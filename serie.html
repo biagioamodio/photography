@@ -34,11 +34,12 @@
           </div>
         </div>
         
-        <!-- Center Column - Photo -->
+        <!-- Center Column - Content (Description or Photo) -->
         <div class="col-xs-8">
-          <div class="photo-container">
-            <!-- Photo -->
-            <img id="photo-image" src="" alt="Photo">
+          <!-- Content Container -->
+          <div class="content-container">
+            <!-- Description or Photo will be loaded here -->
+            <div id="content-display"></div>
           </div>
         </div>
         
@@ -62,6 +63,7 @@
         <!-- Center Column - Serie Title -->
         <div class="col-xs-8 text-center">
           <h2 class="serie-title"></h2>
+          <div id="slide-indicator" class="slide-indicator"></div>
         </div>
         
         <!-- Right Column - Next Serie -->
@@ -98,59 +100,9 @@
         return;
       }
       
-      // Load series data
-      $.getJSON("_data/series.json", function(data) {
-        window.seriesData = data;
-        const serie = data.find(s => s.id === serieId);
-        
-        if (!serie) {
-          window.location.href = 'series.html';
-          return;
-        }
-        
-        // Set serie title
-        $(".serie-title").text(serie.title);
-        
-        // Set page title
+      // Set page title when serie is loaded
+      $(document).on('serieLoaded', function(e, serie) {
         document.title = `${serie.title} - Biagio Amodio Photography`;
-        
-        // Set up photo navigation
-        let currentPhotoIndex = 0;
-        const photos = serie.photos;
-        
-        // Load initial photo
-        loadPhoto(currentPhotoIndex);
-        
-        // Previous photo button
-        $('.prev-photo').click(function(e) {
-          e.preventDefault();
-          currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
-          loadPhoto(currentPhotoIndex);
-        });
-        
-        // Next photo button
-        $('.next-photo').click(function(e) {
-          e.preventDefault();
-          currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
-          loadPhoto(currentPhotoIndex);
-        });
-        
-        // Function to load photo and metadata
-        function loadPhoto(index) {
-          if (!photos[index]) return;
-          
-          const photo = photos[index];
-          $('#photo-image').attr('src', photo.image);
-          $('#photo-metadata').text(photo.metadata);
-        }
-        
-        // Set up serie navigation
-        const serieIndex = data.findIndex(s => s.id === serieId);
-        const prevIndex = (serieIndex - 1 + data.length) % data.length;
-        const nextIndex = (serieIndex + 1) % data.length;
-        
-        $('.prev-serie').attr('href', `serie.html?id=${data[prevIndex].id}`);
-        $('.next-serie').attr('href', `serie.html?id=${data[nextIndex].id}`);
       });
     });
   </script>

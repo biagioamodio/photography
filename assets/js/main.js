@@ -112,13 +112,66 @@ function loadSerieContent(serie) {
   // Set serie title
   $('.serie-title').text(serie.title);
   
-  // Load first photo
-  if (serie.photos.length > 0) {
-    $('#photo-image').attr('src', serie.photos[0].image);
-    $('#photo-metadata').text(serie.photos[0].metadata);
+  // Trigger event for serie loaded
+  $(document).trigger('serieLoaded', [serie]);
+  
+  // Create an array of all slides (description + photos)
+  const slides = [
+    { type: 'description', content: serie.description },
+    ...serie.photos.map(photo => ({ type: 'photo', content: photo }))
+  ];
+  
+  let currentSlideIndex = 0;
+  
+  // Function to load a slide (description or photo)
+  function loadSlide(index) {
+    const slide = slides[index];
+    const contentDisplay = $('#content-display');
+    contentDisplay.empty();
+    
+    if (slide.type === 'description') {
+      // Load description
+      const descriptionElement = $('<div class="serie-description"></div>');
+      descriptionElement.html(slide.content.replace(/\n\n/g, '<br><br>'));
+      contentDisplay.append(descriptionElement);
+      
+      // Hide metadata for description
+      $('#photo-metadata').text('');
+    } else {
+      // Load photo
+      const photoElement = $('<img>').attr({
+        src: slide.content.image,
+        alt: serie.title,
+        class: 'photo-image'
+      });
+      contentDisplay.append(photoElement);
+      
+      // Set metadata for photo
+      $('#photo-metadata').text(slide.content.metadata);
+    }
+    
+    // Update slide indicator
+    $('#slide-indicator').text(`${index + 1} / ${slides.length}`);
   }
   
-  // Set navigation links
+  // Load initial slide (description)
+  loadSlide(currentSlideIndex);
+  
+  // Previous slide button
+  $('.prev-photo').click(function(e) {
+    e.preventDefault();
+    currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+    loadSlide(currentSlideIndex);
+  });
+  
+  // Next slide button
+  $('.next-photo').click(function(e) {
+    e.preventDefault();
+    currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+    loadSlide(currentSlideIndex);
+  });
+  
+  // Set navigation links for series
   if (window.seriesData) {
     const serieIndex = window.seriesData.findIndex(s => s.id === serie.id);
     const prevIndex = (serieIndex - 1 + window.seriesData.length) % window.seriesData.length;
