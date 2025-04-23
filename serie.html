@@ -22,35 +22,40 @@
     <div class="serie-container">
       <!-- Photo Row -->
       <div class="row">
-        <!-- Left Column - Metadata -->
-        <div class="col-xs-2">
+        <!-- Left Column - Metadata and Left Arrow -->
+        <div class="col-xs-2 side-column">
           <div class="photo-metadata">
             <p id="photo-metadata" class="metadata"></p>
+          </div>
+          <div class="arrow-container left-arrow-container">
+            <a href="#" class="prev-photo">
+              <img src="assets/icons/VectorSX.svg" alt="Previous" width="15" height="25">
+            </a>
           </div>
         </div>
         
         <!-- Center Column - Photo -->
         <div class="col-xs-8">
           <div class="photo-container">
-            <!-- Photo Navigation -->
-            <div class="photo-navigation">
-              <a href="#" class="prev-photo">&lt;</a>
-              <a href="#" class="next-photo">&gt;</a>
-            </div>
-            
             <!-- Photo -->
             <img id="photo-image" src="" alt="Photo">
           </div>
         </div>
         
-        <!-- Right Column - Empty -->
-        <div class="col-xs-2"></div>
+        <!-- Right Column - Right Arrow -->
+        <div class="col-xs-2 side-column">
+          <div class="arrow-container right-arrow-container">
+            <a href="#" class="next-photo">
+              <img src="assets/icons/VectorDX.svg" alt="Next" width="15" height="25">
+            </a>
+          </div>
+        </div>
       </div>
       
       <!-- Navigation Row -->
       <div class="row">
         <!-- Left Column - Previous Serie -->
-        <div class="col-xs-2 text-left">
+        <div class="col-xs-2 text-right">
           <a href="#" class="prev-serie">&lt; previous series</a>
         </div>
         
@@ -60,7 +65,7 @@
         </div>
         
         <!-- Right Column - Next Serie -->
-        <div class="col-xs-2 text-right">
+        <div class="col-xs-2 text-left">
           <a href="#" class="next-serie">next series &gt;</a>
         </div>
       </div>

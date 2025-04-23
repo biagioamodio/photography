@@ -1,7 +1,7 @@
 /* Color variables */
 :root {
   --color-primary: #000000;
-  --color-secondary: #8D8D8D;
+  --color-secondary: #ababab;
 }
 
 /* Color utility classes */
@@ -35,6 +35,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'News Cycle';
+  src: url('../fonts/News_Cycle/NewsCycle-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'News Cycle';
+  src: url('../fonts/News_Cycle/NewsCycle-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 /* General styles */
 html, body {
   height: 100%;
@@ -42,7 +56,7 @@ html, body {
   padding: 0;
   background-color: white;
   color: var(--color-primary);
-  font-family: 'Inconsolata', monospace;
+  font-family: 'News Cycle', sans-serif;
   font-size: 16px;
   /* Allow scrolling */
 }
@@ -65,14 +79,14 @@ html, body {
 
 .navbar-brand {
   font-family: 'Oswald', sans-serif;
-  font-size: 32px;
+  font-size: 24px;
   color: var(--color-primary);
   text-transform: uppercase;
 }
 
 .navbar-nav li a {
-  font-family: 'Inconsolata', monospace;
-  font-size: 16px;
+  font-family: 'News Cycle', sans-serif;
+  font-size: 20px;
   color: var(--color-secondary);
   transition: opacity 0.3s ease;
 }
@@ -84,6 +98,7 @@ html, body {
 .navbar-nav li a.active {
   color: var(--color-primary);
   text-decoration: underline;
+  font-weight: bold;
 }
 
 /* Responsive navigation */
@@ -117,12 +132,12 @@ h1, h2, h3 {
 
 .grid-sizer,
 .grid-item {
-  width: 30%;
+  width: 32%;
 }
 
 .grid-item {
   float: left;
-  padding: 4px;
+  padding: 0.66%;
 }
 
 .grid-item img {
@@ -238,36 +253,72 @@ h1, h2, h3 {
   transition: transform 0.3s ease;
 }
 
-.photo-metadata {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+/* Side columns */
+.side-column {
+  position: relative;
   height: 70vh;
+}
+
+/* Remove padding between columns in serie page */
+.serie-container .row .col-xs-2:first-child {
+  padding-right: 0;
+}
+
+.serie-container .row .col-xs-8 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.serie-container .row .col-xs-2:last-child {
+  padding-left: 0;
+}
+
+.photo-metadata {
+  position: absolute;
+  bottom: 20px;
+  right: 0px;
   color: var(--color-secondary);
   font-size: 16px;
   text-align: right;
-  padding-right: 20px;
-  padding-bottom: 20px;
+  z-index: 1;
+  width: 60%;
+  font-family: 'Inconsolata', monospace;
 }
 
-.photo-navigation {
+/* Arrow containers */
+.arrow-container {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  z-index: 10;
+  height: 100%;
 }
 
-.photo-navigation a {
+.arrow-container a {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--color-secondary);
-  font-size: 24px;
   text-decoration: none;
   transition: opacity 0.3s ease;
+  padding: 0;
+  z-index: 2;
 }
 
-.photo-navigation a:hover {
+.left-arrow-container a {
+  right: 0;
+}
+
+.right-arrow-container a {
+  left: 0;
+}
+
+.arrow-container a:hover {
   opacity: 0.7;
+}
+
+.arrow-container img {
+  display: block;
 }
 
 .serie-title {
@@ -279,7 +330,7 @@ h1, h2, h3 {
 
 .prev-serie, .next-serie {
   font-family: 'Young Serif', serif;
-  font-size: 24px;
+  font-size: 20px;
   color: var(--color-secondary);
   text-decoration: none;
   display: block;
@@ -301,12 +352,40 @@ h1, h2, h3 {
     max-height: 60vh;
   }
   
-  .photo-metadata {
+  .side-column {
     height: auto;
     position: static;
-    padding: 10px 0;
+    margin: 10px 0;
+  }
+  
+  .photo-metadata {
+    position: static;
     text-align: center;
-    justify-content: center;
+    padding: 10px 0;
+    width: 100%;
+    right: auto;
+    bottom: auto;
+  }
+  
+  .arrow-container {
+    position: static;
+    text-align: center;
+    height: auto;
+    margin: 10px 0;
+  }
+  
+  .arrow-container a {
+    position: static;
+    transform: none;
+    display: inline-block;
+  }
+  
+  .left-arrow-container a {
+    right: auto;
+  }
+  
+  .right-arrow-container a {
+    left: auto;
   }
   
   .serie-navigation {
@@ -375,4 +454,5 @@ h1, h2, h3 {
 /* Photo metadata */
 .metadata {
   color: var(--color-secondary);
+  font-family: 'Inconsolata', monospace;
 }
