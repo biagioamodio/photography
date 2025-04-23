@@ -1,0 +1,176 @@
+[
+  {
+    "id": "winter-isolation",
+    "title": "Winter Isolation",
+    "description": "A series exploring solitude and stillness in winter landscapes.",
+    "photos": [
+      {
+        "image": "assets/uploads/01_01.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
+      },
+      {
+        "image": "assets/uploads/01_02.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/01_03.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:5.6"
+      },
+      {
+        "image": "assets/uploads/01_04.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
+      },
+      {
+        "image": "assets/uploads/01_05.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
+      }
+    ]
+  },
+  {
+    "id": "coastal-memories",
+    "title": "Coastal Memories",
+    "description": "Capturing the essence of coastal life and maritime heritage.",
+    "photos": [
+      {
+        "image": "assets/uploads/02_01.jpg",
+        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:8"
+      },
+      {
+        "image": "assets/uploads/02_02.jpg",
+        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:5.6"
+      },
+      {
+        "image": "assets/uploads/02_03.jpg",
+        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:4"
+      },
+      {
+        "image": "assets/uploads/02_04.jpg",
+        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/02_05.jpg",
+        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:4"
+      },
+      {
+        "image": "assets/uploads/02_06.jpg",
+        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:5.6"
+      },
+      {
+        "image": "assets/uploads/02_07.jpg",
+        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:8"
+      },
+      {
+        "image": "assets/uploads/02_08.jpg",
+        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:4"
+      }
+    ]
+  },
+  {
+    "id": "urban-fragments",
+    "title": "Urban Fragments",
+    "description": "Exploring the textures and patterns of urban environments.",
+    "photos": [
+      {
+        "image": "assets/uploads/03_01.jpg",
+        "metadata": "Leica M6, 35mm, Portra 400, 1:2"
+      },
+      {
+        "image": "assets/uploads/03_02.jpg",
+        "metadata": "Leica M6, 50mm, Portra 400, 1:1.4"
+      },
+      {
+        "image": "assets/uploads/03_03.jpg",
+        "metadata": "Leica M6, 35mm, Portra 400, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/03_04.jpg",
+        "metadata": "Leica M6, 50mm, Portra 400, 1:2"
+      },
+      {
+        "image": "assets/uploads/03_05.jpg",
+        "metadata": "Leica M6, 35mm, Portra 400, 1:1.4"
+      }
+    ]
+  },
+  {
+    "id": "film-diaries",
+    "title": "Film Diaries",
+    "description": "A collection of moments captured on film throughout the seasons.",
+    "photos": [
+      {
+        "image": "assets/uploads/000026200001.jpg",
+        "metadata": "Olympus OM-1, 28mm, Fuji Superia 400, 1:3.5"
+      },
+      {
+        "image": "assets/uploads/000026200010.jpg",
+        "metadata": "Olympus OM-1, 50mm, Fuji Superia 400, 1:1.8"
+      },
+      {
+        "image": "assets/uploads/000026200023.jpg",
+        "metadata": "Olympus OM-1, 28mm, Fuji Superia 400, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/000026200028.jpg",
+        "metadata": "Olympus OM-1, 50mm, Fuji Superia 400, 1:1.8"
+      },
+      {
+        "image": "assets/uploads/000026200034.jpg",
+        "metadata": "Olympus OM-1, 28mm, Fuji Superia 400, 1:3.5"
+      }
+    ]
+  },
+  {
+    "id": "light-studies",
+    "title": "Light Studies",
+    "description": "Exploring the interplay of light and shadow in various environments.",
+    "photos": [
+      {
+        "image": "assets/uploads/000027500007.jpg",
+        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/000027500016.jpg",
+        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:4"
+      },
+      {
+        "image": "assets/uploads/000027500027.jpg",
+        "metadata": "Hasselblad 500C/M, 50mm, Kodak Portra 160, 1:4"
+      },
+      {
+        "image": "assets/uploads/000027500031.jpg",
+        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/000027500035.jpg",
+        "metadata": "Hasselblad 500C/M, 50mm, Kodak Portra 160, 1:4"
+      }
+    ]
+  },
+  {
+    "id": "monochrome-visions",
+    "title": "Monochrome Visions",
+    "description": "Black and white studies of form and texture.",
+    "photos": [
+      {
+        "image": "assets/uploads/000039670009.jpg",
+        "metadata": "Mamiya RZ67, 110mm, Ilford Delta 100, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/000039670026.jpg",
+        "metadata": "Mamiya RZ67, 65mm, Ilford Delta 100, 1:4"
+      },
+      {
+        "image": "assets/uploads/000045500001.jpg",
+        "metadata": "Mamiya RZ67, 110mm, Ilford Delta 100, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/000045500010.jpg",
+        "metadata": "Mamiya RZ67, 65mm, Ilford Delta 100, 1:4"
+      },
+      {
+        "image": "assets/uploads/000045500022.jpg",
+        "metadata": "Mamiya RZ67, 110mm, Ilford Delta 100, 1:2.8"
+      }
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+backend:
+  name: github
+  repo: biagioamodio/photography
+  branch: main # Branch to update (optional; defaults to master)
+
+# Media files will be stored in the repo under assets/uploads
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+# Content collections
+collections:
+  - name: "series"
+    label: "Series"
+    folder: "_data/series"
+    create: true
+    slug: "{{slug}}"
+    format: "json"
+    extension: "json"
+    fields:
+      - {label: "ID", name: "id", widget: "string", hint: "Unique identifier for the series (use lowercase and hyphens)"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - label: "Photos"
+        name: "photos"
+        widget: "list"
+        fields:
+          - {label: "Image", name: "image", widget: "image"}
+          - {label: "Metadata", name: "metadata", widget: "string", hint: "Camera, lens, film, aperture info"}
+
+  - name: "about"
+    label: "About Page"
+    files:
+      - label: "About Information"
+        name: "about"
+        file: "_data/about.json"
+        fields:
+          - {label: "Profile Image", name: "image", widget: "image"}
+          - {label: "Content", name: "content", widget: "markdown"}
+          - label: "Links"
+            name: "links"
+            widget: "list"
+            fields:
+              - {label: "Text", name: "text", widget: "string"}
+              - {label: "URL", name: "url", widget: "string"}

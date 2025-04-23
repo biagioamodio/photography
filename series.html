@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Series - Biagio Amodio Photography</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- Navigation -->
+    <div id="navbar-container">
+      <!-- Navbar will be loaded here -->
+    </div>
+    
+    <!-- Main Content Row -->
+    <div class="row">
+      <!-- Left Column - Empty -->
+      <div class="col-xs-2"></div>
+      
+      <!-- Center Column - Series Grid -->
+      <div class="col-xs-8">
+        <div class="series-grid">
+          <!-- Series will be loaded dynamically from series.json -->
+        </div>
+      </div>
+      
+      <!-- Right Column - Empty -->
+      <div class="col-xs-2"></div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="assets/js/main.js"></script>
+  
+  <script>
+    // Load navbar
+    $(document).ready(function() {
+      $("#navbar-container").load("_includes/navbar.html", function() {
+        // Set active nav item
+        $("#nav-series").addClass("active");
+      });
+      
+      // Load series data
+      $.getJSON("_data/series.json", function(data) {
+        const grid = $(".series-grid");
+        
+        // Populate grid with series
+        data.forEach(function(serie) {
+          const featuredImage = serie.photos[0].image;
+          
+          const item = $('<div class="series-item">');
+          const link = $('<a>').attr('href', `serie.html?id=${serie.id}`);
+          const img = $('<img>').attr('src', featuredImage).attr('alt', serie.title);
+          const titleOverlay = $('<div class="series-title">').html(`<h2>${serie.title}</h2>`);
+          
+          link.append(img).append(titleOverlay);
+          item.append(link);
+          grid.append(item);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

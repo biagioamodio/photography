@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serie - Biagio Amodio Photography</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- Navigation -->
+    <div id="navbar-container">
+      <!-- Navbar will be loaded here -->
+    </div>
+    
+    <!-- Serie Container -->
+    <div class="serie-container">
+      <!-- Photo Row -->
+      <div class="row">
+        <!-- Left Column - Metadata -->
+        <div class="col-xs-2">
+          <div class="photo-metadata">
+            <p id="photo-metadata" class="metadata"></p>
+          </div>
+        </div>
+        
+        <!-- Center Column - Photo -->
+        <div class="col-xs-8">
+          <div class="photo-container">
+            <!-- Photo Navigation -->
+            <div class="photo-navigation">
+              <a href="#" class="prev-photo">&lt;</a>
+              <a href="#" class="next-photo">&gt;</a>
+            </div>
+            
+            <!-- Photo -->
+            <img id="photo-image" src="" alt="Photo">
+          </div>
+        </div>
+        
+        <!-- Right Column - Empty -->
+        <div class="col-xs-2"></div>
+      </div>
+      
+      <!-- Navigation Row -->
+      <div class="row">
+        <!-- Left Column - Previous Serie -->
+        <div class="col-xs-2 text-left">
+          <a href="#" class="prev-serie">&lt; previous series</a>
+        </div>
+        
+        <!-- Center Column - Serie Title -->
+        <div class="col-xs-8 text-center">
+          <h2 class="serie-title"></h2>
+        </div>
+        
+        <!-- Right Column - Next Serie -->
+        <div class="col-xs-2 text-right">
+          <a href="#" class="next-serie">next series &gt;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="assets/js/main.js"></script>
+  
+  <script>
+    // Load navbar
+    $(document).ready(function() {
+      $("#navbar-container").load("_includes/navbar.html", function() {
+        // Set active nav item
+        $("#nav-series").addClass("active");
+      });
+      
+      // Get serie ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const serieId = urlParams.get('id');
+      
+      if (!serieId) {
+        window.location.href = 'series.html';
+        return;
+      }
+      
+      // Load series data
+      $.getJSON("_data/series.json", function(data) {
+        window.seriesData = data;
+        const serie = data.find(s => s.id === serieId);
+        
+        if (!serie) {
+          window.location.href = 'series.html';
+          return;
+        }
+        
+        // Set serie title
+        $(".serie-title").text(serie.title);
+        
+        // Set page title
+        document.title = `${serie.title} - Biagio Amodio Photography`;
+        
+        // Set up photo navigation
+        let currentPhotoIndex = 0;
+        const photos = serie.photos;
+        
+        // Load initial photo
+        loadPhoto(currentPhotoIndex);
+        
+        // Previous photo button
+        $('.prev-photo').click(function(e) {
+          e.preventDefault();
+          currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+          loadPhoto(currentPhotoIndex);
+        });
+        
+        // Next photo button
+        $('.next-photo').click(function(e) {
+          e.preventDefault();
+          currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+          loadPhoto(currentPhotoIndex);
+        });
+        
+        // Function to load photo and metadata
+        function loadPhoto(index) {
+          if (!photos[index]) return;
+          
+          const photo = photos[index];
+          $('#photo-image').attr('src', photo.image);
+          $('#photo-metadata').text(photo.metadata);
+        }
+        
+        // Set up serie navigation
+        const serieIndex = data.findIndex(s => s.id === serieId);
+        const prevIndex = (serieIndex - 1 + data.length) % data.length;
+        const nextIndex = (serieIndex + 1) % data.length;
+        
+        $('.prev-serie').attr('href', `serie.html?id=${data[prevIndex].id}`);
+        $('.next-serie').attr('href', `serie.html?id=${data[nextIndex].id}`);
+      });
+    });
+  </script>
+</body>
+</html>

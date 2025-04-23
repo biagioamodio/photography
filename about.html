@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Biagio Amodio Photography</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- Navigation -->
+    <div id="navbar-container">
+      <!-- Navbar will be loaded here -->
+    </div>
+    
+    <!-- Main Content Row -->
+    <div class="row">
+      <!-- Left Column - Empty -->
+      <div class="col-xs-2"></div>
+      
+      <!-- Center Column - About Content -->
+      <div class="col-xs-8">
+        <div class="about-container">
+          <!-- About Image -->
+          <div class="about-image">
+            <img id="about-image" src="" alt="Biagio Amodio">
+          </div>
+          
+          <!-- About Content -->
+          <div class="about-content">
+            <div id="about-text"></div>
+            
+            <div class="about-links" id="about-links">
+              <!-- Links will be loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column - Empty -->
+      <div class="col-xs-2"></div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="assets/js/main.js"></script>
+  
+  <script>
+    // Load navbar
+    $(document).ready(function() {
+      $("#navbar-container").load("_includes/navbar.html", function() {
+        // Set active nav item
+        $("#nav-about").addClass("active");
+      });
+      
+      // Load about data
+      $.getJSON("_data/about.json", function(data) {
+        // Set image
+        $("#about-image").attr("src", data.image);
+        
+        // Set content
+        const paragraphs = data.content.split("\n\n");
+        const textContainer = $("#about-text");
+        
+        paragraphs.forEach(function(paragraph) {
+          textContainer.append($("<p>").text(paragraph));
+        });
+        
+        // Set links
+        const linksContainer = $("#about-links");
+        
+        data.links.forEach(function(link) {
+          linksContainer.append(
+            $("<a>")
+              .attr("href", link.url)
+              .text(link.text)
+          );
+        });
+      });
+    });
+  </script>
+</body>
+</html>
