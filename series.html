@@ -51,25 +51,6 @@
         // Set active nav item
         $("#nav-series").addClass("active");
       });
-      
-      // Load series data
-      $.getJSON("_data/series.json", function(data) {
-        const grid = $(".series-grid");
-        
-        // Populate grid with series
-        data.forEach(function(serie) {
-          const featuredImage = serie.photos[0].image;
-          
-          const item = $('<div class="series-item">');
-          const link = $('<a>').attr('href', `serie.html?id=${serie.id}`);
-          const img = $('<img>').attr('src', featuredImage).attr('alt', serie.title);
-          const titleOverlay = $('<div class="series-title">').html(`<h2>${serie.title}</h2>`);
-          
-          link.append(img).append(titleOverlay);
-          item.append(link);
-          grid.append(item);
-        });
-      });
     });
   </script>
 </body>
