@@ -54,7 +54,7 @@
       </div>
       
       <!-- Navigation Row -->
-      <div class="row">
+      <div style="padding-top: 30px;" class="row">
         <!-- Left Column - Previous Serie -->
         <div class="col-xs-2 text-right">
           <a href="#" class="prev-serie">&lt; previous series</a>
@@ -104,6 +104,14 @@
       $(document).on('serieLoaded', function(e, serie) {
         document.title = `${serie.title} - Biagio Amodio Photography`;
       });
+      
+      // Ensure content is visible when page loads (counteract any fade-out from previous page)
+      setTimeout(function() {
+        $('.page-content').removeClass('fade-out');
+      }, 50);
+      
+      // Add fade transition to content display
+      $('#content-display').addClass('fade-transition');
     });
   </script>
 </body>

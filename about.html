@@ -88,6 +88,11 @@
           );
         });
       });
+      
+      // Ensure content is visible when page loads (counteract any fade-out from previous page)
+      setTimeout(function() {
+        $('.page-content').removeClass('fade-out');
+      }, 50);
     });
   </script>
 </body>

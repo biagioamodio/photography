@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  // Wrap main content in page-content div for transitions
+  $('.container-fluid > .row').wrapAll('<div class="page-content fade-transition"></div>');
+  
   // Set active navigation item based on current page
   const currentPage = window.location.pathname.split('/').pop();
   
@@ -9,14 +12,31 @@ $(document).ready(function() {
   } else if (currentPage === 'series.html' || currentPage.includes('serie.html')) {
     $('#nav-series').addClass('active');
   }
+  
+  // Add click event to all navigation links for page transitions
+  $('body').on('click', 'a[href]', function(e) {
+    const href = $(this).attr('href');
+    
+    // Only handle internal links that are not anchors
+    if (href && href.startsWith('http') === false && 
+        href !== '#' && !href.startsWith('#') && 
+        !$(this).hasClass('prev-photo') && !$(this).hasClass('next-photo')) {
+      e.preventDefault();
+      
+      // Fade out current page
+      $('.page-content').addClass('fade-out');
+      
+      // Navigate to new page after transition
+      setTimeout(function() {
+        window.location.href = href;
+      }, 300);
+    }
+  });
 
   // Initialize Masonry for homepage
   if (currentPage === 'index.html' || currentPage === '') {
-    $('.masonry-grid').masonry({
-      itemSelector: '.grid-item',
-      columnWidth: '.grid-sizer',
-      percentPosition: true
-    });
+    // Load random images for homepage
+    loadRandomImagesForHomepage();
   }
 
   // Series page hover effect
@@ -123,35 +143,45 @@ function loadSerieContent(serie) {
   
   let currentSlideIndex = 0;
   
-  // Function to load a slide (description or photo)
+  // Function to load a slide (description or photo) with fade transition
   function loadSlide(index) {
     const slide = slides[index];
     const contentDisplay = $('#content-display');
-    contentDisplay.empty();
     
-    if (slide.type === 'description') {
-      // Load description
-      const descriptionElement = $('<div class="serie-description"></div>');
-      descriptionElement.html(slide.content.replace(/\n\n/g, '<br><br>'));
-      contentDisplay.append(descriptionElement);
-      
-      // Hide metadata for description
-      $('#photo-metadata').text('');
-    } else {
-      // Load photo
-      const photoElement = $('<img>').attr({
-        src: slide.content.image,
-        alt: serie.title,
-        class: 'photo-image'
-      });
-      contentDisplay.append(photoElement);
-      
-      // Set metadata for photo
-      $('#photo-metadata').text(slide.content.metadata);
-    }
+    // Fade out current content
+    contentDisplay.addClass('fade-transition fade-out');
     
-    // Update slide indicator
-    $('#slide-indicator').text(`${index + 1} / ${slides.length}`);
+    // After fade out, update content and fade in
+    setTimeout(function() {
+      contentDisplay.empty();
+      
+      if (slide.type === 'description') {
+        // Load description
+        const descriptionElement = $('<div class="serie-description fade-transition"></div>');
+        descriptionElement.html(slide.content.replace(/\n\n/g, '<br><br>'));
+        contentDisplay.append(descriptionElement);
+        
+        // Hide metadata for description
+        $('#photo-metadata').text('');
+      } else {
+        // Load photo
+        const photoElement = $('<img>').attr({
+          src: slide.content.image,
+          alt: serie.title,
+          class: 'photo-image fade-transition'
+        });
+        contentDisplay.append(photoElement);
+        
+        // Set metadata for photo
+        $('#photo-metadata').text(slide.content.metadata);
+      }
+      
+      // Update slide indicator
+      $('#slide-indicator').text(`${index + 1} / ${slides.length}`);
+      
+      // Fade in new content
+      contentDisplay.removeClass('fade-out');
+    }, 300);
   }
   
   // Load initial slide (description)
@@ -186,3 +216,68 @@ function loadSerieContent(serie) {
 $(document).ready(function() {
   loadSeriesData();
 });
+
+// Function to load random images for homepage
+function loadRandomImagesForHomepage() {
+  // If seriesData is not loaded yet, load it first
+  if (!window.seriesData) {
+    $.getJSON('_data/series.json', function(data) {
+      window.seriesData = data;
+      generateRandomImages(data);
+    });
+  } else {
+    generateRandomImages(window.seriesData);
+  }
+  
+  // Function to generate random images from all series
+  function generateRandomImages(seriesData) {
+    // Extract all image paths from all series
+    const allImages = [];
+    seriesData.forEach(serie => {
+      serie.photos.forEach(photo => {
+        allImages.push({
+          image: photo.image,
+          title: serie.title
+        });
+      });
+    });
+    
+    // Shuffle the array of images
+    const shuffledImages = shuffleArray(allImages);
+    
+    // Select the first 15 images (or all if less than 15)
+    const selectedImages = shuffledImages.slice(0, 15);
+    
+    // Generate grid items for each selected image
+    const grid = $('.masonry-grid');
+    
+    selectedImages.forEach(item => {
+      const gridItem = $('<div class="grid-item">');
+      const img = $('<img>').attr('src', item.image).attr('alt', item.title);
+      
+      gridItem.append(img);
+      grid.append(gridItem);
+    });
+    
+    // Initialize Masonry after images are loaded
+    $('.masonry-grid').imagesLoaded(function() {
+      $('.masonry-grid').masonry({
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-sizer',
+        percentPosition: true,
+        gutter: 8,
+        transitionDuration: '0.2s'
+      });
+    });
+  }
+  
+  // Function to shuffle an array (Fisher-Yates algorithm)
+  function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  }
+}
