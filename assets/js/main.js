@@ -85,11 +85,13 @@ $(document).ready(function() {
 // Function to load series data from JSON
 function loadSeriesData() {
   $.getJSON('_data/series.json', function(data) {
-    window.seriesData = data;
+    // Handle both formats: direct array or nested under "series" property
+    const seriesData = Array.isArray(data) ? data : (data.series || []);
+    window.seriesData = seriesData;
     
     // If on series.html, populate the grid
     if (window.location.pathname.endsWith('series.html')) {
-      populateSeriesGrid(data);
+      populateSeriesGrid(seriesData);
     }
     
     // If on serie.html, load the specific serie
@@ -98,7 +100,7 @@ function loadSeriesData() {
       const serieId = urlParams.get('id');
       
       if (serieId) {
-        const serie = data.find(s => s.id === serieId);
+        const serie = seriesData.find(s => s.id === serieId);
         if (serie) {
           window.serieData = serie;
           loadSerieContent(serie);
@@ -222,8 +224,10 @@ function loadRandomImagesForHomepage() {
   // If seriesData is not loaded yet, load it first
   if (!window.seriesData) {
     $.getJSON('_data/series.json', function(data) {
-      window.seriesData = data;
-      generateRandomImages(data);
+      // Handle both formats: direct array or nested under "series" property
+      const seriesData = Array.isArray(data) ? data : (data.series || []);
+      window.seriesData = seriesData;
+      generateRandomImages(seriesData);
     });
   } else {
     generateRandomImages(window.seriesData);

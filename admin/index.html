@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="github-oauth-client-id" content="Ov23liTdu6AJ5V0W94hs" />
   <title>Content Manager</title>
   <!-- Include the styles for the Decap CMS UI -->
   <link rel="stylesheet" href="https://unpkg.com/@staticcms/app@^2.0.0/dist/main.css" />
@@ -11,6 +12,13 @@
   <!-- Include the script that builds the page and powers Decap CMS -->
   <script src="https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js"></script>
   <script>
+    // Check if running locally
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      // For local development
+      console.log('Running in local development mode');
+    }
+    
+    // Initialize the CMS
     window.CMS.init();
   </script>
 </body>
