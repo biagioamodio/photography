@@ -1,8 +1,9 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: biagioamodio/photography
   branch: main # Branch to update (optional; defaults to master)
-  site_url: https://biagioamodio.github.io/photography
-  base_url: https://api.netlify.com
+  client_id: Ov23liTdu6AJ5V0W94hs
+  auth_type: implicit
 
 # Media files will be stored in the repo under assets/uploads
 media_folder: "assets/uploads"

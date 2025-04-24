@@ -23,8 +23,7 @@
     }
   </script>
   
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <!-- GitHub OAuth is used for admin authentication -->
 </head>
 <body>
   <div class="container-fluid">
@@ -65,27 +64,6 @@
   <script src="assets/js/main.js"></script>
   
   <script>
-    // Handle Netlify Identity login
-    if (window.netlifyIdentity) {
-      // Initialize with explicit configuration
-      window.netlifyIdentity.init({
-        locale: 'en' // Set language
-      });
-      
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/photography/admin/";
-          });
-        } else {
-          // User is already logged in
-          console.log("User already logged in:", user.email);
-        }
-      });
-      
-      window.netlifyIdentity.on("error", err => console.error("Netlify Identity error:", err));
-    }
-    
     // Load navbar
     $(document).ready(function() {
       // Use baseUrl for loading navbar

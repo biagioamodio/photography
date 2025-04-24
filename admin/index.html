@@ -3,22 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="github-oauth-client-id" content="Ov23liTdu6AJ5V0W94hs" />
   <title>Content Manager</title>
   <!-- Include the styles for the Decap CMS UI -->
   <link rel="stylesheet" href="https://unpkg.com/@staticcms/app@^2.0.0/dist/main.css" />
-  <!-- Include Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <!-- Redirect script for successful login -->
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (user) {
-          // User is already logged in, redirect to admin
-          document.location.href = "/photography/admin/";
-        }
-      });
-    }
-  </script>
 </head>
 <body>
   <!-- Include the script that builds the page and powers Decap CMS -->
@@ -30,32 +18,8 @@
       console.log('Running in local development mode');
     }
     
-    // Initialize Netlify Identity with explicit configuration
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.init({
-        locale: 'en' // Set language
-      });
-    }
-    
     // Initialize the CMS
     window.CMS.init();
-
-    // Handle Netlify Identity login
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("login", () => {
-        document.location.href = "/photography/admin/";
-      });
-      
-      window.netlifyIdentity.on("error", err => console.error("Netlify Identity error:", err));
-      
-      window.netlifyIdentity.on("close", () => {
-        // Check if user is logged in after modal is closed
-        const user = window.netlifyIdentity.currentUser();
-        if (user) {
-          document.location.href = "/photography/admin/";
-        }
-      });
-    }
   </script>
 </body>
 </html>

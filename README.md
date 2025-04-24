@@ -27,47 +27,32 @@ The website is designed to be hosted on GitHub Pages from the repository: https:
 
 The website will be available at: https://biagioamodio.github.io/photography/
 
-### 2. Setting up Decap CMS with Netlify Identity
+### 2. Setting up Decap CMS with GitHub OAuth
 
-To allow content editing through Decap CMS, you need to set up Netlify Identity:
+To allow content editing through Decap CMS, you need to set up GitHub OAuth:
 
-1. **Create a Netlify site**:
-   - Sign up for a Netlify account if you don't have one: https://app.netlify.com/signup
-   - Click "New site from Git"
-   - Choose GitHub as your Git provider
-   - Select your repository (biagioamodio/photography)
-   - Configure build settings (or leave as default if you don't have a build process)
-   - Click "Deploy site"
+1. **Create a GitHub OAuth App**:
+   - Go to your GitHub account settings
+   - Navigate to Developer settings > OAuth Apps > New OAuth App
+   - Fill in the following details:
+     - Application name: Biagio Photography CMS
+     - Homepage URL: https://biagioamodio.github.io/photography/
+     - Authorization callback URL: https://biagioamodio.github.io/photography/admin/
+   - Register the application and note the Client ID
+   - The Client ID is already configured in the CMS files
 
-2. **Enable Netlify Identity**:
-   - Once your site is deployed, go to "Site settings" > "Identity"
-   - Click "Enable Identity"
-   - Under "Registration preferences", choose "Invite only" (recommended)
-   - Under "External providers", add GitHub as a provider (optional)
-   - Set the "Git Gateway" URL to your GitHub repository URL
+2. **Verify the .nojekyll file**:
+   - Make sure the `.nojekyll` file exists in the root of your repository
+   - This file tells GitHub Pages not to process the site with Jekyll
+   - Without this file, directories starting with underscore (like `_includes` and `_data`) won't be accessible
 
-3. **Configure Git Gateway**:
-   - In your Netlify site dashboard, go to "Site settings" > "Identity" > "Services"
-   - Enable "Git Gateway"
-   - This allows the CMS to commit changes to your repository
-
-4. **Invite yourself as a user**:
-   - Go to "Identity" > "Invite users"
-   - Enter your email address
-   - Accept the invitation that arrives in your email
-
-5. **Update your Netlify site settings**:
-   - Go to "Site settings" > "General" > "Site details"
-   - Under "Site information", make sure the site name generates a URL you want to use
-   - Optionally, set a custom domain if you have one
-
-6. **Push the updated files to your GitHub repository**:
-   - The site is configured to use Netlify Identity with the correct paths
+3. **Push the updated files to your GitHub repository**:
    - Make sure all files are committed and pushed to the main branch
+   - GitHub Pages will automatically deploy the updated site
 
-### Troubleshooting "Not Found" Issues After Login
+### Troubleshooting Authentication Issues
 
-If you encounter a "not found" error after logging in with GitHub, try these solutions:
+If you encounter issues with GitHub OAuth authentication, try these solutions:
 
 1. **Use the callback page**:
    - Instead of going directly to `/admin/`, use `/admin/callback.html`
@@ -77,15 +62,13 @@ If you encounter a "not found" error after logging in with GitHub, try these sol
    - Open your browser's developer tools (F12 or right-click > Inspect)
    - Look for any error messages in the Console tab
 
-3. **Verify Netlify Identity configuration**:
-   - Make sure your Netlify site is properly connected to your GitHub repository
-   - Check that Git Gateway is enabled and configured correctly
+3. **Verify GitHub OAuth App settings**:
+   - Make sure the callback URL is correctly set to: https://biagioamodio.github.io/photography/admin/
+   - Ensure the Client ID in the config matches your GitHub OAuth App
 
 4. **Clear browser cache and cookies**:
    - Sometimes cached authentication data can cause issues
    - Clear your browser cache and cookies, then try again
-
-Note: While your site is hosted on GitHub Pages, the authentication and content management are handled by Netlify.
 
 ## Using Decap CMS
 
