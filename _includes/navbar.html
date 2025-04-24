@@ -1,12 +1,21 @@
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="index.html">BIAGIO AMODIO</a>
+      <a class="navbar-brand" href="#" id="home-link">BIAGIO AMODIO</a>
+      <script>
+        document.getElementById('home-link').href = (window.baseUrl || '/') + 'index.html';
+      </script>
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="index.html" id="nav-home">home</a></li>
-      <li><a href="about.html" id="nav-about">about</a></li>
-      <li><a href="series.html" id="nav-series">series</a></li>
+      <li><a href="#" id="nav-home">home</a></li>
+      <li><a href="#" id="nav-about">about</a></li>
+      <li><a href="#" id="nav-series">series</a></li>
+      <script>
+        // Update navigation links with baseUrl
+        document.getElementById('nav-home').href = (window.baseUrl || '/') + 'index.html';
+        document.getElementById('nav-about').href = (window.baseUrl || '/') + 'about.html';
+        document.getElementById('nav-series').href = (window.baseUrl || '/') + 'series.html';
+      </script>
     </ul>
   </div>
 </nav>

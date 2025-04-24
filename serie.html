@@ -9,7 +9,19 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css" id="custom-css">
+  
+  <!-- Base URL Script -->
+  <script>
+    // Define base URL based on hostname
+    window.baseUrl = window.location.hostname === 'biagioamodio.github.io' ? 
+      '/photography/' : '/';
+      
+    // Update CSS path if needed
+    if (window.baseUrl !== '/') {
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css';
+    }
+  </script>
 </head>
 <body>
   <div class="container-fluid">
@@ -29,7 +41,10 @@
           </div>
           <div class="arrow-container left-arrow-container">
             <a href="#" class="prev-photo">
-              <img src="assets/icons/VectorSX.svg" alt="Previous" width="15" height="25">
+              <img src="" alt="Previous" width="15" height="25" id="left-arrow-img">
+              <script>
+                document.getElementById('left-arrow-img').src = (window.baseUrl || '/') + 'assets/icons/VectorSX.svg';
+              </script>
             </a>
           </div>
         </div>
@@ -47,7 +62,10 @@
         <div class="col-xs-2 side-column">
           <div class="arrow-container right-arrow-container">
             <a href="#" class="next-photo">
-              <img src="assets/icons/VectorDX.svg" alt="Next" width="15" height="25">
+              <img src="" alt="Next" width="15" height="25" id="right-arrow-img">
+              <script>
+                document.getElementById('right-arrow-img').src = (window.baseUrl || '/') + 'assets/icons/VectorDX.svg';
+              </script>
             </a>
           </div>
         </div>
@@ -86,7 +104,8 @@
   <script>
     // Load navbar
     $(document).ready(function() {
-      $("#navbar-container").load("_includes/navbar.html", function() {
+      // Use baseUrl for loading navbar
+      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html", function() {
         // Set active nav item
         $("#nav-series").addClass("active");
       });
@@ -96,7 +115,7 @@
       const serieId = urlParams.get('id');
       
       if (!serieId) {
-        window.location.href = 'series.html';
+        window.location.href = (window.baseUrl || '/') + 'series.html';
         return;
       }
       

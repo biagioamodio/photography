@@ -84,7 +84,10 @@ $(document).ready(function() {
 
 // Function to load series data from JSON
 function loadSeriesData() {
-  $.getJSON('_data/series.json', function(data) {
+  // Use baseUrl for loading JSON data
+  const jsonPath = (window.baseUrl || '/') + '_data/series.json';
+  
+  $.getJSON(jsonPath, function(data) {
     // Handle both formats: direct array or nested under "series" property
     const seriesData = Array.isArray(data) ? data : (data.series || []);
     window.seriesData = seriesData;
@@ -116,11 +119,20 @@ function populateSeriesGrid(series) {
   grid.empty();
   
   series.forEach(serie => {
+    // Get the first photo from the series
     const featuredImage = serie.photos[0].image;
     
+    // Create elements with proper paths
     const item = $('<div class="series-item">');
-    const link = $('<a>').attr('href', `serie.html?id=${serie.id}`);
-    const img = $('<img>').attr('src', featuredImage).attr('alt', serie.title);
+    const link = $('<a>').attr('href', (window.baseUrl || '/') + `serie.html?id=${serie.id}`);
+    
+    // Use baseUrl for image paths if they're relative
+    let imgSrc = featuredImage;
+    if (imgSrc.startsWith('assets/')) {
+      imgSrc = (window.baseUrl || '/') + featuredImage;
+    }
+    
+    const img = $('<img>').attr('src', imgSrc).attr('alt', serie.title);
     const titleOverlay = $('<div class="series-title">').html(`<h2>${serie.title}</h2>`);
     
     link.append(img).append(titleOverlay);
@@ -168,9 +180,14 @@ function loadSerieContent(serie) {
         // Hide metadata for description
         $('#photo-metadata').text('');
       } else {
-        // Load photo
+        // Load photo with proper path
+        let imgSrc = slide.content.image;
+        if (imgSrc.startsWith('assets/')) {
+          imgSrc = (window.baseUrl || '/') + imgSrc;
+        }
+        
         const photoElement = $('<img>').attr({
-          src: slide.content.image,
+          src: imgSrc,
           alt: serie.title,
           class: 'photo-image fade-transition'
         });
@@ -229,8 +246,8 @@ function loadSerieContent(serie) {
     const isLastSerie = serieIndex === window.seriesData.length - 1;
     
     // Set links
-    $('.prev-serie').attr('href', `serie.html?id=${window.seriesData[prevIndex].id}`);
-    $('.next-serie').attr('href', `serie.html?id=${window.seriesData[nextIndex].id}`);
+    $('.prev-serie').attr('href', (window.baseUrl || '/') + `serie.html?id=${window.seriesData[prevIndex].id}`);
+    $('.next-serie').attr('href', (window.baseUrl || '/') + `serie.html?id=${window.seriesData[nextIndex].id}`);
     
     // Hide/show navigation links based on position
     if (isFirstSerie) {
@@ -256,11 +273,16 @@ $(document).ready(function() {
 function loadRandomImagesForHomepage() {
   // If seriesData is not loaded yet, load it first
   if (!window.seriesData) {
-    $.getJSON('_data/series.json', function(data) {
+    // Use baseUrl for loading JSON data
+    const jsonPath = (window.baseUrl || '/') + '_data/series.json';
+    
+    $.getJSON(jsonPath, function(data) {
       // Handle both formats: direct array or nested under "series" property
       const seriesData = Array.isArray(data) ? data : (data.series || []);
       window.seriesData = seriesData;
       generateRandomImages(seriesData);
+    }).fail(function(jqxhr, textStatus, error) {
+      console.error("Error loading series data:", textStatus, error);
     });
   } else {
     generateRandomImages(window.seriesData);
@@ -290,7 +312,13 @@ function loadRandomImagesForHomepage() {
     
     selectedImages.forEach(item => {
       const gridItem = $('<div class="grid-item">');
-      const img = $('<img>').attr('src', item.image).attr('alt', item.title);
+      // Use baseUrl for image paths if they're relative
+      let imgSrc = item.image;
+      if (imgSrc.startsWith('assets/')) {
+        imgSrc = (window.baseUrl || '/') + imgSrc;
+      }
+      
+      const img = $('<img>').attr('src', imgSrc).attr('alt', item.title);
       
       gridItem.append(img);
       grid.append(gridItem);
