@@ -4,6 +4,7 @@ backend:
   branch: main # Branch to update (optional; defaults to master)
   client_id: Ov23liTdu6AJ5V0W94hs
   auth_type: implicit
+  auth_endpoint: https://github.com/login/oauth/authorize
 
 # Media files will be stored in the repo under assets/uploads
 media_folder: "assets/uploads"

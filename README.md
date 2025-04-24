@@ -37,9 +37,9 @@ To allow content editing through Decap CMS, you need to set up GitHub OAuth:
    - Fill in the following details:
      - Application name: Biagio Photography CMS
      - Homepage URL: https://biagioamodio.github.io/photography/
-     - Authorization callback URL: https://biagioamodio.github.io/photography/admin/
+     - Authorization callback URL: https://biagioamodio.github.io/photography/admin/callback.html
    - Register the application and note the Client ID
-   - The Client ID is already configured in the CMS files
+   - The Client ID is already configured in the CMS files (Ov23liTdu6AJ5V0W94hs)
 
 2. **Verify the .nojekyll file**:
    - Make sure the `.nojekyll` file exists in the root of your repository
@@ -50,25 +50,36 @@ To allow content editing through Decap CMS, you need to set up GitHub OAuth:
    - Make sure all files are committed and pushed to the main branch
    - GitHub Pages will automatically deploy the updated site
 
+### Using the CMS with GitHub OAuth
+
+1. **Access the CMS**:
+   - Go to https://biagioamodio.github.io/photography/admin/
+   - Click "Login with GitHub"
+   - Authorize the application when prompted
+   - You'll be redirected back to the CMS
+
+2. **If you encounter issues**:
+   - Try accessing the callback page directly: https://biagioamodio.github.io/photography/admin/callback.html
+   - This page will handle the OAuth callback and redirect you to the admin
+
 ### Troubleshooting Authentication Issues
 
 If you encounter issues with GitHub OAuth authentication, try these solutions:
 
-1. **Use the callback page**:
-   - Instead of going directly to `/admin/`, use `/admin/callback.html`
-   - This page will handle authentication and redirect you properly
-
-2. **Check browser console for errors**:
+1. **Check browser console for errors**:
    - Open your browser's developer tools (F12 or right-click > Inspect)
    - Look for any error messages in the Console tab
+   - The CMS is configured to log detailed error information
 
-3. **Verify GitHub OAuth App settings**:
-   - Make sure the callback URL is correctly set to: https://biagioamodio.github.io/photography/admin/
-   - Ensure the Client ID in the config matches your GitHub OAuth App
+2. **Verify GitHub OAuth App settings**:
+   - Make sure the callback URL is correctly set to: https://biagioamodio.github.io/photography/admin/callback.html
+   - Ensure the Client ID in the config matches your GitHub OAuth App (Ov23liTdu6AJ5V0W94hs)
+   - Check that your GitHub account has write access to the repository
 
-4. **Clear browser cache and cookies**:
+3. **Clear browser cache and cookies**:
    - Sometimes cached authentication data can cause issues
    - Clear your browser cache and cookies, then try again
+   - You can also try using a private/incognito browser window
 
 ## Using Decap CMS
 

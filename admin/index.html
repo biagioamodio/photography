@@ -6,11 +6,11 @@
   <meta name="github-oauth-client-id" content="Ov23liTdu6AJ5V0W94hs" />
   <title>Content Manager</title>
   <!-- Include the styles for the Decap CMS UI -->
-  <link rel="stylesheet" href="https://unpkg.com/@staticcms/app@^2.0.0/dist/main.css" />
+  <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
 </head>
 <body>
   <!-- Include the script that builds the page and powers Decap CMS -->
-  <script src="https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js"></script>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <script>
     // Check if running locally
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -18,8 +18,27 @@
       console.log('Running in local development mode');
     }
     
-    // Initialize the CMS
-    window.CMS.init();
+    // Initialize the CMS with explicit GitHub OAuth configuration
+    window.CMS.init({
+      config: {
+        backend: {
+          name: 'github',
+          repo: 'biagioamodio/photography',
+          branch: 'main',
+          client_id: 'Ov23liTdu6AJ5V0W94hs',
+          auth_type: 'implicit',
+          auth_endpoint: 'https://github.com/login/oauth/authorize'
+        }
+      }
+    });
+    
+    // Log any initialization errors
+    window.CMS.registerEventListener({
+      name: 'error',
+      handler: function(err) {
+        console.error('CMS Error:', err);
+      }
+    });
   </script>
 </body>
 </html>
