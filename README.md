@@ -18,9 +18,12 @@ The website is designed to be hosted on GitHub Pages from the repository: https:
 
 1. Make sure the repository is public
 2. Push all the website files to the repository
-3. Go to the repository settings > Pages
-4. Under "Source", select "main" branch
-5. Click "Save" to deploy the website
+3. **Important**: Make sure the `.nojekyll` file is in the root of your repository
+   - This file tells GitHub Pages not to process the site with Jekyll
+   - Without this file, directories starting with underscore (like `_includes` and `_data`) won't be accessible
+4. Go to the repository settings > Pages
+5. Under "Source", select "main" branch
+6. Click "Save" to deploy the website
 
 The website will be available at: https://biagioamodio.github.io/photography/
 
