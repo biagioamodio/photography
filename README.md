@@ -24,51 +24,65 @@ The website is designed to be hosted on GitHub Pages from the repository: https:
 
 The website will be available at: https://biagioamodio.github.io/photography/
 
-### 2. Setting up Decap CMS with GitHub OAuth
+### 2. Setting up Decap CMS with Netlify Identity
 
-To allow content editing through Decap CMS, you need to set up GitHub OAuth:
+To allow content editing through Decap CMS, you need to set up Netlify Identity:
 
-1. Go to your GitHub account settings
-2. Navigate to Developer settings > OAuth Apps > New OAuth App
-3. Fill in the following details:
-   - Application name: Biagio Photography CMS
-   - Homepage URL: https://biagioamodio.github.io/photography/
-   - Authorization callback URL: https://biagioamodio.github.io/photography/admin/
-4. Register the application and note the Client ID
-5. Generate a Client Secret and save it securely
+1. **Create a Netlify site**:
+   - Sign up for a Netlify account if you don't have one: https://app.netlify.com/signup
+   - Click "New site from Git"
+   - Choose GitHub as your Git provider
+   - Select your repository (biagioamodio/photography)
+   - Configure build settings (or leave as default if you don't have a build process)
+   - Click "Deploy site"
 
-#### Option 1: Using a Proxy Server (Recommended)
+2. **Enable Netlify Identity**:
+   - Once your site is deployed, go to "Site settings" > "Identity"
+   - Click "Enable Identity"
+   - Under "Registration preferences", choose "Invite only" (recommended)
+   - Under "External providers", add GitHub as a provider (optional)
+   - Set the "Git Gateway" URL to your GitHub repository URL
 
-For security reasons, it's recommended to use a proxy server to handle the OAuth authentication:
+3. **Configure Git Gateway**:
+   - In your Netlify site dashboard, go to "Site settings" > "Identity" > "Services"
+   - Enable "Git Gateway"
+   - This allows the CMS to commit changes to your repository
 
-1. Deploy a Netlify OAuth proxy server:
-   - Fork this repository: https://github.com/decaporg/decap-oauth-provider
-   - Deploy it to Netlify or another hosting service
-   - Set the Client ID and Client Secret as environment variables
+4. **Invite yourself as a user**:
+   - Go to "Identity" > "Invite users"
+   - Enter your email address
+   - Accept the invitation that arrives in your email
 
-2. Update the `admin/config.yml` file to include:
-   ```yaml
-   backend:
-     name: github
-     repo: biagioamodio/photography
-     branch: main
-     base_url: https://your-oauth-proxy-server.netlify.app
-   ```
+5. **Update your Netlify site settings**:
+   - Go to "Site settings" > "General" > "Site details"
+   - Under "Site information", make sure the site name generates a URL you want to use
+   - Optionally, set a custom domain if you have one
 
-#### Option 2: Direct GitHub OAuth (For Development)
+6. **Push the updated files to your GitHub repository**:
+   - The site is configured to use Netlify Identity with the correct paths
+   - Make sure all files are committed and pushed to the main branch
 
-For local development or testing, you can use direct GitHub OAuth:
+### Troubleshooting "Not Found" Issues After Login
 
-1. Create a file named `admin/config.local.yml` with:
-   ```yaml
-   backend:
-     name: github
-     repo: biagioamodio/photography
-     branch: main
-     client_id: your_github_client_id
-   ```
+If you encounter a "not found" error after logging in with GitHub, try these solutions:
 
-2. Note: This approach exposes your Client ID in the frontend code, which is not recommended for production.
+1. **Use the callback page**:
+   - Instead of going directly to `/admin/`, use `/admin/callback.html`
+   - This page will handle authentication and redirect you properly
+
+2. **Check browser console for errors**:
+   - Open your browser's developer tools (F12 or right-click > Inspect)
+   - Look for any error messages in the Console tab
+
+3. **Verify Netlify Identity configuration**:
+   - Make sure your Netlify site is properly connected to your GitHub repository
+   - Check that Git Gateway is enabled and configured correctly
+
+4. **Clear browser cache and cookies**:
+   - Sometimes cached authentication data can cause issues
+   - Clear your browser cache and cookies, then try again
+
+Note: While your site is hosted on GitHub Pages, the authentication and content management are handled by Netlify.
 
 ## Using Decap CMS
 

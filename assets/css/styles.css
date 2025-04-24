@@ -241,6 +241,8 @@ h1, h2, h3 {
   align-items: center;
   justify-content: center;
   height: 70vh;
+  padding-left: 40px;
+    padding-right: 40px;
 }
 
 .serie-description {

@@ -149,6 +149,8 @@ function loadSerieContent(serie) {
   function loadSlide(index) {
     const slide = slides[index];
     const contentDisplay = $('#content-display');
+    const isFirstSlide = index === 0;
+    const isLastSlide = index === slides.length - 1;
     
     // Fade out current content
     contentDisplay.addClass('fade-transition fade-out');
@@ -176,6 +178,21 @@ function loadSerieContent(serie) {
         
         // Set metadata for photo
         $('#photo-metadata').text(slide.content.metadata);
+      }
+      
+      // Handle navigation arrows visibility
+      // Hide left arrow on first slide
+      if (isFirstSlide) {
+        $('.left-arrow-container').hide();
+      } else {
+        $('.left-arrow-container').show();
+      }
+      
+      // Hide right arrow on last slide
+      if (isLastSlide) {
+        $('.right-arrow-container').hide();
+      } else {
+        $('.right-arrow-container').show();
       }
       
       // Update slide indicator
@@ -208,9 +225,25 @@ function loadSerieContent(serie) {
     const serieIndex = window.seriesData.findIndex(s => s.id === serie.id);
     const prevIndex = (serieIndex - 1 + window.seriesData.length) % window.seriesData.length;
     const nextIndex = (serieIndex + 1) % window.seriesData.length;
+    const isFirstSerie = serieIndex === 0;
+    const isLastSerie = serieIndex === window.seriesData.length - 1;
     
+    // Set links
     $('.prev-serie').attr('href', `serie.html?id=${window.seriesData[prevIndex].id}`);
     $('.next-serie').attr('href', `serie.html?id=${window.seriesData[nextIndex].id}`);
+    
+    // Hide/show navigation links based on position
+    if (isFirstSerie) {
+      $('.prev-serie').hide();
+    } else {
+      $('.prev-serie').show();
+    }
+    
+    if (isLastSerie) {
+      $('.next-serie').hide();
+    } else {
+      $('.next-serie').show();
+    }
   }
 }
 
