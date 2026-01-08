@@ -3,16 +3,9 @@
   "content": "Biagio Amodio is a photographer based in Italy, focusing on analog photography and documentary projects. His work explores the relationship between people and their environments, with a particular interest in coastal communities and urban landscapes.\n\nUsing primarily film cameras, Amodio's approach emphasizes careful composition and natural light to create contemplative images that invite viewers to slow down and observe the subtle details of everyday scenes.\n\nHis photographs have been exhibited in galleries across Europe and published in various photography magazines.",
   "links": [
     {
-      "text": "Instagram",
-      "url": "https://instagram.com/biagioamodio"
-    },
-    {
       "text": "Email",
-      "url": "mailto:contact@biagioamodio.com"
-    },
-    {
-      "text": "Exhibitions",
-      "url": "#exhibitions"
+      "url": "mailto:contact@biagioamodio.com",
+      "icon": "email"
     }
   ]
 }

@@ -501,6 +501,26 @@ h1, h2, h3 {
   color: var(--color-secondary);
 }
 
+.about-links a.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.about-links a.contact-link:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.about-links a.contact-link i {
+  font-size: 16px;
+  line-height: 1;
+  position: relative;
+  top: 1px;
+}
+
 /* Photo metadata */
 .metadata {
   color: var(--color-secondary);

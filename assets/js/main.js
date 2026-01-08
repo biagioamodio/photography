@@ -237,6 +237,15 @@ function loadSerieContent(serie) {
     loadSlide(currentSlideIndex);
   });
   
+  // Click handler for serie title - go back to first slide
+  $('.serie-title').css('cursor', 'pointer').click(function(e) {
+    e.preventDefault();
+    if (currentSlideIndex !== 0) {
+      currentSlideIndex = 0;
+      loadSlide(currentSlideIndex);
+    }
+  });
+  
   // Set navigation links for series
   if (window.seriesData) {
     const serieIndex = window.seriesData.findIndex(s => s.id === serie.id);

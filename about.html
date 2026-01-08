@@ -8,6 +8,9 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
   
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <!-- Custom CSS -->
   <link rel="stylesheet" href="assets/css/styles.css" id="custom-css">
   
@@ -98,11 +101,18 @@
         const linksContainer = $("#about-links");
         
         data.links.forEach(function(link) {
-          linksContainer.append(
-            $("<a>")
-              .attr("href", link.url)
-              .text(link.text)
-          );
+          const linkElement = $("<a>")
+            .attr("href", link.url)
+            .addClass("contact-link");
+          
+          // Add icon if specified
+          if (link.icon === "email") {
+            linkElement.append($("<i>").addClass("fa-regular fa-envelope"));
+            linkElement.append(" ");
+          }
+          
+          linkElement.append(link.text);
+          linksContainer.append(linkElement);
         });
       });
       
