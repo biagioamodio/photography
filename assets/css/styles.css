@@ -521,11 +521,14 @@ h1, h2, h3 {
   }
   
   .left-arrow-container a {
-    right: 0;
+    right: auto;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .right-arrow-container a {
-    left: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .serie-navigation {
