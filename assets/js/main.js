@@ -271,89 +271,90 @@ $(document).ready(function() {
 
 // Function to load random images for homepage
 function loadRandomImagesForHomepage() {
-  // If seriesData is not loaded yet, load it first
-  if (!window.seriesData) {
-    // Use baseUrl for loading JSON data
-    const jsonPath = (window.baseUrl || '/') + '_data/series.json';
-    
-    $.getJSON(jsonPath, function(data) {
-      // Handle both formats: direct array or nested under "series" property
-      const seriesData = Array.isArray(data) ? data : (data.series || []);
-      window.seriesData = seriesData;
-      generateRandomImages(seriesData);
-    }).fail(function(jqxhr, textStatus, error) {
-      console.error("Error loading series data:", textStatus, error);
-    });
-  } else {
-    generateRandomImages(window.seriesData);
-  }
+  const jsonPath = (window.baseUrl || '/') + '_data/series.json';
   
-  // Function to generate random images from all series
-  function generateRandomImages(seriesData) {
-    // Extract all image paths from all series (including series ID)
-    const allImages = [];
-    seriesData.forEach(serie => {
-      serie.photos.forEach(photo => {
+  $.getJSON(jsonPath, function(data) {
+    // Handle both formats: direct array or nested under "series" property
+    const seriesData = Array.isArray(data) ? data : (data.series || []);
+    
+    // Collect all images with their series info
+    let allImages = [];
+    seriesData.forEach(function(series) {
+      series.photos.forEach(function(photo) {
         allImages.push({
           image: photo.image,
-          title: serie.title,
-          seriesId: serie.id
+          metadata: photo.metadata,
+          seriesId: series.id,
+          seriesTitle: series.title
         });
       });
     });
     
-    // Shuffle the array of images
+    // Fisher-Yates shuffle algorithm for true randomization
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+    
+    // Shuffle and select 18 images (or all if less than 18)
     const shuffledImages = shuffleArray(allImages);
+    const selectedImages = shuffledImages.slice(0, 18);
     
-    // Select the first 15 images (or all if less than 15)
-    const selectedImages = shuffledImages.slice(0, 15);
+    // Get the masonry grid container
+    const $grid = $('.masonry-grid');
     
-    // Generate grid items for each selected image
-    const grid = $('.masonry-grid');
+    // Clear existing content
+    $grid.empty();
     
-    selectedImages.forEach(item => {
-      const gridItem = $('<div class="grid-item">');
-      // Store series data on the grid item
-      gridItem.data('series-id', item.seriesId);
-      gridItem.data('series-title', item.title);
-      
-      // Use baseUrl for image paths if they're relative
-      let imgSrc = item.image;
+    // Create 3 column divs
+    const $column1 = $('<div class="masonry-column"></div>');
+    const $column2 = $('<div class="masonry-column"></div>');
+    const $column3 = $('<div class="masonry-column"></div>');
+    
+    // Distribute images across the 3 columns
+    // Using round-robin distribution: 0->col1, 1->col2, 2->col3, 3->col1, etc.
+    selectedImages.forEach(function(imageData, index) {
+      // Construct proper image path
+      let imgSrc = imageData.image;
       if (imgSrc.startsWith('assets/')) {
         imgSrc = (window.baseUrl || '/') + imgSrc;
       }
-      gridItem.data('image-src', imgSrc);
       
-      const img = $('<img>').attr('src', imgSrc).attr('alt', item.title);
+      // Create grid item with data attributes for modal
+      const $item = $('<div class="grid-item">')
+        .attr('data-image-src', imgSrc)
+        .attr('data-series-id', imageData.seriesId)
+        .attr('data-series-title', imageData.seriesTitle);
       
-      gridItem.append(img);
-      grid.append(gridItem);
+      const $img = $('<img>')
+        .attr('src', imgSrc)
+        .attr('alt', imageData.seriesTitle);
+      
+      $item.append($img);
+      
+      // Distribute to columns using modulo
+      const columnIndex = index % 3;
+      if (columnIndex === 0) {
+        $column1.append($item);
+      } else if (columnIndex === 1) {
+        $column2.append($item);
+      } else {
+        $column3.append($item);
+      }
     });
     
-    // Initialize Masonry after images are loaded
-    $('.masonry-grid').imagesLoaded(function() {
-      $('.masonry-grid').masonry({
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-sizer',
-        percentPosition: true,
-        gutter: 8,
-        transitionDuration: '0.2s'
-      });
-    });
+    // Append columns to grid
+    $grid.append($column1, $column2, $column3);
     
-    // Initialize modal click handlers after images are generated
+    // Initialize the image modal after grid is populated
     initializeImageModal();
-  }
-  
-  // Function to shuffle an array (Fisher-Yates algorithm)
-  function shuffleArray(array) {
-    const newArray = [...array];
-    for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-    return newArray;
-  }
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error('Error loading series data:', textStatus, errorThrown);
+  });
 }
 
 // ===== Image Modal Functions =====

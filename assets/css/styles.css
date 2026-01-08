@@ -128,43 +128,63 @@ h1, h2, h3 {
   color: var(--color-primary);
 }
 
-/* Homepage - Masonry grid */
+/* Homepage - Masonry grid with 3 explicit columns */
 .masonry-grid {
+  display: flex;
+  gap: 8px;
   margin: 0 auto;
+  padding: 10px 0;
 }
 
-.grid-sizer,
-.grid-item {
-  width: 32%;
+.grid-sizer {
+  display: none;
+}
+
+.masonry-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .grid-item {
-  float: left;
-  padding: 0.66%;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.grid-item:hover {
+  opacity: 0.85;
 }
 
 .grid-item img {
-  display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
+  display: block;
 }
 
-/* No hover effects on masonry grid */
-
-/* Adjust for smaller screens */
-@media (max-width: 767px) {
-  .grid-sizer,
-  .grid-item {
-    width: 50%;
+/* Responsive masonry grid */
+@media (max-width: 991px) {
+  .masonry-grid {
+    flex-wrap: wrap;
+  }
+  
+  .masonry-column {
+    flex: 0 0 calc(50% - 4px);
+  }
+  
+  .masonry-column:nth-child(3) {
+    display: none;
   }
 }
 
-/* Adjust for very small screens */
-@media (max-width: 480px) {
-  .grid-sizer,
-  .grid-item {
-    width: 100%;
+@media (max-width: 576px) {
+  .masonry-column {
+    flex: 0 0 100%;
+  }
+  
+  .masonry-column:nth-child(2),
+  .masonry-column:nth-child(3) {
+    display: none;
   }
 }
 

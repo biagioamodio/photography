@@ -70,10 +70,6 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
   
-  <!-- Masonry JS -->
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
-  
   <!-- Custom JS -->
   <script src="assets/js/main.js"></script>
   
@@ -84,22 +80,6 @@
       $("#navbar-container").load(window.baseUrl + "_includes/navbar.html", function() {
         // Set active nav item
         $("#nav-home").addClass("active");
-      });
-      
-      // Initialize Masonry after images are loaded
-      var $grid = $('.masonry-grid').imagesLoaded(function() {
-        $grid.masonry({
-          itemSelector: '.grid-item',
-          columnWidth: '.grid-sizer',
-          percentPosition: true,
-          gutter: 8,
-          transitionDuration: '0.2s'
-        });
-        
-        // Re-layout Masonry when window is resized
-        $(window).on('resize', function() {
-          $grid.masonry('layout');
-        });
       });
       
       // Ensure content is visible when page loads (counteract any fade-out from previous page)
