@@ -329,8 +329,32 @@ h1, h2, h3 {
 .serie-description {
   font-family: 'News Cycle', sans-serif;
   text-align: justify;
-  max-width: 80%;
+  max-width: 100%;
+  max-height: 70vh;
+  overflow-y: auto;
   margin: 0 auto;
+  padding-right: 10px;
+  /* Hide scrollbar by default, show on hover */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.serie-description::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+.serie-description::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+.serie-description:hover {
+  scrollbar-width: thin; /* Firefox - show on hover */
+}
+
+.serie-description:hover::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
 }
 
 .slide-indicator {
@@ -513,6 +537,26 @@ h1, h2, h3 {
   .prev-serie, .next-serie {
     font-size: 14px;
     margin: 10px 0;
+  }
+  
+  /* Keep text alignment for series navigation */
+  .prev-serie {
+    text-align: right;
+  }
+  
+  .next-serie {
+    text-align: left;
+  }
+  
+  /* Add lateral padding to serie title */
+  .serie-title {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+  
+  /* Limit serie description height for mobile and enable scroll */
+  .serie-description {
+    max-height: 60vh;
   }
 }
 
