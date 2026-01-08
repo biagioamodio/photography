@@ -1,4 +1,7 @@
 $(document).ready(function() {
+  // Initialize theme from localStorage or default to light
+  initializeTheme();
+  
   // Wrap main content in page-content div for transitions
   $('.container-fluid > .row').wrapAll('<div class="page-content fade-transition"></div>');
   
@@ -428,4 +431,36 @@ function closeImageModal() {
   modal.removeClass('active');
   // Re-enable body scroll
   $('body').css('overflow', '');
+}
+
+// ===== Theme Toggle Functions =====
+function initializeTheme() {
+  // Check for saved theme preference in localStorage
+  const savedTheme = localStorage.getItem('theme');
+  
+  if (savedTheme) {
+    // Apply saved theme
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else {
+    // Default to light mode
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+  
+  // Add click handler for theme toggle button
+  $(document).on('click', '#theme-toggle', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleTheme();
+  });
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  // Apply new theme
+  document.documentElement.setAttribute('data-theme', newTheme);
+  
+  // Save preference to localStorage
+  localStorage.setItem('theme', newTheme);
 }

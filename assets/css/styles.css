@@ -2,6 +2,18 @@
 :root {
   --color-primary: #000000;
   --color-secondary: #ababab;
+  --color-background: #ffffff;
+  --color-toggle-border: #ababab;
+  --color-toggle-slider: #ababab;
+}
+
+/* Dark mode color variables */
+[data-theme="dark"] {
+  --color-primary: #ffffff;
+  --color-secondary: #555555;
+  --color-background: #000000;
+  --color-toggle-border: #555555;
+  --color-toggle-slider: #555555;
 }
 
 /* Color utility classes */
@@ -55,10 +67,11 @@ html, body {
   margin: 0;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: white;
+  background-color: var(--color-background);
   color: var(--color-primary);
   font-family: 'News Cycle', sans-serif;
   font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
   /* Allow scrolling */
 }
 
@@ -69,9 +82,10 @@ html, body {
 
 /* Navigation */
 .navbar {
-  background-color: white;
+  background-color: var(--color-background);
   border: none;
   margin-bottom: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .navbar .container-fluid {
@@ -85,16 +99,33 @@ html, body {
   text-transform: uppercase;
 }
 
+.navbar-nav li {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+}
+
 .navbar-nav li a {
   font-family: 'News Cycle', sans-serif;
   font-size: 20px;
   color: var(--color-secondary);
   transition: color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  line-height: 1;
+  padding: 0 15px;
+  position: relative;
+  top: -4px;
 }
 
-.navbar-nav li a:hover {
+.navbar-nav li a:hover,
+.navbar-nav li a:focus,
+.navbar-nav li a:active {
   color: var(--color-primary);
-  background-color: transparent;
+  background-color: transparent !important;
+  outline: none;
 }
 
 .navbar-nav li a.active {
@@ -102,6 +133,7 @@ html, body {
   text-decoration: underline;
   text-underline-offset: 3px;
   font-weight: bold;
+  background-color: transparent !important;
 }
 
 /* Responsive navigation */
@@ -592,10 +624,11 @@ h1, h2, h3 {
   max-height: 90vh;
   padding: 30px;
   box-shadow: none;
-  background: white;
+  background: var(--color-background);
   border: none;
   border-radius: 0;
   outline: none;
+  transition: background-color 0.3s ease;
 }
 
 .modal-close {
@@ -750,5 +783,105 @@ h1, h2, h3 {
   .modal-series-link {
     font-size: 14px;
     padding: 8px 15px;
+  }
+}
+
+/* ===== Theme Toggle Button ===== */
+.theme-toggle-container {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  margin-left: 15px;
+  padding: 0 15px;
+}
+
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 34px;
+  height: 17px;
+  padding: 2px;
+  background-color: transparent;
+  border: 1.5px solid var(--color-toggle-border);
+  border-radius: 9px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+}
+
+.theme-toggle:focus {
+  outline: none;
+}
+
+.theme-icon {
+  width: 11px;
+  height: 11px;
+  color: var(--color-secondary);
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.sun-icon {
+  margin-left: 0px;
+}
+
+.moon-icon {
+  margin-right: 0px;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  background-color: var(--color-toggle-slider);
+  border-radius: 50%;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Dark mode toggle state */
+[data-theme="dark"] .toggle-slider {
+  transform: translateY(-50%) translateX(16px);
+}
+
+/* Hide active icon behind slider */
+.theme-toggle .sun-icon {
+  opacity: 0;
+}
+
+.theme-toggle .moon-icon {
+  opacity: 1;
+}
+
+[data-theme="dark"] .theme-toggle .sun-icon {
+  opacity: 1;
+}
+
+[data-theme="dark"] .theme-toggle .moon-icon {
+  opacity: 0;
+}
+
+/* Dark mode specific styles for series overlay */
+[data-theme="dark"] .series-title {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark mode specific styles for modal link text */
+[data-theme="dark"] .modal-series-link {
+  color: black;
+}
+
+/* Responsive theme toggle */
+@media (max-width: 767px) {
+  .theme-toggle-container {
+    margin-left: 10px;
+    margin-top: 5px;
   }
 }
