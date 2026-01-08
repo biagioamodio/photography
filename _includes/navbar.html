@@ -7,9 +7,6 @@
       </script>
     </div>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#" id="nav-home">home</a></li>
-      <li><a href="#" id="nav-about">about</a></li>
-      <li><a href="#" id="nav-series">series</a></li>
       <li class="theme-toggle-container">
         <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
           <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -29,6 +26,9 @@
           </svg>
         </button>
       </li>
+      <li><a href="#" id="nav-home">home</a></li>
+      <li><a href="#" id="nav-about">about</a></li>
+      <li><a href="#" id="nav-series">series</a></li>
       <script>
         // Update navigation links with baseUrl
         document.getElementById('nav-home').href = (window.baseUrl || '/') + 'index.html';
