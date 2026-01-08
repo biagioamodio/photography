@@ -587,6 +587,10 @@ h1, h2, h3 {
   padding-left: 20px;
 }
 
+.about-content p {
+  text-align: justify;
+}
+
 /* Responsive about page */
 @media (max-width: 767px) {
   .about-container {
