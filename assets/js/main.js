@@ -290,13 +290,14 @@ function loadRandomImagesForHomepage() {
   
   // Function to generate random images from all series
   function generateRandomImages(seriesData) {
-    // Extract all image paths from all series
+    // Extract all image paths from all series (including series ID)
     const allImages = [];
     seriesData.forEach(serie => {
       serie.photos.forEach(photo => {
         allImages.push({
           image: photo.image,
-          title: serie.title
+          title: serie.title,
+          seriesId: serie.id
         });
       });
     });
@@ -312,11 +313,16 @@ function loadRandomImagesForHomepage() {
     
     selectedImages.forEach(item => {
       const gridItem = $('<div class="grid-item">');
+      // Store series data on the grid item
+      gridItem.data('series-id', item.seriesId);
+      gridItem.data('series-title', item.title);
+      
       // Use baseUrl for image paths if they're relative
       let imgSrc = item.image;
       if (imgSrc.startsWith('assets/')) {
         imgSrc = (window.baseUrl || '/') + imgSrc;
       }
+      gridItem.data('image-src', imgSrc);
       
       const img = $('<img>').attr('src', imgSrc).attr('alt', item.title);
       
@@ -334,6 +340,9 @@ function loadRandomImagesForHomepage() {
         transitionDuration: '0.2s'
       });
     });
+    
+    // Initialize modal click handlers after images are generated
+    initializeImageModal();
   }
   
   // Function to shuffle an array (Fisher-Yates algorithm)
@@ -345,4 +354,68 @@ function loadRandomImagesForHomepage() {
     }
     return newArray;
   }
+}
+
+// ===== Image Modal Functions =====
+function initializeImageModal() {
+  const modal = $('#image-modal');
+  const modalImage = $('#modal-image');
+  const modalTitle = $('.modal-series-title');
+  const modalLink = $('.modal-series-link');
+  
+  // Click handler for grid items
+  $('.masonry-grid').on('click', '.grid-item', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const $item = $(this);
+    const imageSrc = $item.data('image-src');
+    const seriesId = $item.data('series-id');
+    const seriesTitle = $item.data('series-title');
+    
+    // Set modal content
+    modalImage.attr('src', imageSrc);
+    modalImage.attr('alt', seriesTitle);
+    modalTitle.text(seriesTitle);
+    modalLink.attr('href', (window.baseUrl || '/') + 'serie.html?id=' + seriesId);
+    
+    // Open modal
+    openImageModal();
+  });
+  
+  // Close modal on overlay click
+  $('.modal-overlay').on('click', function() {
+    closeImageModal();
+  });
+  
+  // Close modal on close button click
+  $('.modal-close').on('click', function() {
+    closeImageModal();
+  });
+  
+  // Close modal on ESC key
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape' && modal.hasClass('active')) {
+      closeImageModal();
+    }
+  });
+  
+  // Prevent modal content click from closing the modal
+  $('.modal-content').on('click', function(e) {
+    e.stopPropagation();
+  });
+}
+
+function openImageModal() {
+  const modal = $('#image-modal');
+  modal.addClass('active');
+  // Prevent body scroll when modal is open
+  $('body').css('overflow', 'hidden');
+}
+
+function closeImageModal() {
+  const modal = $('#image-modal');
+  modal.removeClass('active');
+  // Re-enable body scroll
+  $('body').css('overflow', '');
 }

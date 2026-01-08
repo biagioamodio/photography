@@ -22,8 +22,6 @@
       document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css';
     }
   </script>
-  
-  <!-- GitHub OAuth is used for admin authentication -->
 </head>
 <body>
   <div class="container-fluid">
@@ -47,6 +45,22 @@
       
       <!-- Right Column - Empty -->
       <div class="col-xs-2"></div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Image Modal -->
+  <div id="image-modal" class="image-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Close modal">&times;</button>
+      <div class="modal-image-container">
+        <img id="modal-image" src="" alt="">
+      </div>
+      <div class="modal-info">
+        <p class="modal-series-text">from the series</p>
+        <h2 class="modal-series-title"></h2>
+        <a href="#" class="modal-series-link">View Series →</a>
+      </div>
     </div>
   </div>
 
