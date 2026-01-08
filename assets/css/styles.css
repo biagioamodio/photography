@@ -551,10 +551,11 @@ h1, h2, h3 {
     text-align: left;
   }
   
-  /* Add lateral padding to serie title */
+  /* Add lateral padding to serie title and remove top margin */
   .serie-title {
     padding-left: 50px;
     padding-right: 50px;
+    margin-top: 5px;
   }
   
   /* Limit serie description height for mobile and enable scroll */
