@@ -665,6 +665,12 @@ async function publish() {
     const result = await res.json();
     
     if (!res.ok) {
+      // Check if it's an authentication error
+      if (result.needsAuth || res.status === 401) {
+        hideLoading();
+        showAuthHelp();
+        return;
+      }
       throw new Error(result.error || 'Publish failed');
     }
     
@@ -674,6 +680,55 @@ async function publish() {
     showToast(err.message, 'error');
   }
   hideLoading();
+}
+
+// Show authentication help modal
+function showAuthHelp() {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.id = 'auth-help-modal';
+  modal.innerHTML = `
+    <div class="modal-backdrop" onclick="closeAuthHelp()"></div>
+    <div class="modal-content bg-white rounded-xl p-6 w-full max-w-lg shadow-2xl">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900">🔐 GitHub Setup Required</h3>
+      <div class="space-y-4 text-gray-700">
+        <p>To publish changes, you need to set up GitHub authentication. This is a one-time setup.</p>
+        
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <p class="font-medium text-blue-800 mb-2">Quick Steps:</p>
+          <ol class="list-decimal list-inside space-y-1 text-sm text-blue-700">
+            <li>Go to GitHub → Settings → Developer settings → Personal access tokens</li>
+            <li>Create a new token with "repo" permissions</li>
+            <li>Copy the token (starts with ghp_...)</li>
+            <li>Try publishing again - use the token as password</li>
+          </ol>
+        </div>
+        
+        <p class="text-sm text-gray-500">
+          📄 Full instructions in Italian are available in:<br>
+          <code class="bg-gray-100 px-2 py-1 rounded">cms/SETUP_GITHUB.md</code>
+        </p>
+        
+        <div class="flex gap-3 justify-end pt-2">
+          <a href="https://github.com/settings/tokens/new" target="_blank" 
+             class="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg font-medium">
+            Open GitHub Settings
+          </a>
+          <button onclick="closeAuthHelp()" class="px-4 py-2 text-gray-500 hover:text-gray-700">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function closeAuthHelp() {
+  const modal = document.getElementById('auth-help-modal');
+  if (modal) {
+    modal.remove();
+  }
 }
 
 // ==================== Utilities ====================

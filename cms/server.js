@@ -429,6 +429,18 @@ app.post('/api/publish', async (req, res) => {
     res.json({ success: true, message: 'Changes published successfully!' });
   } catch (err) {
     console.error('Publish error:', err);
+    
+    // Check for authentication errors
+    const errorMsg = err.message || '';
+    if (errorMsg.includes('Authentication failed') || 
+        errorMsg.includes('Invalid username or token') ||
+        errorMsg.includes('Password authentication')) {
+      return res.status(401).json({ 
+        error: 'GitHub authentication required. Please see the SETUP_GITHUB.md file in the cms folder for instructions.',
+        needsAuth: true
+      });
+    }
+    
     res.status(500).json({ error: `Failed to publish: ${err.message}` });
   }
 });
