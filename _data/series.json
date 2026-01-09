@@ -1,32 +1,5 @@
 [
   {
-    "id": "winter-isolation",
-    "title": "Winter Isolation",
-    "description": "A series exploring solitude and stillness in winter landscapes. These photographs capture the quiet beauty of snow-covered scenes, where the absence of human presence creates a sense of peaceful isolation.\n\nTaken during the coldest months of the year, these images invite viewers to experience the serene emptiness that winter brings. The minimal color palette and stark contrasts emphasize the simplicity and purity of these environments.\n\nThrough this work, I aim to convey both the harshness and the tranquility of winter, revealing how isolation can be both challenging and meditative.",
-    "photos": [
-      {
-        "image": "assets/uploads/01_01.jpg",
-        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
-      },
-      {
-        "image": "assets/uploads/01_02.jpg",
-        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
-      },
-      {
-        "image": "assets/uploads/01_03.jpg",
-        "metadata": "Canon F, Rangefinder, Kodak 200, 1:5.6"
-      },
-      {
-        "image": "assets/uploads/01_04.jpg",
-        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
-      },
-      {
-        "image": "assets/uploads/01_05.jpg",
-        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
-      }
-    ]
-  },
-  {
     "id": "coastal-memories",
     "title": "Coastal Memories",
     "description": "Capturing the essence of coastal life and maritime heritage, this series documents the relationship between people and the sea. These photographs explore fishing communities, harbor towns, and the weathered textures of seaside architecture.\n\nEach image often represents a fragment of memory, a moment preserved from places where time seems to move differently. The black and white treatment emphasizes form, texture, and the play of light across water and weathered surfaces.\n\nThrough this work, I seek to honor traditional maritime cultures while acknowledging their gradual transformation in the modern world. These images serve as both documentation and poetic interpretation of coastal existence.",
@@ -89,6 +62,33 @@
       {
         "image": "assets/uploads/03_05.jpg",
         "metadata": "Leica M6, 35mm, Portra 400, 1:1.4"
+      }
+    ]
+  },
+  {
+    "id": "winter-isolation",
+    "title": "Winter Isolation",
+    "description": "A series exploring solitude and stillness in winter landscapes. These photographs capture the quiet beauty of snow-covered scenes, where the absence of human presence creates a sense of peaceful isolation.\n\nTaken during the coldest months of the year, these images invite viewers to experience the serene emptiness that winter brings. The minimal color palette and stark contrasts emphasize the simplicity and purity of these environments.\n\nThrough this work, I aim to convey both the harshness and the tranquility of winter, revealing how isolation can be both challenging and meditative.",
+    "photos": [
+      {
+        "image": "assets/uploads/01_01.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
+      },
+      {
+        "image": "assets/uploads/01_02.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
+      },
+      {
+        "image": "assets/uploads/01_03.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:5.6"
+      },
+      {
+        "image": "assets/uploads/01_04.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:4"
+      },
+      {
+        "image": "assets/uploads/01_05.jpg",
+        "metadata": "Canon F, Rangefinder, Kodak 200, 1:2.8"
       }
     ]
   },
