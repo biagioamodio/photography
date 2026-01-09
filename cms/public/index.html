@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biagio Photography - CMS</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Quill Editor CSS -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Sortable.js for drag and drop -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-xl font-semibold">
+        <span class="text-gray-500">📷</span> Biagio Photography CMS
+      </h1>
+      <div class="flex items-center gap-4">
+        <div id="git-status" class="text-sm text-gray-400">
+          Checking status...
+        </div>
+        <button id="publish-btn" onclick="publish()" 
+                class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
+          <span>📤</span> Publish Changes
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Navigation Tabs -->
+  <nav class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex gap-1">
+        <button onclick="showView('series-list')" class="tab-btn active" data-tab="series-list">
+          📚 Series
+        </button>
+        <button onclick="showView('about')" class="tab-btn" data-tab="about">
+          👤 About Page
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Series List View -->
+    <div id="series-list-view" class="view">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold">Photo Series</h2>
+        <button onclick="showCreateSeriesModal()" 
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          + New Series
+        </button>
+      </div>
+      
+      <p class="text-gray-400 text-sm mb-4">Drag to reorder series. Click to edit.</p>
+      
+      <div id="series-grid" class="grid gap-4">
+        <!-- Series cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Series Edit View -->
+    <div id="series-edit-view" class="view hidden">
+      <div class="flex items-center gap-4 mb-6">
+        <button onclick="showView('series-list')" class="text-gray-500 hover:text-gray-900">
+          ← Back to Series
+        </button>
+        <h2 class="text-2xl font-semibold" id="edit-series-title">Edit Series</h2>
+      </div>
+      
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Left Column: Series Info -->
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+            <input type="text" id="series-title-input" 
+                   class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <div id="series-description-editor" class="bg-white rounded-lg"></div>
+          </div>
+          
+          <button onclick="saveSeriesInfo()" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            Save Changes
+          </button>
+          
+          <div class="pt-4 border-t border-gray-200">
+            <button onclick="deleteCurrentSeries()" 
+                    class="text-red-500 hover:text-red-600 text-sm">
+              🗑️ Delete this series
+            </button>
+          </div>
+        </div>
+        
+        <!-- Right Column: Photos -->
+        <div>
+          <h3 class="text-lg font-medium mb-4">Photos</h3>
+          
+          <!-- Upload Area -->
+          <div id="photo-upload-area" 
+               class="rounded-lg p-8 text-center mb-4 transition-colors cursor-pointer"
+               onclick="document.getElementById('photo-input').click()">
+            <div class="text-4xl mb-2">📁</div>
+            <p class="text-gray-500">Drop photos here or click to upload</p>
+            <input type="file" id="photo-input" multiple accept="image/*" class="hidden" onchange="uploadPhotos(event)">
+          </div>
+          
+          <label class="flex items-center gap-2 text-sm text-gray-600 mb-4">
+            <input type="checkbox" id="optimize-checkbox" checked class="rounded">
+            Optimize images for web (recommended)
+          </label>
+          
+          <p class="text-gray-500 text-sm mb-2">Drag to reorder photos</p>
+          
+          <div id="photos-grid" class="grid grid-cols-2 gap-3">
+            <!-- Photo cards will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Edit View -->
+    <div id="about-view" class="view hidden">
+      <h2 class="text-2xl font-semibold mb-6">About Page</h2>
+      
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Left Column: Image -->
+        <div>
+          <h3 class="text-lg font-medium mb-4">Profile Image</h3>
+          <div class="relative">
+            <img id="about-image-preview" src="" alt="Profile" 
+                 class="w-full aspect-square object-cover rounded-lg bg-gray-100">
+            <button onclick="document.getElementById('about-image-input').click()"
+                    class="absolute bottom-4 right-4 bg-white/90 hover:bg-white text-gray-700 px-4 py-2 rounded-lg text-sm shadow-md">
+              Change Image
+            </button>
+            <input type="file" id="about-image-input" accept="image/*" class="hidden" onchange="uploadAboutImage(event)">
+          </div>
+          
+          <label class="flex items-center gap-2 text-sm text-gray-600 mt-2">
+            <input type="checkbox" id="about-optimize-checkbox" checked class="rounded">
+            Optimize image for web
+          </label>
+        </div>
+        
+        <!-- Right Column: Content -->
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+            <div id="about-content-editor" class="bg-white rounded-lg"></div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Contact Links</label>
+            <div id="links-container" class="space-y-2">
+              <!-- Links will be inserted here -->
+            </div>
+            <button onclick="addLink()" class="text-blue-600 hover:text-blue-700 text-sm mt-2">
+              + Add Link
+            </button>
+          </div>
+          
+          <button onclick="saveAbout()" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Series Modal -->
+  <div id="create-series-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="hideCreateSeriesModal()"></div>
+    <div class="modal-content bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900">Create New Series</h3>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+          <input type="text" id="new-series-title" 
+                 class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                 placeholder="e.g., Summer Landscapes">
+        </div>
+        <div class="flex gap-3 justify-end">
+          <button onclick="hideCreateSeriesModal()" class="px-4 py-2 text-gray-500 hover:text-gray-700">
+            Cancel
+          </button>
+          <button onclick="createSeries()" 
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Edit Modal -->
+  <div id="photo-edit-modal" class="modal hidden">
+    <div class="modal-backdrop" onclick="hidePhotoEditModal()"></div>
+    <div class="modal-content bg-white rounded-xl p-6 w-full max-w-lg shadow-2xl">
+      <h3 class="text-xl font-semibold mb-4 text-gray-900">Edit Photo</h3>
+      <img id="photo-edit-preview" src="" alt="" class="w-full rounded-lg mb-4">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Metadata (camera, film, aperture, etc.)</label>
+          <input type="text" id="photo-metadata-input" 
+                 class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                 placeholder="e.g., Canon AE-1, Portra 400, f/2.8">
+        </div>
+        <div class="flex gap-3 justify-between">
+          <button onclick="deletePhoto()" class="px-4 py-2 text-red-500 hover:text-red-600">
+            🗑️ Delete
+          </button>
+          <div class="flex gap-3">
+            <button onclick="hidePhotoEditModal()" class="px-4 py-2 text-gray-500 hover:text-gray-700">
+              Cancel
+            </button>
+            <button onclick="savePhotoMetadata()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">
+    <span id="toast-message"></span>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loading-message">Loading...</p>
+  </div>
+
+  <!-- Quill Editor JS -->
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  
+  <!-- App JS -->
+  <script src="app.js"></script>
+</body>
+</html>
