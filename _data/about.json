@@ -1,11 +1,15 @@
 {
   "image": "assets/uploads/000045500005.jpg",
-  "content": "Biagio Amodio is a photographer currently based in London, focusing on analog photography and documentary projects. His work can really explore the relationship between people and their environments, with a particular interest in coastal communities and urban landscapes.\n\nCioe aspe’ nel senso.\n\nUsing primarily film cameras, Amodio's approach emphasizes careful composition and natural light to create contemplative images that invite viewers to slow down and observe the subtle details of everyday scenes.\n\nHis photographs have been exhibited in galleries across Europe and published in various photography magazines.",
+  "content": "Ciao! I'm an italian photographer based in London.\n\nI feel there’s an invisible reality hiding behind the one I see with my eyes. It speaks a forgotten language and moves at a different speed.\n\nWith my work, I seek to get in touch with that realm and my camera becomes a tool for meditation, while developing the negatives is a sacred ceremony, a way to be present, to slow down and witness beauty unfold.\n\nEach photograph is an attempt to hold onto something intangible, a glimpse of my inner world reflected in the mirror of the material one.",
   "links": [
     {
       "text": "Email",
       "url": "mailto:contact@biagioamodio.com",
       "icon": "email"
+    },
+    {
+      "text": "Substack",
+      "url": "https://substack.com/@biagioamodio?"
     }
   ]
 }
