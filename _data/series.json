@@ -1,40 +1,48 @@
 [
   {
     "id": "coastal-memories",
-    "title": "Coastal Memories",
+    "title": "Alien Sea",
     "description": "Capturing the essence of coastal life and maritime heritage, this series documents the relationship between people and the sea. These photographs explore fishing communities, harbor towns, and the weathered textures of seaside architecture.\n\nEach image often represents a fragment of memory, a moment preserved from places where time seems to move differently. The black and white treatment emphasizes form, texture, and the play of light across water and weathered surfaces.\n\nThrough this work, I seek to honor traditional maritime cultures while acknowledging their gradual transformation in the modern world. These images serve as both documentation and poetic interpretation of coastal existence.",
     "photos": [
       {
-        "image": "assets/uploads/02_01.jpg",
-        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:8"
-      },
-      {
-        "image": "assets/uploads/02_02.jpg",
-        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:5.6"
-      },
-      {
-        "image": "assets/uploads/02_03.jpg",
-        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:4"
-      },
-      {
         "image": "assets/uploads/02_04.jpg",
-        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:2.8"
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/02_02b.jpg",
+        "metadata": ""
       },
       {
         "image": "assets/uploads/02_05.jpg",
-        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:4"
+        "metadata": ""
       },
       {
         "image": "assets/uploads/02_06.jpg",
-        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:5.6"
-      },
-      {
-        "image": "assets/uploads/02_07.jpg",
-        "metadata": "Nikon FM2, 35mm, Ilford HP5, 1:8"
+        "metadata": ""
       },
       {
         "image": "assets/uploads/02_08.jpg",
-        "metadata": "Nikon FM2, 50mm, Ilford HP5, 1:4"
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/02_07.jpg",
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/000026200031.jpg",
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/000026200023.jpg",
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/000026200029.jpg",
+        "metadata": ""
+      },
+      {
+        "image": "assets/uploads/000026200030.jpg",
+        "metadata": ""
       }
     ]
   },
