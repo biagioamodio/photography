@@ -130,23 +130,35 @@
     "photos": [
       {
         "image": "assets/uploads/000027500007.jpg",
-        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:2.8"
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
       },
       {
-        "image": "assets/uploads/000027500016.jpg",
-        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:4"
+        "image": "assets/uploads/000027500033.jpg",
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
+      },
+      {
+        "image": "assets/uploads/000027500010.jpg",
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
       },
       {
         "image": "assets/uploads/000027500027.jpg",
-        "metadata": "Hasselblad 500C/M, 50mm, Kodak Portra 160, 1:4"
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
       },
       {
-        "image": "assets/uploads/000027500031.jpg",
-        "metadata": "Hasselblad 500C/M, 80mm, Kodak Portra 160, 1:2.8"
+        "image": "assets/uploads/000027500029.jpg",
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
       },
       {
         "image": "assets/uploads/000027500035.jpg",
-        "metadata": "Hasselblad 500C/M, 50mm, Kodak Portra 160, 1:4"
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
+      },
+      {
+        "image": "assets/uploads/000027500031.jpg",
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
+      },
+      {
+        "image": "assets/uploads/000027500016.jpg",
+        "metadata": "Canon P, Canon 50mm f/1.2, Kodak UltraMax 400"
       }
     ]
   },
