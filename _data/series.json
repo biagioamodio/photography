@@ -6,39 +6,75 @@
     "photos": [
       {
         "image": "assets/uploads/02_04.jpg",
-        "metadata": { "camera": "Canon P Rangefinder", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P Rangtfinder",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/02_02b.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/02_05.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/02_06.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/02_08.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000026200031.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000026200023.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000026200029.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000026200030.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       }
     ]
   },
@@ -49,23 +85,43 @@
     "photos": [
       {
         "image": "assets/uploads/03_01.jpg",
-        "metadata": { "camera": "Leica M6", "lens": "35mm", "filmRoll": "Portra 400" }
+        "metadata": {
+          "camera": "Leica M6",
+          "lens": "35mm",
+          "filmRoll": "Portra 400"
+        }
       },
       {
         "image": "assets/uploads/03_02.jpg",
-        "metadata": { "camera": "Leica M6", "lens": "50mm", "filmRoll": "Portra 400" }
+        "metadata": {
+          "camera": "Leica M6",
+          "lens": "50mm",
+          "filmRoll": "Portra 400"
+        }
       },
       {
         "image": "assets/uploads/03_03.jpg",
-        "metadata": { "camera": "Leica M6", "lens": "35mm", "filmRoll": "Portra 400" }
+        "metadata": {
+          "camera": "Leica M6",
+          "lens": "35mm",
+          "filmRoll": "Portra 400"
+        }
       },
       {
         "image": "assets/uploads/03_04.jpg",
-        "metadata": { "camera": "Leica M6", "lens": "50mm", "filmRoll": "Portra 400" }
+        "metadata": {
+          "camera": "Leica M6",
+          "lens": "50mm",
+          "filmRoll": "Portra 400"
+        }
       },
       {
         "image": "assets/uploads/03_05.jpg",
-        "metadata": { "camera": "Leica M6", "lens": "35mm", "filmRoll": "Portra 400" }
+        "metadata": {
+          "camera": "Leica M6",
+          "lens": "35mm",
+          "filmRoll": "Portra 400"
+        }
       }
     ]
   },
@@ -76,23 +132,43 @@
     "photos": [
       {
         "image": "assets/uploads/01_01.jpg",
-        "metadata": { "camera": "Canon F", "lens": "Rangefinder", "filmRoll": "Kodak 200" }
+        "metadata": {
+          "camera": "Canon F",
+          "lens": "Rangefinder",
+          "filmRoll": "Kodak 200"
+        }
       },
       {
         "image": "assets/uploads/01_02.jpg",
-        "metadata": { "camera": "Canon F", "lens": "Rangefinder", "filmRoll": "Kodak 200" }
+        "metadata": {
+          "camera": "Canon F",
+          "lens": "Rangefinder",
+          "filmRoll": "Kodak 200"
+        }
       },
       {
         "image": "assets/uploads/01_03.jpg",
-        "metadata": { "camera": "Canon F", "lens": "Rangefinder", "filmRoll": "Kodak 200" }
+        "metadata": {
+          "camera": "Canon F",
+          "lens": "Rangefinder",
+          "filmRoll": "Kodak 200"
+        }
       },
       {
         "image": "assets/uploads/01_04.jpg",
-        "metadata": { "camera": "Canon F", "lens": "Rangefinder", "filmRoll": "Kodak 200" }
+        "metadata": {
+          "camera": "Canon F",
+          "lens": "Rangefinder",
+          "filmRoll": "Kodak 200"
+        }
       },
       {
         "image": "assets/uploads/01_05.jpg",
-        "metadata": { "camera": "Canon F", "lens": "Rangefinder", "filmRoll": "Kodak 200" }
+        "metadata": {
+          "camera": "Canon F",
+          "lens": "Rangefinder",
+          "filmRoll": "Kodak 200"
+        }
       }
     ]
   },
@@ -103,23 +179,43 @@
     "photos": [
       {
         "image": "assets/uploads/000026200001.jpg",
-        "metadata": { "camera": "Olympus OM-1", "lens": "28mm", "filmRoll": "Fuji Superia 400" }
+        "metadata": {
+          "camera": "Olympus OM-1",
+          "lens": "28mm",
+          "filmRoll": "Fuji Superia 400"
+        }
       },
       {
         "image": "assets/uploads/000026200010.jpg",
-        "metadata": { "camera": "Olympus OM-1", "lens": "50mm", "filmRoll": "Fuji Superia 400" }
+        "metadata": {
+          "camera": "Olympus OM-1",
+          "lens": "50mm",
+          "filmRoll": "Fuji Superia 400"
+        }
       },
       {
         "image": "assets/uploads/000026200023.jpg",
-        "metadata": { "camera": "Olympus OM-1", "lens": "28mm", "filmRoll": "Fuji Superia 400" }
+        "metadata": {
+          "camera": "Olympus OM-1",
+          "lens": "28mm",
+          "filmRoll": "Fuji Superia 400"
+        }
       },
       {
         "image": "assets/uploads/000026200028.jpg",
-        "metadata": { "camera": "Olympus OM-1", "lens": "50mm", "filmRoll": "Fuji Superia 400" }
+        "metadata": {
+          "camera": "Olympus OM-1",
+          "lens": "50mm",
+          "filmRoll": "Fuji Superia 400"
+        }
       },
       {
         "image": "assets/uploads/000026200034.jpg",
-        "metadata": { "camera": "Olympus OM-1", "lens": "28mm", "filmRoll": "Fuji Superia 400" }
+        "metadata": {
+          "camera": "Olympus OM-1",
+          "lens": "28mm",
+          "filmRoll": "Fuji Superia 400"
+        }
       }
     ]
   },
@@ -130,35 +226,67 @@
     "photos": [
       {
         "image": "assets/uploads/000027500033.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500010.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500027.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500029.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500007.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500035.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500031.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/000027500016.jpg",
-        "metadata": { "camera": "Canon P", "lens": "Canon 50mm f/1.2", "filmRoll": "Kodak UltraMax 400" }
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       }
     ]
   },
@@ -169,23 +297,43 @@
     "photos": [
       {
         "image": "assets/uploads/000039670009.jpg",
-        "metadata": { "camera": "Mamiya RZ67", "lens": "110mm", "filmRoll": "Ilford Delta 100" }
+        "metadata": {
+          "camera": "Mamiya RZ67",
+          "lens": "110mm",
+          "filmRoll": "Ilford Delta 100"
+        }
       },
       {
         "image": "assets/uploads/000039670026.jpg",
-        "metadata": { "camera": "Mamiya RZ67", "lens": "65mm", "filmRoll": "Ilford Delta 100" }
+        "metadata": {
+          "camera": "Mamiya RZ67",
+          "lens": "65mm",
+          "filmRoll": "Ilford Delta 100"
+        }
       },
       {
         "image": "assets/uploads/000045500001.jpg",
-        "metadata": { "camera": "Mamiya RZ67", "lens": "110mm", "filmRoll": "Ilford Delta 100" }
+        "metadata": {
+          "camera": "Mamiya RZ67",
+          "lens": "110mm",
+          "filmRoll": "Ilford Delta 100"
+        }
       },
       {
         "image": "assets/uploads/000045500010.jpg",
-        "metadata": { "camera": "Mamiya RZ67", "lens": "65mm", "filmRoll": "Ilford Delta 100" }
+        "metadata": {
+          "camera": "Mamiya RZ67",
+          "lens": "65mm",
+          "filmRoll": "Ilford Delta 100"
+        }
       },
       {
         "image": "assets/uploads/000045500022.jpg",
-        "metadata": { "camera": "Mamiya RZ67", "lens": "110mm", "filmRoll": "Ilford Delta 100" }
+        "metadata": {
+          "camera": "Mamiya RZ67",
+          "lens": "110mm",
+          "filmRoll": "Ilford Delta 100"
+        }
       }
     ]
   }
