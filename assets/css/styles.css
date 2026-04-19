@@ -150,6 +150,7 @@ html, body {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    position: relative;
   }
   
   .navbar-brand {
@@ -178,6 +179,14 @@ html, body {
   
   .navbar-nav li a {
     padding: 0 10px;
+  }
+  
+  .navbar-nav .theme-toggle-container {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    margin: 0;
   }
 }
 
