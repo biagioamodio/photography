@@ -183,7 +183,7 @@ html, body {
   
   .navbar-nav .theme-toggle-container {
     position: absolute;
-    top: 50%;
+    top: 30%;
     right: 0;
     transform: translateY(-50%);
     margin: 0;
