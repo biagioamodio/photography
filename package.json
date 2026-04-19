@@ -1,0 +1,11 @@
+{
+  "name": "biagio-photography",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "browser-sync start --server --port 3001 --files '*.html, assets/css/*.css, assets/js/*.js, _data/*.json' --no-notify"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.3"
+  }
+}

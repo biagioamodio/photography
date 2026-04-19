@@ -152,9 +152,9 @@ function loadSerieContent(serie) {
   // Trigger event for serie loaded
   $(document).trigger('serieLoaded', [serie]);
   
-  // Create an array of all slides (description + photos)
+  // Create an array of all slides (description slide only if description is non-empty, then photos)
   const slides = [
-    { type: 'description', content: serie.description },
+    ...(serie.description ? [{ type: 'description', content: serie.description }] : []),
     ...serie.photos.map(photo => ({ type: 'photo', content: photo }))
   ];
   
@@ -196,8 +196,17 @@ function loadSerieContent(serie) {
         });
         contentDisplay.append(photoElement);
         
-        // Set metadata for photo
-        $('#photo-metadata').text(slide.content.metadata);
+        // Set metadata for photo — render only non-empty fields
+        const meta = slide.content.metadata;
+        const metaLines = [];
+        if (meta && typeof meta === 'object') {
+          if (meta.camera) metaLines.push($('<span>').text(meta.camera).prop('outerHTML'));
+          if (meta.lens) metaLines.push($('<span>').text(meta.lens).prop('outerHTML'));
+          if (meta.filmRoll) metaLines.push($('<span>').text(meta.filmRoll).prop('outerHTML'));
+        } else if (typeof meta === 'string' && meta) {
+          metaLines.push($('<span>').text(meta).prop('outerHTML'));
+        }
+        $('#photo-metadata').html(metaLines.join('<br>'));
       }
       
       // Handle navigation arrows visibility

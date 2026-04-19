@@ -225,7 +225,7 @@ function renderPhotosGrid(photos) {
     <div class="photo-card" data-index="${index}" onclick="openPhotoEdit(${index})">
       <img src="/${photo.image}" alt="" loading="lazy">
       <div class="photo-card-overlay">
-        <span class="photo-card-meta">${escapeHtml(photo.metadata || 'No metadata')}</span>
+        <span class="photo-card-meta">${photo.metadata && typeof photo.metadata === 'object' ? [photo.metadata.camera, photo.metadata.lens, photo.metadata.filmRoll].filter(Boolean).map(escapeHtml).join(' · ') : escapeHtml(photo.metadata || 'No metadata')}</span>
       </div>
     </div>
   `).join('');
@@ -397,7 +397,7 @@ function openPhotoEdit(index) {
   document.getElementById('photo-camera-input').value = meta.camera || '';
   document.getElementById('photo-lens-input').value = meta.lens || '';
   document.getElementById('photo-film-input').value = meta.filmRoll || '';
-
+  
   document.getElementById('photo-edit-modal').classList.remove('hidden');
 }
 
