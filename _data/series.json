@@ -6,7 +6,11 @@
     "photos": [
       {
         "image": "assets/uploads/02_04.jpg",
-        "metadata": "Canon P Rangefinder, Canon 50mm f/1.2, Kodak UltraMax 400"
+        "metadata": {
+          "camera": "Canon P Rangsfinder",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400"
+        }
       },
       {
         "image": "assets/uploads/02_02b.jpg",

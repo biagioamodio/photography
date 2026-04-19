@@ -393,8 +393,11 @@ function openPhotoEdit(index) {
   const photo = series.photos[index];
   
   document.getElementById('photo-edit-preview').src = '/' + photo.image;
-  document.getElementById('photo-metadata-input').value = photo.metadata || '';
-  
+  const meta = (photo.metadata && typeof photo.metadata === 'object') ? photo.metadata : {};
+  document.getElementById('photo-camera-input').value = meta.camera || '';
+  document.getElementById('photo-lens-input').value = meta.lens || '';
+  document.getElementById('photo-film-input').value = meta.filmRoll || '';
+
   document.getElementById('photo-edit-modal').classList.remove('hidden');
 }
 
@@ -409,8 +412,12 @@ async function savePhotoMetadata() {
   const series = seriesData.find(s => s.id === currentSeriesId);
   if (!series) return;
   
-  const metadata = document.getElementById('photo-metadata-input').value.trim();
-  
+  const metadata = {
+    camera: document.getElementById('photo-camera-input').value.trim(),
+    lens: document.getElementById('photo-lens-input').value.trim(),
+    filmRoll: document.getElementById('photo-film-input').value.trim()
+  };
+
   series.photos[currentPhotoIndex].metadata = metadata;
   
   showLoading('Saving...');
