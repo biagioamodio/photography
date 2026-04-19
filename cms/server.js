@@ -225,7 +225,7 @@ app.post('/api/series/:id/photos', upload.array('photos', 50), async (req, res) 
       const imagePath = await processImage(file.buffer, file.originalname, optimize);
       const newPhoto = {
         image: imagePath,
-        metadata: req.body.metadata || ''
+        metadata: { camera: '', lens: '', filmRoll: '' }
       };
       series[index].photos.push(newPhoto);
       uploadedPhotos.push(newPhoto);
