@@ -610,19 +610,23 @@ h1, h2, h3 {
 @media (max-width: 767px) {
   .about-container {
     flex-direction: column;
+    min-height: auto;
   }
-  
+
   .about-image {
+    flex: none;
     padding-right: 0;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
   }
-  
+
   .about-content {
+    flex: none;
     padding-left: 0;
   }
-  
+
   .about-image img {
     max-height: 50vh;
+    width: 100%;
   }
 }
 
