@@ -41,3 +41,6 @@ out/
 # Temporary files
 .tmp/
 .temp/
+
+# Claude Code worktrees
+.claude/worktrees/
