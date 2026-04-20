@@ -426,6 +426,7 @@ h1, h2, h3 {
 
 #photo-metadata {
   margin-bottom: 0 !important;
+  white-space: nowrap;
 }
 
 /* Arrow containers */
