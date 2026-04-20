@@ -328,11 +328,16 @@ h1, h2, h3 {
 /* Serie content */
 .content-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  height: 70vh;
   padding-left: 40px;
-    padding-right: 40px;
+  padding-right: 40px;
+}
+
+/* Photo row: flex so side columns stretch to image height */
+.serie-container > .row:first-child {
+  display: flex;
+  align-items: stretch;
 }
 
 .serie-description {
@@ -395,7 +400,7 @@ h1, h2, h3 {
 /* Side columns */
 .side-column {
   position: relative;
-  height: 70vh;
+  height: auto;
 }
 
 /* Remove padding between columns in serie page */
@@ -420,12 +425,13 @@ h1, h2, h3 {
   font-size: 16px;
   text-align: right;
   z-index: 1;
-  width: 50%;
+  width: 100%;
   font-family: 'Inconsolata', monospace;
 }
 
 #photo-metadata {
   margin-bottom: 0 !important;
+  white-space: nowrap;
 }
 
 /* Arrow containers */
@@ -484,6 +490,33 @@ h1, h2, h3 {
 .prev-serie:hover, .next-serie:hover {
   color: var(--color-secondary);
   text-decoration: none;
+}
+
+/* Reduce side margins on mobile: collapse empty spacer columns, expand content */
+@media (max-width: 767px) {
+  .col-xs-2:not(.side-column) {
+    display: none;
+  }
+
+  .container-fluid > .row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .col-xs-8 {
+    width: 100%;
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Serie page: restore Bootstrap grid for arrow navigation */
+  .serie-container .col-xs-8 {
+    width: 66.66667%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 }
 
 /* Responsive serie page */
@@ -604,19 +637,23 @@ h1, h2, h3 {
 @media (max-width: 767px) {
   .about-container {
     flex-direction: column;
+    min-height: auto;
   }
-  
+
   .about-image {
+    flex: none;
     padding-right: 0;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
   }
-  
+
   .about-content {
+    flex: none;
     padding-left: 0;
   }
-  
+
   .about-image img {
     max-height: 50vh;
+    width: 100%;
   }
 }
 
