@@ -498,13 +498,24 @@ h1, h2, h3 {
     display: none;
   }
 
-  .col-xs-8 {
-    width: 100%;
+  .container-fluid > .row {
+    margin-left: 0;
+    margin-right: 0;
   }
 
-  /* Serie page: restore column widths so arrows remain on each side */
+  .col-xs-8 {
+    width: 100%;
+    float: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Serie page: restore Bootstrap grid for arrow navigation */
   .serie-container .col-xs-8 {
     width: 66.66667%;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 }
 
