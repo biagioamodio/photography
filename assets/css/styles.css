@@ -420,7 +420,7 @@ h1, h2, h3 {
   font-size: 16px;
   text-align: right;
   z-index: 1;
-  width: 50%;
+  width: 100%;
   font-family: 'Inconsolata', monospace;
 }
 
