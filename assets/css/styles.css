@@ -328,7 +328,7 @@ h1, h2, h3 {
 /* Serie content */
 .content-container {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   padding-left: 40px;
   padding-right: 40px;
