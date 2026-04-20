@@ -506,8 +506,8 @@ h1, h2, h3 {
   .col-xs-8 {
     width: 100%;
     float: none;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   /* Serie page: restore Bootstrap grid for arrow navigation */
