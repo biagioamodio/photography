@@ -477,6 +477,17 @@ h1, h2, h3 {
   margin: 20px 0;
 }
 
+.serie-nav-row {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: var(--color-background);
+  z-index: 100;
+  margin: 0;
+}
+
 .prev-serie, .next-serie {
   font-family: 'Young Serif', serif;
   font-size: 20px;
