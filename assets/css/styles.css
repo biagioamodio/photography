@@ -321,8 +321,11 @@ h1, h2, h3 {
 
 /* Serie page */
 .serie-container {
-  min-height: calc(100vh - 120px);
-  padding-bottom: 20px;
+  height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 120px; /* offset for fixed nav bar at bottom: 40px + ~80px height */
 }
 
 /* Serie content */
