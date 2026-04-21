@@ -87,8 +87,8 @@
         if (imgSrc.startsWith('assets/')) {
           imgSrc = window.baseUrl + imgSrc;
         }
-        $("#about-image").attr("src", imgSrc);
-        
+        $("#about-image").attr("src", imgSrc).on("load", syncContentToImage);
+
         // Set content
         const paragraphs = data.content.split("\n\n");
         const textContainer = $("#about-text");
@@ -119,6 +119,20 @@
         });
       });
       
+      // Sync about-content width to rendered image width on mobile
+      function syncContentToImage() {
+        var img = document.getElementById('about-image');
+        var content = document.querySelector('.about-content');
+        if (!img || !content) return;
+        if (window.innerWidth <= 767) {
+          content.style.width = img.offsetWidth + 'px';
+        } else {
+          content.style.width = '';
+        }
+      }
+
+      $(window).on('resize', syncContentToImage);
+
       // Ensure content is visible when page loads (counteract any fade-out from previous page)
       setTimeout(function() {
         $('.page-content').removeClass('fade-out');
