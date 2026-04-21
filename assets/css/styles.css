@@ -672,6 +672,8 @@ h1, h2, h3 {
     flex: none;
     padding-right: 0;
     padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
   }
 
   .about-content {

@@ -119,14 +119,18 @@
         });
       });
       
-      // Sync about-content width to rendered image width on mobile
+      // Sync about-content position and width to rendered image on mobile
       function syncContentToImage() {
         var img = document.getElementById('about-image');
+        var container = document.querySelector('.about-container');
         var content = document.querySelector('.about-content');
-        if (!img || !content) return;
+        if (!img || !content || !container) return;
         if (window.innerWidth <= 767) {
+          var imgLeft = img.getBoundingClientRect().left - container.getBoundingClientRect().left;
+          content.style.marginLeft = imgLeft + 'px';
           content.style.width = img.offsetWidth + 'px';
         } else {
+          content.style.marginLeft = '';
           content.style.width = '';
         }
       }
