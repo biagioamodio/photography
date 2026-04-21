@@ -604,10 +604,33 @@ h1, h2, h3 {
     padding-right: 50px;
     margin-top: 5px;
   }
-  
+
   /* Limit serie description height for mobile and enable scroll */
   .serie-description {
     max-height: 60vh;
+  }
+
+  /* Fix nav row title: override the .serie-container .col-xs-8 rule that
+     sets 66.66% width + float:left, so the title column takes full width
+     and centers correctly in the fixed nav bar */
+  .serie-nav-row .col-xs-8 {
+    width: 100%;
+    float: none;
+    text-align: center;
+  }
+
+  /* Center image vertically within the content container on mobile.
+     Desktop uses flex-end (bottom-align) to equalise top/bottom gaps,
+     but on mobile that pushes the image to the bottom of the 60vh zone
+     while the arrows stay at 50% — they end up at different heights. */
+  .content-container {
+    align-items: center;
+  }
+
+  /* Increase padding-bottom so the flex centre point sits higher on mobile
+     and the image is vertically centred between the navbar and the fixed nav bar */
+  .serie-container {
+    padding-bottom: 190px;
   }
 }
 
