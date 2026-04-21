@@ -357,27 +357,12 @@ h1, h2, h3 {
   overflow-y: auto;
   margin: 0 auto;
   padding-right: 10px;
-  /* Hide scrollbar by default, show on hover */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
 
 .serie-description::-webkit-scrollbar {
-  width: 6px;
-  background: transparent;
-}
-
-.serie-description::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 3px;
-}
-
-.serie-description:hover {
-  scrollbar-width: thin; /* Firefox - show on hover */
-}
-
-.serie-description:hover::-webkit-scrollbar-thumb {
-  background-color: var(--color-secondary);
+  display: none;
 }
 
 .slide-indicator {
