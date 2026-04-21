@@ -325,7 +325,7 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-bottom: 120px; /* offset for fixed nav bar at bottom: 40px + ~80px height */
+  padding-bottom: 190px; /* offset to equalise top/bottom gaps around content */
 }
 
 /* Serie content */
