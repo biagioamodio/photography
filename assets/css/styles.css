@@ -1,3 +1,8 @@
+/* Prevent scrollbar on serie page */
+body.serie-page {
+  overflow: hidden;
+}
+
 /* Color variables */
 :root {
   --color-primary: #000000;
@@ -321,8 +326,12 @@ h1, h2, h3 {
 
 /* Serie page */
 .serie-container {
-  min-height: calc(100vh - 120px);
-  padding-bottom: 20px;
+  height: calc(100vh - 50px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 190px;
 }
 
 /* Serie content */
@@ -348,27 +357,12 @@ h1, h2, h3 {
   overflow-y: auto;
   margin: 0 auto;
   padding-right: 10px;
-  /* Hide scrollbar by default, show on hover */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
 
 .serie-description::-webkit-scrollbar {
-  width: 6px;
-  background: transparent;
-}
-
-.serie-description::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 3px;
-}
-
-.serie-description:hover {
-  scrollbar-width: thin; /* Firefox - show on hover */
-}
-
-.serie-description:hover::-webkit-scrollbar-thumb {
-  background-color: var(--color-secondary);
+  display: none;
 }
 
 .slide-indicator {
@@ -419,10 +413,10 @@ h1, h2, h3 {
 
 .photo-metadata {
   position: absolute;
-  bottom: 0px;
+  bottom: -3px;
   right: 0px;
   color: var(--color-secondary);
-  font-size: 16px;
+  font-size: 13px;
   text-align: right;
   z-index: 1;
   width: 100%;
@@ -477,6 +471,17 @@ h1, h2, h3 {
   margin: 20px 0;
 }
 
+.serie-nav-row {
+  position: fixed;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: var(--color-background);
+  z-index: 100;
+  margin: 0;
+}
+
 .prev-serie, .next-serie {
   font-family: 'Young Serif', serif;
   font-size: 20px;
@@ -506,8 +511,8 @@ h1, h2, h3 {
   .col-xs-8 {
     width: 100%;
     float: none;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 30px;
+    padding-right: 30px;
   }
 
   /* Serie page: restore Bootstrap grid for arrow navigation */
@@ -599,10 +604,33 @@ h1, h2, h3 {
     padding-right: 50px;
     margin-top: 5px;
   }
-  
+
   /* Limit serie description height for mobile and enable scroll */
   .serie-description {
     max-height: 60vh;
+  }
+
+  /* Fix nav row title: override the .serie-container .col-xs-8 rule that
+     sets 66.66% width + float:left, so the title column takes full width
+     and centers correctly in the fixed nav bar */
+  .serie-nav-row .col-xs-8 {
+    width: 100%;
+    float: none;
+    text-align: center;
+  }
+
+  /* Center image vertically within the content container on mobile.
+     Desktop uses flex-end (bottom-align) to equalise top/bottom gaps,
+     but on mobile that pushes the image to the bottom of the 60vh zone
+     while the arrows stay at 50% — they end up at different heights. */
+  .content-container {
+    align-items: center;
+  }
+
+  /* Increase padding-bottom so the flex centre point sits higher on mobile
+     and the image is vertically centred between the navbar and the fixed nav bar */
+  .serie-container {
+    padding-bottom: 190px;
   }
 }
 
@@ -668,7 +696,7 @@ h1, h2, h3 {
 }
 
 .about-links a.contact-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
@@ -685,6 +713,21 @@ h1, h2, h3 {
   line-height: 1;
   position: relative;
   top: 1px;
+  display: inline-block;
+  width: 16px;
+  text-align: center;
+}
+
+.about-links .fa-envelope {
+  -webkit-text-stroke: 0.3px var(--color-background);
+}
+
+.about-links .fa-instagram {
+  margin-left: 0;
+}
+
+.about-links .link-instagram {
+  gap: 11px;
 }
 
 /* Photo metadata */

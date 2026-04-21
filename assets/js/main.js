@@ -196,17 +196,15 @@ function loadSerieContent(serie) {
         });
         contentDisplay.append(photoElement);
         
-        // Set metadata for photo — render only non-empty fields
+        // Set metadata — always 3 fixed rows (one per field, empty fields show as blank lines)
         const meta = slide.content.metadata;
-        const metaLines = [];
         if (meta && typeof meta === 'object') {
-          if (meta.camera) metaLines.push($('<span>').text(meta.camera).prop('outerHTML'));
-          if (meta.lens) metaLines.push($('<span>').text(meta.lens).prop('outerHTML'));
-          if (meta.filmRoll) metaLines.push($('<span>').text(meta.filmRoll).prop('outerHTML'));
-        } else if (typeof meta === 'string' && meta) {
-          metaLines.push($('<span>').text(meta).prop('outerHTML'));
+          const rows = [meta.camera || '', meta.lens || '', meta.filmRoll || '']
+            .map(v => $('<span>').text(v).prop('outerHTML'));
+          $('#photo-metadata').html(rows.join('<br>'));
+        } else {
+          $('#photo-metadata').html($('<span>').text(typeof meta === 'string' ? meta : '').prop('outerHTML'));
         }
-        $('#photo-metadata').html(metaLines.join('<br>'));
       }
       
       // Handle navigation arrows visibility

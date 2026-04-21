@@ -103,11 +103,14 @@
         data.links.forEach(function(link) {
           const linkElement = $("<a>")
             .attr("href", link.url)
-            .addClass("contact-link");
+            .addClass("contact-link link-" + link.icon);
           
           // Add icon if specified
           if (link.icon === "email") {
             linkElement.append($("<i>").addClass("fa-regular fa-envelope"));
+            linkElement.append(" ");
+          } else if (link.icon === "instagram") {
+            linkElement.append($("<i>").addClass("fa-brands fa-instagram"));
             linkElement.append(" ");
           }
           

@@ -6,6 +6,11 @@
       "text": "Email",
       "url": "mailto:contact@biagioamodio.com",
       "icon": "email"
+    },
+    {
+      "text": "Instagram",
+      "url": "https://www.instagram.com/biagio.amodio",
+      "icon": "instagram"
     }
   ]
 }
