@@ -413,7 +413,7 @@ h1, h2, h3 {
 
 .photo-metadata {
   position: absolute;
-  bottom: 0px;
+  bottom: -3px;
   right: 0px;
   color: var(--color-secondary);
   font-size: 13px;
