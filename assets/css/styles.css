@@ -323,6 +323,10 @@ h1, h2, h3 {
 .serie-container {
   height: calc(100vh - 50px);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 190px;
 }
 
 /* Serie content */
