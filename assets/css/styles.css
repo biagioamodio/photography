@@ -479,7 +479,7 @@ h1, h2, h3 {
 
 .serie-nav-row {
   position: fixed;
-  bottom: 0;
+  bottom: 50px;
   left: 0;
   right: 0;
   width: 100%;
