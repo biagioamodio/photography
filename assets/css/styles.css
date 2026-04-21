@@ -333,8 +333,8 @@ h1, h2, h3 {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Photo row: flex so side columns stretch to image height */
@@ -348,6 +348,14 @@ h1, h2, h3 {
   width: calc(16.66667% - 50px);
 }
 .serie-container > .row:first-child > .col-xs-8 {
+  width: calc(66.66667% + 100px);
+}
+
+/* Align prev/next series with the photo row column boundaries */
+.serie-nav-row > .col-xs-2 {
+  width: calc(16.66667% - 50px);
+}
+.serie-nav-row > .col-xs-8 {
   width: calc(66.66667% + 100px);
 }
 
