@@ -696,7 +696,7 @@ h1, h2, h3 {
 }
 
 .about-links a.contact-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
@@ -713,6 +713,21 @@ h1, h2, h3 {
   line-height: 1;
   position: relative;
   top: 1px;
+  display: inline-block;
+  width: 16px;
+  text-align: center;
+}
+
+.about-links .fa-envelope {
+  -webkit-text-stroke: 0.3px var(--color-background);
+}
+
+.about-links .fa-instagram {
+  margin-left: 0;
+}
+
+.about-links .link-instagram {
+  gap: 11px;
 }
 
 /* Photo metadata */
