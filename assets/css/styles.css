@@ -480,6 +480,17 @@ h1, h2, h3 {
   background: var(--color-background);
   z-index: 100;
   margin: 0;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+/* Align nav row outer edges with navbar content boundaries */
+.serie-nav-row .col-xs-2:first-child {
+  padding-left: 0;
+}
+
+.serie-nav-row .col-xs-2:last-child {
+  padding-right: 0;
 }
 
 .prev-serie, .next-serie {
