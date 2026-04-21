@@ -627,10 +627,10 @@ h1, h2, h3 {
     align-items: center;
   }
 
-  /* Increase padding-bottom so the flex centre point sits higher on mobile
-     and the image is vertically centred between the navbar and the fixed nav bar */
+  /* padding-bottom shifts the flex centre point upward to compensate for
+     the navbar height and the fixed nav bar space at the bottom */
   .serie-container {
-    padding-bottom: 190px;
+    padding-bottom: 211px;
   }
 }
 
