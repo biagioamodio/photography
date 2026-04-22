@@ -553,7 +553,7 @@ h1, h2, h3 {
 
 /* Reduce side margins on mobile: collapse empty spacer columns, expand content */
 @media (max-width: 840px) {
-  .col-xs-2:not(.side-column) {
+  .col-xs-2:not(.side-column):not(.serie-nav-col) {
     display: none;
   }
 
@@ -664,9 +664,14 @@ h1, h2, h3 {
   
   /* Add lateral padding to serie title and remove top margin */
   .serie-title {
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 0;
+    padding-right: 0;
     margin-top: 5px;
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   /* Limit serie description height for mobile and enable scroll */
@@ -682,12 +687,11 @@ h1, h2, h3 {
     padding-bottom: 2px;
   }
 
-  /* Fix nav row title: override the .serie-container .col-xs-8 rule that
-     sets 66.66% width + float:left, so the title column takes full width
-     and centers correctly in the fixed nav bar */
+  /* Nav row uses a 3-col layout on mobile (arrows + title + arrows).
+     Restore Bootstrap col-xs-8 width so all three columns sit in one row. */
   .serie-nav-row .col-xs-8 {
-    width: 100%;
-    float: none;
+    width: 66.66667%;
+    float: left;
     text-align: center;
   }
 
