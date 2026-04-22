@@ -1037,7 +1037,7 @@ h1, h2, h3 {
   height: 17px;
   padding: 2px;
   background-color: transparent;
-  border: 1.5px solid var(--color-toggle-border);
+  border: 1.4px solid var(--color-toggle-border);
   border-radius: 9px;
   cursor: pointer;
   transition: border-color 0.3s ease;
