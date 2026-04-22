@@ -538,6 +538,14 @@ h1, h2, h3 {
   cursor: pointer;
 }
 
+.serie-nav-arrows {
+  display: none;
+}
+
+.double-arrow-first {
+  margin-right: -4px;
+}
+
 .prev-serie:hover, .next-serie:hover {
   color: var(--color-secondary);
   text-decoration: none;
@@ -633,6 +641,16 @@ h1, h2, h3 {
   .prev-serie, .next-serie {
     font-size: 14px;
     margin: 10px 0;
+  }
+
+  /* Replace prev/next series text with double arrows on mobile */
+  .serie-nav-text {
+    display: none;
+  }
+
+  .serie-nav-arrows {
+    display: inline-flex;
+    align-items: center;
   }
   
   /* Keep text alignment for series navigation */
