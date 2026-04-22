@@ -652,6 +652,13 @@ h1, h2, h3 {
     display: inline-flex;
     align-items: center;
   }
+
+  /* Center double arrows in their columns to align with content arrows above */
+  .serie-nav-col {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
   
   /* Keep text alignment for series navigation */
   .prev-serie {
@@ -662,16 +669,13 @@ h1, h2, h3 {
     text-align: left;
   }
   
-  /* Add lateral padding to serie title and remove top margin */
+  /* Serie title: same font-size as desktop, no side padding needed
+     since the col is now naturally bounded by the arrow columns */
   .serie-title {
     padding-left: 0;
     padding-right: 0;
     margin-top: 5px;
-    font-size: 18px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    font-size: 24px;
   }
 
   /* Limit serie description height for mobile and enable scroll */
