@@ -808,9 +808,11 @@ h1, h2, h3 {
   transition: color 0.3s ease;
 }
 
-.about-links a.contact-link:hover {
+.about-links a.contact-link:hover,
+.about-links a.contact-link:focus {
   color: var(--color-primary);
   text-decoration: none;
+  outline: none;
 }
 
 .about-links a.contact-link i {
