@@ -101,6 +101,11 @@ html, body {
   margin-top: 7px;
 }
 
+.navbar-nav .theme-toggle-container {
+  position: relative;
+  top: -2px;
+}
+
 .navbar-brand {
   font-family: 'Oswald', sans-serif;
   font-size: 24px;
