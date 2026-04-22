@@ -546,9 +546,11 @@ h1, h2, h3 {
   margin-right: -4px;
 }
 
-.prev-serie:hover, .next-serie:hover {
+.prev-serie:hover, .next-serie:hover,
+.prev-serie:focus, .next-serie:focus {
   color: var(--color-secondary);
   text-decoration: none;
+  outline: none;
 }
 
 /* Reduce side margins on mobile: collapse empty spacer columns, expand content */
