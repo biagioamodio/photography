@@ -437,7 +437,7 @@ h1, h2, h3 {
 
 .photo-metadata {
   position: absolute;
-  bottom: -5px;
+  bottom: -4.5px;
   right: 0px;
   color: var(--color-secondary);
   font-size: 13px;
@@ -449,7 +449,7 @@ h1, h2, h3 {
 
 .photo-darkroom {
   position: absolute;
-  bottom: -5px;
+  bottom: -4.5px;
   left: 0px;
   color: var(--color-secondary);
   font-size: 13px;
