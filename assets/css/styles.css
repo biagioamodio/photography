@@ -493,6 +493,7 @@ h1, h2, h3 {
   text-align: center;
   margin: 20px 0;
   color: var(--color-primary);
+  display: inline-block;
 }
 
 .serie-title:hover {
