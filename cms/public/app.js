@@ -385,19 +385,35 @@ async function handlePhotoUpload(files) {
 
 // ==================== Photo Edit Modal ====================
 
+function updateCount(inputId, countId) {
+  const input = document.getElementById(inputId);
+  const count = document.getElementById(countId);
+  if (input && count) count.textContent = `(${input.value.length}/20)`;
+}
+
 function openPhotoEdit(index) {
   const series = seriesData.find(s => s.id === currentSeriesId);
   if (!series || !series.photos[index]) return;
-  
+
   currentPhotoIndex = index;
   const photo = series.photos[index];
-  
+
   document.getElementById('photo-edit-preview').src = '/' + photo.image;
   const meta = (photo.metadata && typeof photo.metadata === 'object') ? photo.metadata : {};
-  document.getElementById('photo-camera-input').value = meta.camera || '';
-  document.getElementById('photo-lens-input').value = meta.lens || '';
-  document.getElementById('photo-film-input').value = meta.filmRoll || '';
-  
+
+  const fields = [
+    ['photo-camera-input',     'camera-count',     meta.camera     || ''],
+    ['photo-lens-input',       'lens-count',       meta.lens       || ''],
+    ['photo-film-input',       'film-count',       meta.filmRoll   || ''],
+    ['photo-developing-input', 'developing-count', meta.developing || ''],
+    ['photo-scanning-input',   'scanning-count',   meta.scanning   || ''],
+    ['photo-printing-input',   'printing-count',   meta.printing   || ''],
+  ];
+  fields.forEach(([inputId, countId, value]) => {
+    const el = document.getElementById(inputId);
+    if (el) { el.value = value; updateCount(inputId, countId); }
+  });
+
   document.getElementById('photo-edit-modal').classList.remove('hidden');
 }
 
@@ -413,9 +429,12 @@ async function savePhotoMetadata() {
   if (!series) return;
   
   const metadata = {
-    camera: document.getElementById('photo-camera-input').value.trim(),
-    lens: document.getElementById('photo-lens-input').value.trim(),
-    filmRoll: document.getElementById('photo-film-input').value.trim()
+    camera:     document.getElementById('photo-camera-input').value.trim(),
+    lens:       document.getElementById('photo-lens-input').value.trim(),
+    filmRoll:   document.getElementById('photo-film-input').value.trim(),
+    developing: document.getElementById('photo-developing-input').value.trim(),
+    scanning:   document.getElementById('photo-scanning-input').value.trim(),
+    printing:   document.getElementById('photo-printing-input').value.trim(),
   };
 
   series.photos[currentPhotoIndex].metadata = metadata;

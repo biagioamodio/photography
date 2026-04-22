@@ -212,41 +212,100 @@
   <!-- Photo Edit Modal -->
   <div id="photo-edit-modal" class="modal hidden">
     <div class="modal-backdrop" onclick="hidePhotoEditModal()"></div>
-    <div class="modal-content bg-white rounded-xl p-6 w-full max-w-lg shadow-2xl">
+    <div class="modal-content bg-white rounded-xl p-6 w-full max-w-2xl shadow-2xl">
       <h3 class="text-xl font-semibold mb-4 text-gray-900">Edit Photo</h3>
-      <img id="photo-edit-preview" src="" alt="" class="w-full rounded-lg mb-4">
-      <div class="space-y-4">
+
+      <!-- 3:2 photo preview -->
+      <div style="aspect-ratio:3/2;" class="w-full mb-4 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+        <img id="photo-edit-preview" src="" alt="" class="w-full h-full object-contain">
+      </div>
+
+      <!-- Two-column: GEAR + DARKROOM -->
+      <div class="grid grid-cols-2 gap-6 mb-4">
+
+        <!-- GEAR -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Camera</label>
-          <input type="text" id="photo-camera-input" maxlength="20"
-                 class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 placeholder="e.g., Canon AE-1">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Lens</label>
-          <input type="text" id="photo-lens-input" maxlength="20"
-                 class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 placeholder="e.g., 50mm f/1.4">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Film roll</label>
-          <input type="text" id="photo-film-input" maxlength="20"
-                 class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                 placeholder="e.g., Kodak Portra 400">
-        </div>
-        <div class="flex gap-3 justify-between">
-          <button onclick="deletePhoto()" class="px-4 py-2 text-red-500 hover:text-red-600">
-            🗑️ Delete
-          </button>
-          <div class="flex gap-3">
-            <button onclick="hidePhotoEditModal()" class="px-4 py-2 text-gray-500 hover:text-gray-700">
-              Cancel
-            </button>
-            <button onclick="savePhotoMetadata()" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-              Save
-            </button>
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Gear</p>
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Camera</label>
+              <span class="text-xs text-gray-400" id="camera-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-camera-input" maxlength="20"
+                   oninput="updateCount('photo-camera-input','camera-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., Canon AE-1">
           </div>
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Lens</label>
+              <span class="text-xs text-gray-400" id="lens-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-lens-input" maxlength="20"
+                   oninput="updateCount('photo-lens-input','lens-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., 50mm f/1.4">
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Film roll</label>
+              <span class="text-xs text-gray-400" id="film-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-film-input" maxlength="20"
+                   oninput="updateCount('photo-film-input','film-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., Kodak Portra 400">
+          </div>
+        </div>
+
+        <!-- DARKROOM -->
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Darkroom</p>
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Developing</label>
+              <span class="text-xs text-gray-400" id="developing-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-developing-input" maxlength="20"
+                   oninput="updateCount('photo-developing-input','developing-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., Film Lab London">
+          </div>
+          <div class="mb-3">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Scanning</label>
+              <span class="text-xs text-gray-400" id="scanning-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-scanning-input" maxlength="20"
+                   oninput="updateCount('photo-scanning-input','scanning-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., Carmencita Lab">
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-sm font-medium text-gray-700">Printing</label>
+              <span class="text-xs text-gray-400" id="printing-count">(0/20)</span>
+            </div>
+            <input type="text" id="photo-printing-input" maxlength="20"
+                   oninput="updateCount('photo-printing-input','printing-count')"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-right focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                   placeholder="e.g., self printed">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 justify-between pt-3 border-t border-gray-100">
+        <button onclick="deletePhoto()" class="px-4 py-2 text-red-500 hover:text-red-600">
+          🗑️ Delete
+        </button>
+        <div class="flex gap-3">
+          <button onclick="hidePhotoEditModal()" class="px-4 py-2 text-gray-500 hover:text-gray-700">
+            Cancel
+          </button>
+          <button onclick="savePhotoMetadata()"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
+            Save
+          </button>
         </div>
       </div>
     </div>
