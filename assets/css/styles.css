@@ -115,6 +115,11 @@ html, body {
   text-transform: uppercase;
 }
 
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: var(--color-primary);
+}
+
 .navbar-nav li {
   display: inline-flex;
   align-items: center;
