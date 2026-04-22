@@ -94,7 +94,7 @@ html, body {
 }
 
 .navbar .container-fluid {
-  padding: 20px;
+  padding: 25px 20px 15px;
 }
 
 .navbar-brand {
@@ -195,7 +195,7 @@ html, body {
   
   .navbar-nav .theme-toggle-container {
     position: absolute;
-    top: 20px;
+    top: 25px;
     right: 0;
     transform: none;
     margin: 0;
