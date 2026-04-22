@@ -642,6 +642,14 @@ h1, h2, h3 {
     max-height: 60vh;
   }
 
+  /* Compensate for the change in which column drives nav-row height on mobile
+     (side cols drive on desktop via taller 20px font; center col drives on mobile
+     via shorter 14px font). Adding 2px padding-bottom extends the row so the
+     title y-position matches the desktop value exactly. */
+  .serie-nav-row {
+    padding-bottom: 2px;
+  }
+
   /* Fix nav row title: override the .serie-container .col-xs-8 rule that
      sets 66.66% width + float:left, so the title column takes full width
      and centers correctly in the fixed nav bar */
