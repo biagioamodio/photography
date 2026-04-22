@@ -659,10 +659,11 @@ h1, h2, h3 {
     align-items: center;
   }
 
-  /* padding-bottom shifts the flex centre point upward to compensate for
-     the navbar height and the fixed nav bar space at the bottom */
+  /* padding-bottom shifts the flex centre point upward so the photo sits
+     at the viewport's vertical centre (equal space from page top and bottom).
+     Formula: container.top(160) + (vh-50-P)/2 = vh/2  →  P = 270px */
   .serie-container {
-    padding-bottom: 221px;
+    padding-bottom: 270px;
   }
 }
 
