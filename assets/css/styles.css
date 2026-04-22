@@ -459,7 +459,8 @@ h1, h2, h3 {
   font-family: 'Inconsolata', monospace;
 }
 
-#photo-metadata {
+#photo-metadata,
+#photo-darkroom {
   margin-bottom: 0 !important;
   white-space: nowrap;
 }
