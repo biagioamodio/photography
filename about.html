@@ -87,8 +87,6 @@
         if (imgSrc.startsWith('assets/')) {
           imgSrc = window.baseUrl + imgSrc;
         }
-        $("#about-image").attr("src", imgSrc).on("load", syncContentToImage);
-
         // Set content
         const paragraphs = data.content.split("\n\n");
         const textContainer = $("#about-text");
@@ -125,7 +123,7 @@
         var container = document.querySelector('.about-container');
         var content = document.querySelector('.about-content');
         if (!img || !content || !container) return;
-        if (window.innerWidth <= 767) {
+        if (window.innerWidth <= 840) {
           var imgLeft = img.getBoundingClientRect().left - container.getBoundingClientRect().left;
           content.style.marginLeft = imgLeft + 'px';
           content.style.width = img.offsetWidth + 'px';
@@ -134,6 +132,14 @@
           content.style.width = '';
         }
       }
+
+      // Run on image load (handles uncached), on window load (handles cached),
+      // and after a short delay to catch any late layout shifts
+      $("#about-image").attr("src", imgSrc)
+        .on("load", syncContentToImage)
+        .each(function() { if (this.complete) syncContentToImage(); });
+      $(window).on('load', syncContentToImage);
+      setTimeout(syncContentToImage, 100);
 
       $(window).on('resize', syncContentToImage);
 
