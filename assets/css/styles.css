@@ -652,7 +652,7 @@ h1, h2, h3 {
     display: inline-flex;
     align-items: center;
     position: relative;
-    top: -4px;
+    top: -5px;
   }
 
   /* Center double arrows in their columns to align with content arrows above */
