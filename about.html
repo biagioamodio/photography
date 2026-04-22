@@ -87,8 +87,6 @@
         if (imgSrc.startsWith('assets/')) {
           imgSrc = window.baseUrl + imgSrc;
         }
-        $("#about-image").attr("src", imgSrc);
-        
         // Set content
         const paragraphs = data.content.split("\n\n");
         const textContainer = $("#about-text");
@@ -104,7 +102,7 @@
           const linkElement = $("<a>")
             .attr("href", link.url)
             .addClass("contact-link link-" + link.icon);
-          
+
           // Add icon if specified
           if (link.icon === "email") {
             linkElement.append($("<i>").addClass("fa-regular fa-envelope"));
@@ -113,12 +111,37 @@
             linkElement.append($("<i>").addClass("fa-brands fa-instagram"));
             linkElement.append(" ");
           }
-          
+
           linkElement.append(link.text);
           linksContainer.append(linkElement);
         });
+
+        // Set image src and trigger sync (imgSrc is in scope here)
+        $("#about-image").attr("src", imgSrc)
+          .on("load", syncContentToImage)
+          .each(function() { if (this.complete) syncContentToImage(); });
       });
-      
+
+      // Sync about-content position and width to rendered image on mobile
+      function syncContentToImage() {
+        var img = document.getElementById('about-image');
+        var container = document.querySelector('.about-container');
+        var content = document.querySelector('.about-content');
+        if (!img || !content || !container) return;
+        if (window.innerWidth <= 840) {
+          var imgLeft = img.getBoundingClientRect().left - container.getBoundingClientRect().left;
+          content.style.marginLeft = imgLeft + 'px';
+          content.style.width = img.offsetWidth + 'px';
+        } else {
+          content.style.marginLeft = '';
+          content.style.width = '';
+        }
+      }
+
+      $(window).on('load', syncContentToImage);
+      setTimeout(syncContentToImage, 100);
+      $(window).on('resize', syncContentToImage);
+
       // Ensure content is visible when page loads (counteract any fade-out from previous page)
       setTimeout(function() {
         $('.page-content').removeClass('fade-out');
