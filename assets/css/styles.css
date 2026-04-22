@@ -651,6 +651,8 @@ h1, h2, h3 {
   .serie-nav-arrows {
     display: inline-flex;
     align-items: center;
+    position: relative;
+    top: -2px;
   }
 
   /* Center double arrows in their columns to align with content arrows above */
