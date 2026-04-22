@@ -118,6 +118,7 @@ html, body {
 .navbar-brand:hover,
 .navbar-brand:focus {
   color: var(--color-primary);
+  outline: none;
 }
 
 .navbar-nav li {
