@@ -479,8 +479,10 @@ h1, h2, h3 {
   left: 0;
 }
 
-.arrow-container a:hover {
+.arrow-container a:hover,
+.arrow-container a:focus {
   opacity: 1;
+  outline: none;
 }
 
 .arrow-container img {
