@@ -97,13 +97,13 @@ html, body {
   padding: 20px;
 }
 
-.navbar-nav {
-  margin-top: 5px;
-}
-
 .navbar-nav .theme-toggle-container {
   position: relative;
-  top: -2px;
+  top: 5px;
+}
+
+.navbar-nav li:not(.theme-toggle-container) {
+  margin-top: 5px;
 }
 
 .navbar-brand {
