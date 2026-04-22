@@ -447,6 +447,18 @@ h1, h2, h3 {
   font-family: 'Inconsolata', monospace;
 }
 
+.photo-darkroom {
+  position: absolute;
+  bottom: -3px;
+  left: 0px;
+  color: var(--color-secondary);
+  font-size: 13px;
+  text-align: left;
+  z-index: 1;
+  width: 100%;
+  font-family: 'Inconsolata', monospace;
+}
+
 #photo-metadata {
   margin-bottom: 0 !important;
   white-space: nowrap;
@@ -604,7 +616,8 @@ h1, h2, h3 {
   }
   
   /* Hide metadata on small screens to prevent layout disruption */
-  .photo-metadata {
+  .photo-metadata,
+  .photo-darkroom {
     display: none;
   }
   

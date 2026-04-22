@@ -182,6 +182,7 @@ function loadSerieContent(serie) {
         
         // Hide metadata for description
         $('#photo-metadata').text('');
+        $('#photo-darkroom').text('');
       } else {
         // Load photo with proper path
         let imgSrc = slide.content.image;
@@ -196,14 +197,21 @@ function loadSerieContent(serie) {
         });
         contentDisplay.append(photoElement);
         
-        // Set metadata — always 3 fixed rows (one per field, empty fields show as blank lines)
+        // Set metadata — only filled fields, compacted to top in CMS order
         const meta = slide.content.metadata;
         if (meta && typeof meta === 'object') {
-          const rows = [meta.camera || '', meta.lens || '', meta.filmRoll || '']
+          const gearRows = [meta.camera, meta.lens, meta.filmRoll]
+            .filter(v => v && v.trim())
             .map(v => $('<span>').text(v).prop('outerHTML'));
-          $('#photo-metadata').html(rows.join('<br>'));
+          $('#photo-metadata').html(gearRows.join('<br>'));
+
+          const darkroomRows = [meta.developing, meta.scanning, meta.printing]
+            .filter(v => v && v.trim())
+            .map(v => $('<span>').text(v).prop('outerHTML'));
+          $('#photo-darkroom').html(darkroomRows.join('<br>'));
         } else {
           $('#photo-metadata').html($('<span>').text(typeof meta === 'string' ? meta : '').prop('outerHTML'));
+          $('#photo-darkroom').html('');
         }
       }
       
