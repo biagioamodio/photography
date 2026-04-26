@@ -914,13 +914,20 @@ function editHomeSlide(id) {
 
 function fitPreviewToImage(imgEl) {
   if (!imgEl.naturalWidth) return;
+  const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+
+  // Size large preview
   const container = document.getElementById('home-preview-container');
   const w = container.offsetWidth;
-  if (w > 0) {
-    container.style.height = Math.round(w * imgEl.naturalHeight / imgEl.naturalWidth) + 'px';
-    updateHomePreview();
-    resetCropHandle();
-  }
+  if (w > 0) container.style.height = Math.round(w / ratio) + 'px';
+
+  // Size thumbnail to same ratio
+  const thumb = document.getElementById('home-thumb-wrap');
+  const tw = thumb.offsetWidth;
+  if (tw > 0) thumb.style.height = Math.round(tw / ratio) + 'px';
+
+  updateHomePreview();
+  resetCropHandle();
 }
 
 function updateHomeSliderLabel(name) {
@@ -930,46 +937,63 @@ function updateHomeSliderLabel(name) {
   label.textContent = `${parseFloat(slider.value)}%`;
 }
 
+const BLANK_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
+function setImgSrc(img, src, onLoadFn) {
+  // Use dataset to avoid browser URL-normalization comparison pitfalls
+  if (img.dataset.loadedSrc === src) return;
+  img.dataset.loadedSrc = src;
+  if (onLoadFn) img.onload = onLoadFn;
+  img.src = src;
+}
+
 function updateHomePreview() {
   const slide = homeData.slides.find(s => s.id === currentSlideId);
   if (!slide) return;
 
-  const text      = document.getElementById('home-text-input').value;
-  const textX     = parseFloat(document.getElementById('home-textX-slider').value);
-  const textY     = parseFloat(document.getElementById('home-textY-slider').value);
-  const textSize  = parseFloat(document.getElementById('home-textSize-slider').value);
+  const text       = document.getElementById('home-text-input').value;
+  const textX      = parseFloat(document.getElementById('home-textX-slider').value);
+  const textY      = parseFloat(document.getElementById('home-textY-slider').value);
+  const textSize   = parseFloat(document.getElementById('home-textSize-slider').value);
   const centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
 
   const container = document.getElementById('home-preview-container');
   const h = container.offsetHeight;
 
-  // BG image — set src and auto-size container on first load
-  const bgImg = document.getElementById('home-preview-bg');
-  const bgSrc = slide.background ? '/' + slide.background : '';
-  if (bgSrc && bgImg.src !== location.origin + bgSrc) {
-    bgImg.onload = () => fitPreviewToImage(bgImg);
-    bgImg.src = bgSrc;
-  }
+  // Large preview — BG
+  const bgSrc = slide.background ? '/' + slide.background : BLANK_GIF;
+  const bgPrev = document.getElementById('home-preview-bg');
+  setImgSrc(bgPrev, bgSrc, slide.background ? () => fitPreviewToImage(bgPrev) : null);
 
-  // FG image
-  const fgImg = document.getElementById('home-preview-fg');
-  const fgSrc = slide.foreground ? '/' + slide.foreground : '';
-  if (fgSrc && fgImg.src !== location.origin + fgSrc) {
-    fgImg.src = fgSrc;
-  }
+  // Large preview — FG
+  const fgSrc = slide.foreground ? '/' + slide.foreground : BLANK_GIF;
+  setImgSrc(document.getElementById('home-preview-fg'), fgSrc, null);
+
+  // Thumbnail — BG (same src, also auto-sizes thumb on load)
+  const bgThumb = document.getElementById('home-bg-preview');
+  setImgSrc(bgThumb, bgSrc, slide.background ? () => {
+    const thumb = document.getElementById('home-thumb-wrap');
+    const tw = thumb.offsetWidth;
+    if (bgThumb.naturalWidth > 0 && tw > 0) {
+      thumb.style.height = Math.round(tw * bgThumb.naturalHeight / bgThumb.naturalWidth) + 'px';
+    }
+  } : null);
+
+  // Thumbnail — FG
+  setImgSrc(document.getElementById('home-fg-preview'), fgSrc, null);
 
   // Text
   const textEl = document.getElementById('home-preview-text');
   textEl.textContent = text;
-  textEl.style.left = textX + '%';
-  textEl.style.top  = textY + '%';
-  textEl.style.fontSize = (h * textSize / 100) + 'px';
+  textEl.style.left      = textX + '%';
+  textEl.style.top       = textY + '%';
+  textEl.style.fontSize  = (h * textSize / 100) + 'px';
 
   // Center line
   document.getElementById('home-preview-centerline').style.left = centerLine + '%';
   const clLabel = document.getElementById('home-preview-centerline-label');
-  clLabel.style.left = centerLine + '%';
-  clLabel.textContent = Math.round(centerLine) + '%';
+  clLabel.style.left    = centerLine + '%';
+  clLabel.textContent   = Math.round(centerLine) + '%';
 }
 
 // ==================== Crop Handle ====================
@@ -1052,20 +1076,11 @@ async function uploadHomeImage(type, event) {
     const slide = homeData.slides.find(s => s.id === currentSlideId);
     if (slide) slide[type] = result.image;
 
-    // Update thumbnail immediately
-    const thumbId = type === 'background' ? 'home-bg-preview' : 'home-fg-preview';
-    document.getElementById(thumbId).src = '/' + result.image;
-
-    // Force preview to reload src by clearing it first
-    const previewId = type === 'background' ? 'home-preview-bg' : 'home-preview-fg';
-    const previewImg = document.getElementById(previewId);
-    previewImg.src = '';
-    requestAnimationFrame(() => {
-      previewImg.src = '/' + result.image;
-      if (type === 'background') {
-        previewImg.onload = () => fitPreviewToImage(previewImg);
-      }
-    });
+    // Clear dataset cache so setImgSrc forces a reload on next updateHomePreview
+    const thumbId   = type === 'background' ? 'home-bg-preview'  : 'home-fg-preview';
+    const previewId = type === 'background' ? 'home-preview-bg'  : 'home-preview-fg';
+    delete document.getElementById(thumbId).dataset.loadedSrc;
+    delete document.getElementById(previewId).dataset.loadedSrc;
 
     updateHomePreview();
     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');
