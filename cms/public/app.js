@@ -1038,9 +1038,10 @@ async function uploadHomeImage(type, event) {
   const file = event.target.files[0];
   if (!file || !currentSlideId) return;
 
+  const optimize = document.getElementById('home-optimize-checkbox').checked;
   const formData = new FormData();
   formData.append('image', file);
-  formData.append('optimize', 'true');
+  formData.append('optimize', optimize.toString());
 
   showLoading(`Uploading ${type} image...`);
   try {
