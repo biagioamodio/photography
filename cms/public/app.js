@@ -889,62 +889,63 @@ function editHomeSlide(id) {
   updateHomeSliderLabel('textSize');
   updateHomeSliderLabel('centerLine');
 
-  // Thumbnails — always set src so they show immediately
-  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-  document.getElementById('home-bg-preview').src = slide.background ? '/' + slide.background : BLANK;
-  document.getElementById('home-fg-preview').src = slide.foreground ? '/' + slide.foreground : BLANK;
-
   // Update slide title label
   const slideIndex = homeData.slides.findIndex(s => s.id === id);
   document.getElementById('home-slide-edit-title').textContent =
     slide.text ? `"${slide.text}"` : `Slide ${slideIndex + 1}`;
 
-  // Show view first so the container has real dimensions
+  // Show view so container has real dimensions, then load images + update UI
   showView('home-slide-edit');
 
-  // Reset crop handle to full width, then update preview with real dimensions
   requestAnimationFrame(() => {
     resetCropHandle();
+    loadHomeImages(slide);
     updateHomePreview();
-    // Auto-size container to BG image ratio if it's already loaded
-    const bgImg = document.getElementById('home-preview-bg');
-    if (bgImg.naturalWidth > 0) fitPreviewToImage(bgImg);
   });
 }
 
-function fitPreviewToImage(imgEl) {
-  if (!imgEl.naturalWidth) return;
-  const ratio = imgEl.naturalWidth / imgEl.naturalHeight;
+// Load BG + FG into both thumbnail and preview, update aspect ratio
+function loadHomeImages(slide) {
+  const bgSrc = slide.background ? '/' + slide.background : null;
+  const fgSrc = slide.foreground ? '/' + slide.foreground : null;
 
-  // Size large preview
-  const container = document.getElementById('home-preview-container');
-  const w = container.offsetWidth;
-  if (w > 0) container.style.height = Math.round(w / ratio) + 'px';
+  // Thumbnail composite
+  const bgThumb = document.getElementById('home-bg-preview');
+  const fgThumb = document.getElementById('home-fg-preview');
+  if (bgSrc) bgThumb.src = bgSrc;
+  if (fgSrc) fgThumb.src = fgSrc;
 
-  // Size thumbnail to same ratio
-  const thumb = document.getElementById('home-thumb-wrap');
-  const tw = thumb.offsetWidth;
-  if (tw > 0) thumb.style.height = Math.round(tw / ratio) + 'px';
+  // Large preview
+  const bgPrev = document.getElementById('home-preview-bg');
+  const fgPrev = document.getElementById('home-preview-fg');
+  if (fgSrc) fgPrev.src = fgSrc;
 
-  updateHomePreview();
-  resetCropHandle();
+  if (bgSrc) {
+    bgPrev.onload = function () {
+      if (!this.naturalWidth) return;
+      const r = this.naturalWidth / this.naturalHeight;
+      // Snap preview aspect-ratio
+      document.getElementById('home-preview-container').style.aspectRatio =
+        `${this.naturalWidth} / ${this.naturalHeight}`;
+      // Snap thumbnail height
+      const thumb = document.getElementById('home-thumb-wrap');
+      if (thumb && thumb.offsetWidth > 0) {
+        thumb.style.height = Math.round(thumb.offsetWidth / r) + 'px';
+      }
+      updateHomePreview();
+      resetCropHandle();
+    };
+    bgPrev.src = bgSrc;
+    // Already cached — fire immediately
+    if (bgPrev.complete && bgPrev.naturalWidth > 0) bgPrev.onload.call(bgPrev);
+  }
 }
 
 function updateHomeSliderLabel(name) {
   const slider = document.getElementById(`home-${name}-slider`);
-  const label = document.getElementById(`home-${name}-label`);
+  const label  = document.getElementById(`home-${name}-label`);
   if (!slider || !label) return;
   label.textContent = `${parseFloat(slider.value)}%`;
-}
-
-const BLANK_GIF = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-function setImgSrc(img, src, onLoadFn) {
-  // Use dataset to avoid browser URL-normalization comparison pitfalls
-  if (img.dataset.loadedSrc === src) return;
-  img.dataset.loadedSrc = src;
-  if (onLoadFn) img.onload = onLoadFn;
-  img.src = src;
 }
 
 function updateHomePreview() {
@@ -960,31 +961,9 @@ function updateHomePreview() {
   const container = document.getElementById('home-preview-container');
   const h = container.offsetHeight;
 
-  // Large preview — BG
-  const bgSrc = slide.background ? '/' + slide.background : BLANK_GIF;
-  const bgPrev = document.getElementById('home-preview-bg');
-  setImgSrc(bgPrev, bgSrc, slide.background ? () => fitPreviewToImage(bgPrev) : null);
-
-  // Large preview — FG
-  const fgSrc = slide.foreground ? '/' + slide.foreground : BLANK_GIF;
-  setImgSrc(document.getElementById('home-preview-fg'), fgSrc, null);
-
-  // Thumbnail — BG (same src, also auto-sizes thumb on load)
-  const bgThumb = document.getElementById('home-bg-preview');
-  setImgSrc(bgThumb, bgSrc, slide.background ? () => {
-    const thumb = document.getElementById('home-thumb-wrap');
-    const tw = thumb.offsetWidth;
-    if (bgThumb.naturalWidth > 0 && tw > 0) {
-      thumb.style.height = Math.round(tw * bgThumb.naturalHeight / bgThumb.naturalWidth) + 'px';
-    }
-  } : null);
-
-  // Thumbnail — FG
-  setImgSrc(document.getElementById('home-fg-preview'), fgSrc, null);
-
   // Text
   const textEl = document.getElementById('home-preview-text');
-  textEl.textContent = text;
+  textEl.textContent     = text;
   textEl.style.left      = textX + '%';
   textEl.style.top       = textY + '%';
   textEl.style.fontSize  = (h * textSize / 100) + 'px';
@@ -1072,15 +1051,12 @@ async function uploadHomeImage(type, event) {
     if (!res.ok) throw new Error('Upload failed');
     const result = await res.json();
 
-    // Update local slide data
+    // Update local slide data then reload all images
     const slide = homeData.slides.find(s => s.id === currentSlideId);
-    if (slide) slide[type] = result.image;
-
-    // Clear dataset cache so setImgSrc forces a reload on next updateHomePreview
-    const thumbId   = type === 'background' ? 'home-bg-preview'  : 'home-fg-preview';
-    const previewId = type === 'background' ? 'home-preview-bg'  : 'home-preview-fg';
-    delete document.getElementById(thumbId).dataset.loadedSrc;
-    delete document.getElementById(previewId).dataset.loadedSrc;
+    if (slide) {
+      slide[type] = result.image;
+      loadHomeImages(slide);
+    }
 
     updateHomePreview();
     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');

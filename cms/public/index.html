@@ -319,21 +319,17 @@
 
         <!-- Preview column -->
         <div>
-          <!-- Preview frame — aspect ratio matches the BG image -->
-          <div class="relative overflow-hidden rounded-lg bg-gray-900" id="home-preview-container" style="height:320px;">
+          <!-- Preview frame — aspect-ratio set by JS when BG loads, default 16/9 -->
+          <div class="relative overflow-hidden rounded-lg bg-gray-900" id="home-preview-container" style="width:100%;aspect-ratio:16/9;">
             <!-- Background layer -->
-            <img id="home-preview-bg"
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                 alt=""
-                 style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;object-position:bottom;z-index:1;">
+            <img id="home-preview-bg" alt=""
+                 style="display:block;position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:cover;object-position:bottom;z-index:1;">
             <!-- Text layer (between BG and FG) -->
             <div id="home-preview-text"
                  style="position:absolute;pointer-events:none;white-space:nowrap;font-family:'Young Serif',serif;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.6);transform:translate(-50%,-50%);z-index:2;"></div>
             <!-- Foreground layer -->
-            <img id="home-preview-fg"
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                 alt=""
-                 style="position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:contain;object-position:bottom;z-index:3;">
+            <img id="home-preview-fg" alt=""
+                 style="display:block;position:absolute;bottom:0;left:0;width:100%;height:100%;object-fit:contain;object-position:bottom;z-index:3;">
             <!-- Mobile center line -->
             <div id="home-preview-centerline"
                  style="position:absolute;top:0;bottom:0;width:1px;background:rgba(239,68,68,0.75);z-index:5;pointer-events:none;left:50%;"></div>
