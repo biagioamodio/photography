@@ -15,16 +15,23 @@ const DATA_DIR = path.join(PROJECT_ROOT, '_data');
 const UPLOADS_DIR = path.join(PROJECT_ROOT, 'assets', 'uploads');
 const SERIES_FILE = path.join(DATA_DIR, 'series.json');
 const ABOUT_FILE = path.join(DATA_DIR, 'about.json');
+const HOME_FILE = path.join(DATA_DIR, 'home.json');
+const HOME_UPLOADS_DIR = path.join(UPLOADS_DIR, 'home');
 
 // Git setup
 const git = simpleGit(PROJECT_ROOT);
+
+// Ensure home uploads dir exists
+if (!fs.existsSync(HOME_UPLOADS_DIR)) {
+  fs.mkdirSync(HOME_UPLOADS_DIR, { recursive: true });
+}
 
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve uploaded images from the main project
-app.use('/assets/uploads', express.static(UPLOADS_DIR));
+// Serve main project assets (images, fonts, etc.)
+app.use('/assets', express.static(path.join(PROJECT_ROOT, 'assets')));
 
 // Multer setup for file uploads
 const storage = multer.memoryStorage();
@@ -96,6 +103,22 @@ async function processImage(buffer, filename, optimize = true) {
   }
 
   return `assets/uploads/${outputFilename}`;
+}
+
+async function processImageToDir(buffer, baseName, outputDir, relPath, optimize = true) {
+  const outputFilename = `${baseName}.jpg`;
+  const outputPath = path.join(outputDir, outputFilename);
+
+  if (optimize) {
+    await sharp(buffer)
+      .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 85 })
+      .toFile(outputPath);
+  } else {
+    await sharp(buffer).jpeg({ quality: 95 }).toFile(outputPath);
+  }
+
+  return `${relPath}/${outputFilename}`;
 }
 
 // ==================== API ROUTES ====================
@@ -362,6 +385,118 @@ app.post('/api/about/image', upload.single('image'), async (req, res) => {
   }
 });
 
+// --- Home Routes ---
+
+// Get home data
+app.get('/api/home', (req, res) => {
+  let home = readJSON(HOME_FILE);
+  if (home === null) {
+    home = { slides: [] };
+    writeJSON(HOME_FILE, home);
+  }
+  res.json(home);
+});
+
+// Update home data (save all slides)
+app.put('/api/home', (req, res) => {
+  const { slides } = req.body;
+  const home = readJSON(HOME_FILE) || { slides: [] };
+  if (slides !== undefined) home.slides = slides;
+  if (!writeJSON(HOME_FILE, home)) {
+    return res.status(500).json({ error: 'Failed to save home data' });
+  }
+  res.json(home);
+});
+
+// Create new slide
+app.post('/api/home/slides', (req, res) => {
+  const home = readJSON(HOME_FILE) || { slides: [] };
+  const id = `slide-${Date.now()}`;
+  const newSlide = {
+    id,
+    background: '',
+    foreground: '',
+    text: '',
+    textX: 50,
+    textY: 50,
+    textSize: 5,
+    centerLine: 50
+  };
+  home.slides.push(newSlide);
+  if (!writeJSON(HOME_FILE, home)) {
+    return res.status(500).json({ error: 'Failed to save home data' });
+  }
+  res.status(201).json(newSlide);
+});
+
+// Delete slide
+app.delete('/api/home/slides/:id', (req, res) => {
+  const home = readJSON(HOME_FILE) || { slides: [] };
+  const index = home.slides.findIndex(s => s.id === req.params.id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Slide not found' });
+  }
+  home.slides.splice(index, 1);
+  if (!writeJSON(HOME_FILE, home)) {
+    return res.status(500).json({ error: 'Failed to save home data' });
+  }
+  res.json({ success: true });
+});
+
+// Upload background image for slide
+app.post('/api/home/slides/:id/background', upload.single('image'), async (req, res) => {
+  try {
+    const home = readJSON(HOME_FILE) || { slides: [] };
+    const slide = home.slides.find(s => s.id === req.params.id);
+    if (!slide) return res.status(404).json({ error: 'Slide not found' });
+
+    const optimize = req.body.optimize !== 'false';
+    const imagePath = await processImageToDir(
+      req.file.buffer,
+      `${req.params.id}-bg`,
+      HOME_UPLOADS_DIR,
+      'assets/uploads/home',
+      optimize
+    );
+    slide.background = imagePath;
+
+    if (!writeJSON(HOME_FILE, home)) {
+      return res.status(500).json({ error: 'Failed to save home data' });
+    }
+    res.json({ success: true, image: imagePath });
+  } catch (err) {
+    console.error('Home BG upload error:', err);
+    res.status(500).json({ error: 'Failed to upload background image' });
+  }
+});
+
+// Upload foreground image for slide
+app.post('/api/home/slides/:id/foreground', upload.single('image'), async (req, res) => {
+  try {
+    const home = readJSON(HOME_FILE) || { slides: [] };
+    const slide = home.slides.find(s => s.id === req.params.id);
+    if (!slide) return res.status(404).json({ error: 'Slide not found' });
+
+    const optimize = req.body.optimize !== 'false';
+    const imagePath = await processImageToDir(
+      req.file.buffer,
+      `${req.params.id}-fg`,
+      HOME_UPLOADS_DIR,
+      'assets/uploads/home',
+      optimize
+    );
+    slide.foreground = imagePath;
+
+    if (!writeJSON(HOME_FILE, home)) {
+      return res.status(500).json({ error: 'Failed to save home data' });
+    }
+    res.json({ success: true, image: imagePath });
+  } catch (err) {
+    console.error('Home FG upload error:', err);
+    res.status(500).json({ error: 'Failed to upload foreground image' });
+  }
+});
+
 // --- Git Routes ---
 
 // Get git status (only track website content changes)
@@ -382,8 +517,10 @@ app.get('/api/git/status', async (req, res) => {
     const modified = filterWebsiteFiles(status.modified || []);
     const created = filterWebsiteFiles(status.created || []);
     const deleted = filterWebsiteFiles(status.deleted || []);
-    // For not_added (untracked files), only count new uploads
-    const not_added = (status.not_added || []).filter(f => f.startsWith('assets/uploads/'));
+    // For not_added (untracked files), count new uploads and home.json if just created
+    const not_added = (status.not_added || []).filter(f =>
+      f.startsWith('assets/uploads/') || f === '_data/home.json'
+    );
     
     const isClean = modified.length === 0 && created.length === 0 && 
                     deleted.length === 0 && not_added.length === 0;

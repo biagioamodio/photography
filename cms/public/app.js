@@ -3,8 +3,10 @@
 // ==================== State ====================
 let seriesData = [];
 let aboutData = {};
+let homeData = { slides: [] };
 let currentSeriesId = null;
 let currentPhotoIndex = null;
+let currentSlideId = null;
 let seriesDescriptionEditor = null;
 let aboutContentEditor = null;
 let seriesSortable = null;
@@ -80,16 +82,19 @@ function initDragDrop() {
 async function loadData() {
   showLoading('Loading...');
   try {
-    const [seriesRes, aboutRes] = await Promise.all([
+    const [seriesRes, aboutRes, homeRes] = await Promise.all([
       fetch('/api/series'),
-      fetch('/api/about')
+      fetch('/api/about'),
+      fetch('/api/home')
     ]);
-    
+
     seriesData = await seriesRes.json();
     aboutData = await aboutRes.json();
-    
+    homeData = await homeRes.json();
+
     renderSeriesList();
     renderAboutPage();
+    renderHomeList();
   } catch (err) {
     showToast('Failed to load data', 'error');
     console.error(err);
@@ -103,22 +108,25 @@ function showView(viewName) {
   // Hide all views
   document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
   
-  // Update tab buttons
+  // Update tab buttons (sub-views map back to their parent tab)
+  const tabName = viewName === 'series-edit' ? 'series-list'
+    : viewName === 'home-slide-edit' ? 'home'
+    : viewName;
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('active');
-    if (btn.dataset.tab === viewName) {
-      btn.classList.add('active');
-    }
+    if (btn.dataset.tab === tabName) btn.classList.add('active');
   });
   
   // Show selected view
-  if (viewName === 'series-list') {
-    document.getElementById('series-list-view').classList.remove('hidden');
-  } else if (viewName === 'series-edit') {
-    document.getElementById('series-edit-view').classList.remove('hidden');
-  } else if (viewName === 'about') {
-    document.getElementById('about-view').classList.remove('hidden');
-  }
+  const viewMap = {
+    'series-list':    'series-list-view',
+    'series-edit':    'series-edit-view',
+    'about':          'about-view',
+    'home':           'home-view',
+    'home-slide-edit':'home-slide-edit-view'
+  };
+  const viewId = viewMap[viewName];
+  if (viewId) document.getElementById(viewId).classList.remove('hidden');
 }
 
 // ==================== Series List ====================
@@ -813,6 +821,264 @@ function showLoading(message = 'Loading...') {
 
 function hideLoading() {
   document.getElementById('loading-overlay').classList.add('hidden');
+}
+
+// ==================== Home Page ====================
+
+function renderHomeList() {
+  const grid = document.getElementById('home-slides-grid');
+  if (!grid) return;
+
+  const slides = homeData.slides || [];
+
+  if (slides.length === 0) {
+    grid.innerHTML = `
+      <div class="text-center py-12 text-gray-400">
+        <p class="text-lg mb-2">No slides yet</p>
+        <p>Click "+ Add Slide" to create your first home slide</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = slides.map((slide, index) => `
+    <div class="series-card" onclick="editHomeSlide('${slide.id}')">
+      ${slide.background
+        ? `<img src="/${slide.background}" alt="" class="series-card-thumb">`
+        : `<div class="series-card-thumb flex items-center justify-center text-2xl bg-gray-100">🖼️</div>`
+      }
+      <div class="series-card-info">
+        <div class="series-card-title">${slide.text ? escapeHtml(slide.text) : `Slide ${index + 1}`}</div>
+        <div class="series-card-meta">${slide.background ? 'BG ✓' : 'No BG'} · ${slide.foreground ? 'FG ✓' : 'No FG'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addHomeSlide() {
+  showLoading('Creating slide...');
+  try {
+    const res = await fetch('/api/home/slides', { method: 'POST' });
+    if (!res.ok) throw new Error('Failed to create slide');
+    const newSlide = await res.json();
+    homeData.slides.push(newSlide);
+    renderHomeList();
+    editHomeSlide(newSlide.id);
+    checkGitStatus();
+  } catch (err) {
+    showToast('Failed to create slide', 'error');
+  }
+  hideLoading();
+}
+
+function editHomeSlide(id) {
+  const slide = homeData.slides.find(s => s.id === id);
+  if (!slide) return;
+  currentSlideId = id;
+
+  // Populate controls
+  document.getElementById('home-text-input').value = slide.text || '';
+  document.getElementById('home-textX-slider').value = slide.textX ?? 50;
+  document.getElementById('home-textY-slider').value = slide.textY ?? 50;
+  document.getElementById('home-textSize-slider').value = slide.textSize ?? 5;
+  document.getElementById('home-centerLine-slider').value = slide.centerLine ?? 50;
+
+  updateHomeSliderLabel('textX');
+  updateHomeSliderLabel('textY');
+  updateHomeSliderLabel('textSize');
+  updateHomeSliderLabel('centerLine');
+
+  // BG thumbnail
+  const bgPreview = document.getElementById('home-bg-preview');
+  if (slide.background) {
+    bgPreview.src = '/' + slide.background;
+    bgPreview.style.display = 'block';
+  } else {
+    bgPreview.style.display = 'none';
+  }
+
+  // FG thumbnail
+  const fgPreview = document.getElementById('home-fg-preview');
+  if (slide.foreground) {
+    fgPreview.src = '/' + slide.foreground;
+    fgPreview.style.display = 'block';
+  } else {
+    fgPreview.style.display = 'none';
+  }
+
+  // Reset aspect ratio to 16:9
+  const aspectSlider = document.getElementById('aspect-ratio-slider');
+  aspectSlider.value = 178;
+  updatePreviewAspect(178);
+
+  // Update title
+  const slideIndex = homeData.slides.findIndex(s => s.id === id);
+  document.getElementById('home-slide-edit-title').textContent =
+    slide.text ? `"${slide.text}"` : `Slide ${slideIndex + 1}`;
+
+  showView('home-slide-edit');
+
+  // Defer preview update so the view is visible and has dimensions
+  requestAnimationFrame(() => updateHomePreview());
+}
+
+function updateHomeSliderLabel(name) {
+  const slider = document.getElementById(`home-${name}-slider`);
+  const label = document.getElementById(`home-${name}-label`);
+  if (!slider || !label) return;
+  label.textContent = `${parseFloat(slider.value)}%`;
+}
+
+function updateHomePreview() {
+  const slide = homeData.slides.find(s => s.id === currentSlideId);
+  if (!slide) return;
+
+  const text = document.getElementById('home-text-input').value;
+  const textX = parseFloat(document.getElementById('home-textX-slider').value);
+  const textY = parseFloat(document.getElementById('home-textY-slider').value);
+  const textSize = parseFloat(document.getElementById('home-textSize-slider').value);
+  const centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
+
+  const container = document.getElementById('home-preview-container');
+  const containerHeight = container.offsetHeight;
+
+  // BG image
+  const bgImg = document.getElementById('home-preview-bg');
+  if (slide.background) {
+    bgImg.src = '/' + slide.background;
+    bgImg.style.display = 'block';
+  }
+
+  // FG image
+  const fgImg = document.getElementById('home-preview-fg');
+  if (slide.foreground) {
+    fgImg.src = '/' + slide.foreground;
+    fgImg.style.display = 'block';
+  }
+
+  // Empty state visibility
+  const emptyEl = document.getElementById('home-preview-empty');
+  if (emptyEl) emptyEl.style.display = (slide.background || slide.foreground) ? 'none' : 'flex';
+
+  // Text element
+  const textEl = document.getElementById('home-preview-text');
+  textEl.textContent = text;
+  textEl.style.left = textX + '%';
+  textEl.style.top = textY + '%';
+  textEl.style.fontSize = (containerHeight * textSize / 100) + 'px';
+
+  // Center line
+  const lineEl = document.getElementById('home-preview-centerline');
+  lineEl.style.left = centerLine + '%';
+
+  const labelEl = document.getElementById('home-preview-centerline-label');
+  labelEl.style.left = centerLine + '%';
+  labelEl.textContent = Math.round(centerLine) + '%';
+}
+
+function updatePreviewAspect(value) {
+  // value = aspectRatio × 100 (56 → 0.56:1 portrait, 178 → 1.78:1 landscape)
+  const ratio = value / 100;
+  const container = document.getElementById('home-preview-container');
+  const width = container.offsetWidth;
+  container.style.height = Math.round(width / ratio) + 'px';
+
+  // Label
+  let label;
+  if (value >= 175)      label = '16 : 9';
+  else if (value >= 130) label = '4 : 3';
+  else if (value >= 95)  label = '1 : 1';
+  else if (value >= 72)  label = '3 : 4';
+  else                   label = '9 : 16';
+  document.getElementById('aspect-ratio-label').textContent = label;
+
+  updateHomePreview();
+}
+
+async function uploadHomeImage(type, event) {
+  const file = event.target.files[0];
+  if (!file || !currentSlideId) return;
+
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('optimize', 'true');
+
+  showLoading(`Uploading ${type} image...`);
+  try {
+    const res = await fetch(`/api/home/slides/${currentSlideId}/${type}`, {
+      method: 'POST',
+      body: formData
+    });
+    if (!res.ok) throw new Error('Upload failed');
+    const result = await res.json();
+
+    // Update local slide data
+    const slide = homeData.slides.find(s => s.id === currentSlideId);
+    if (slide) slide[type] = result.image;
+
+    // Update thumbnail
+    const previewId = type === 'background' ? 'home-bg-preview' : 'home-fg-preview';
+    const preview = document.getElementById(previewId);
+    preview.src = '/' + result.image;
+    preview.style.display = 'block';
+
+    updateHomePreview();
+    showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');
+    checkGitStatus();
+  } catch (err) {
+    showToast(`Failed to upload ${type} image`, 'error');
+  }
+  hideLoading();
+  event.target.value = '';
+}
+
+async function saveHomeSlide() {
+  const slide = homeData.slides.find(s => s.id === currentSlideId);
+  if (!slide) return;
+
+  slide.text = document.getElementById('home-text-input').value;
+  slide.textX = parseFloat(document.getElementById('home-textX-slider').value);
+  slide.textY = parseFloat(document.getElementById('home-textY-slider').value);
+  slide.textSize = parseFloat(document.getElementById('home-textSize-slider').value);
+  slide.centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
+
+  showLoading('Saving...');
+  try {
+    const res = await fetch('/api/home', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slides: homeData.slides })
+    });
+    if (!res.ok) throw new Error('Failed to save');
+
+    renderHomeList();
+    showToast('Slide saved!', 'success');
+    checkGitStatus();
+  } catch (err) {
+    showToast('Failed to save slide', 'error');
+  }
+  hideLoading();
+}
+
+async function deleteHomeSlide() {
+  if (!currentSlideId) return;
+  if (!confirm('Delete this slide?')) return;
+
+  showLoading('Deleting...');
+  try {
+    const res = await fetch(`/api/home/slides/${currentSlideId}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Failed to delete');
+
+    homeData.slides = homeData.slides.filter(s => s.id !== currentSlideId);
+    currentSlideId = null;
+    renderHomeList();
+    showToast('Slide deleted', 'success');
+    showView('home');
+    checkGitStatus();
+  } catch (err) {
+    showToast('Failed to delete slide', 'error');
+  }
+  hideLoading();
 }
 
 // Handle Enter key in create series modal
