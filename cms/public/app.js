@@ -17,9 +17,10 @@ let photosSortable = null;
 document.addEventListener('DOMContentLoaded', () => {
   initEditors();
   initDragDrop();
+  initCropHandle();
   loadData();
   checkGitStatus();
-  
+
   // Periodically check git status
   setInterval(checkGitStatus, 30000);
 });
@@ -888,38 +889,38 @@ function editHomeSlide(id) {
   updateHomeSliderLabel('textSize');
   updateHomeSliderLabel('centerLine');
 
-  // BG thumbnail
-  const bgPreview = document.getElementById('home-bg-preview');
-  if (slide.background) {
-    bgPreview.src = '/' + slide.background;
-    bgPreview.style.display = 'block';
-  } else {
-    bgPreview.style.display = 'none';
-  }
+  // Thumbnails — always set src so they show immediately
+  const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  document.getElementById('home-bg-preview').src = slide.background ? '/' + slide.background : BLANK;
+  document.getElementById('home-fg-preview').src = slide.foreground ? '/' + slide.foreground : BLANK;
 
-  // FG thumbnail
-  const fgPreview = document.getElementById('home-fg-preview');
-  if (slide.foreground) {
-    fgPreview.src = '/' + slide.foreground;
-    fgPreview.style.display = 'block';
-  } else {
-    fgPreview.style.display = 'none';
-  }
-
-  // Reset aspect ratio to 16:9
-  const aspectSlider = document.getElementById('aspect-ratio-slider');
-  aspectSlider.value = 178;
-  updatePreviewAspect(178);
-
-  // Update title
+  // Update slide title label
   const slideIndex = homeData.slides.findIndex(s => s.id === id);
   document.getElementById('home-slide-edit-title').textContent =
     slide.text ? `"${slide.text}"` : `Slide ${slideIndex + 1}`;
 
+  // Show view first so the container has real dimensions
   showView('home-slide-edit');
 
-  // Defer preview update so the view is visible and has dimensions
-  requestAnimationFrame(() => updateHomePreview());
+  // Reset crop handle to full width, then update preview with real dimensions
+  requestAnimationFrame(() => {
+    resetCropHandle();
+    updateHomePreview();
+    // Auto-size container to BG image ratio if it's already loaded
+    const bgImg = document.getElementById('home-preview-bg');
+    if (bgImg.naturalWidth > 0) fitPreviewToImage(bgImg);
+  });
+}
+
+function fitPreviewToImage(imgEl) {
+  if (!imgEl.naturalWidth) return;
+  const container = document.getElementById('home-preview-container');
+  const w = container.offsetWidth;
+  if (w > 0) {
+    container.style.height = Math.round(w * imgEl.naturalHeight / imgEl.naturalWidth) + 'px';
+    updateHomePreview();
+    resetCropHandle();
+  }
 }
 
 function updateHomeSliderLabel(name) {
@@ -933,66 +934,101 @@ function updateHomePreview() {
   const slide = homeData.slides.find(s => s.id === currentSlideId);
   if (!slide) return;
 
-  const text = document.getElementById('home-text-input').value;
-  const textX = parseFloat(document.getElementById('home-textX-slider').value);
-  const textY = parseFloat(document.getElementById('home-textY-slider').value);
-  const textSize = parseFloat(document.getElementById('home-textSize-slider').value);
+  const text      = document.getElementById('home-text-input').value;
+  const textX     = parseFloat(document.getElementById('home-textX-slider').value);
+  const textY     = parseFloat(document.getElementById('home-textY-slider').value);
+  const textSize  = parseFloat(document.getElementById('home-textSize-slider').value);
   const centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
 
   const container = document.getElementById('home-preview-container');
-  const containerHeight = container.offsetHeight;
+  const h = container.offsetHeight;
 
-  // BG image
+  // BG image — set src and auto-size container on first load
   const bgImg = document.getElementById('home-preview-bg');
-  if (slide.background) {
-    bgImg.src = '/' + slide.background;
-    bgImg.style.display = 'block';
+  const bgSrc = slide.background ? '/' + slide.background : '';
+  if (bgSrc && bgImg.src !== location.origin + bgSrc) {
+    bgImg.onload = () => fitPreviewToImage(bgImg);
+    bgImg.src = bgSrc;
   }
 
   // FG image
   const fgImg = document.getElementById('home-preview-fg');
-  if (slide.foreground) {
-    fgImg.src = '/' + slide.foreground;
-    fgImg.style.display = 'block';
+  const fgSrc = slide.foreground ? '/' + slide.foreground : '';
+  if (fgSrc && fgImg.src !== location.origin + fgSrc) {
+    fgImg.src = fgSrc;
   }
 
-  // Empty state visibility
-  const emptyEl = document.getElementById('home-preview-empty');
-  if (emptyEl) emptyEl.style.display = (slide.background || slide.foreground) ? 'none' : 'flex';
-
-  // Text element
+  // Text
   const textEl = document.getElementById('home-preview-text');
   textEl.textContent = text;
   textEl.style.left = textX + '%';
-  textEl.style.top = textY + '%';
-  textEl.style.fontSize = (containerHeight * textSize / 100) + 'px';
+  textEl.style.top  = textY + '%';
+  textEl.style.fontSize = (h * textSize / 100) + 'px';
 
   // Center line
-  const lineEl = document.getElementById('home-preview-centerline');
-  lineEl.style.left = centerLine + '%';
-
-  const labelEl = document.getElementById('home-preview-centerline-label');
-  labelEl.style.left = centerLine + '%';
-  labelEl.textContent = Math.round(centerLine) + '%';
+  document.getElementById('home-preview-centerline').style.left = centerLine + '%';
+  const clLabel = document.getElementById('home-preview-centerline-label');
+  clLabel.style.left = centerLine + '%';
+  clLabel.textContent = Math.round(centerLine) + '%';
 }
 
-function updatePreviewAspect(value) {
-  // value = aspectRatio × 100 (56 → 0.56:1 portrait, 178 → 1.78:1 landscape)
-  const ratio = value / 100;
+// ==================== Crop Handle ====================
+
+function initCropHandle() {
+  const handle    = document.getElementById('home-crop-handle');
+  const overlay   = document.getElementById('home-crop-overlay');
   const container = document.getElementById('home-preview-container');
-  const width = container.offsetWidth;
-  container.style.height = Math.round(width / ratio) + 'px';
+  if (!handle) return;
 
-  // Label
-  let label;
-  if (value >= 175)      label = '16 : 9';
-  else if (value >= 130) label = '4 : 3';
-  else if (value >= 95)  label = '1 : 1';
-  else if (value >= 72)  label = '3 : 4';
-  else                   label = '9 : 16';
-  document.getElementById('aspect-ratio-label').textContent = label;
+  let dragging = false;
 
-  updateHomePreview();
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mouseup', () => { dragging = false; });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const rect = container.getBoundingClientRect();
+    const pct  = Math.max(5, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
+    applyCrop(pct);
+  });
+
+  // Re-size container height on window resize
+  window.addEventListener('resize', () => {
+    const bgImg = document.getElementById('home-preview-bg');
+    if (bgImg && bgImg.naturalWidth > 0) fitPreviewToImage(bgImg);
+  });
+}
+
+function applyCrop(pct) {
+  const handle  = document.getElementById('home-crop-handle');
+  const overlay = document.getElementById('home-crop-overlay');
+  const label   = document.getElementById('home-crop-label');
+
+  // Position handle line
+  handle.style.left  = `calc(${pct}% - 2px)`;
+  handle.style.right = 'auto';
+
+  // Dimmed overlay: from crop line to right edge
+  overlay.style.left  = pct + '%';
+  overlay.style.width = (100 - pct) + '%';
+
+  label.textContent = Math.round(pct) + '%';
+}
+
+function resetCropHandle() {
+  const handle  = document.getElementById('home-crop-handle');
+  const overlay = document.getElementById('home-crop-overlay');
+  const label   = document.getElementById('home-crop-label');
+  if (!handle) return;
+  handle.style.left  = 'auto';
+  handle.style.right = '0';
+  overlay.style.left  = '100%';
+  overlay.style.width = '0';
+  label.textContent  = '100%';
 }
 
 async function uploadHomeImage(type, event) {
@@ -1016,11 +1052,20 @@ async function uploadHomeImage(type, event) {
     const slide = homeData.slides.find(s => s.id === currentSlideId);
     if (slide) slide[type] = result.image;
 
-    // Update thumbnail
-    const previewId = type === 'background' ? 'home-bg-preview' : 'home-fg-preview';
-    const preview = document.getElementById(previewId);
-    preview.src = '/' + result.image;
-    preview.style.display = 'block';
+    // Update thumbnail immediately
+    const thumbId = type === 'background' ? 'home-bg-preview' : 'home-fg-preview';
+    document.getElementById(thumbId).src = '/' + result.image;
+
+    // Force preview to reload src by clearing it first
+    const previewId = type === 'background' ? 'home-preview-bg' : 'home-preview-fg';
+    const previewImg = document.getElementById(previewId);
+    previewImg.src = '';
+    requestAnimationFrame(() => {
+      previewImg.src = '/' + result.image;
+      if (type === 'background') {
+        previewImg.onload = () => fitPreviewToImage(previewImg);
+      }
+    });
 
     updateHomePreview();
     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');
@@ -1036,10 +1081,10 @@ async function saveHomeSlide() {
   const slide = homeData.slides.find(s => s.id === currentSlideId);
   if (!slide) return;
 
-  slide.text = document.getElementById('home-text-input').value;
-  slide.textX = parseFloat(document.getElementById('home-textX-slider').value);
-  slide.textY = parseFloat(document.getElementById('home-textY-slider').value);
-  slide.textSize = parseFloat(document.getElementById('home-textSize-slider').value);
+  slide.text       = document.getElementById('home-text-input').value;
+  slide.textX      = parseFloat(document.getElementById('home-textX-slider').value);
+  slide.textY      = parseFloat(document.getElementById('home-textY-slider').value);
+  slide.textSize   = parseFloat(document.getElementById('home-textSize-slider').value);
   slide.centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
 
   showLoading('Saving...');
@@ -1050,7 +1095,6 @@ async function saveHomeSlide() {
       body: JSON.stringify({ slides: homeData.slides })
     });
     if (!res.ok) throw new Error('Failed to save');
-
     renderHomeList();
     showToast('Slide saved!', 'success');
     checkGitStatus();
@@ -1068,7 +1112,6 @@ async function deleteHomeSlide() {
   try {
     const res = await fetch(`/api/home/slides/${currentSlideId}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Failed to delete');
-
     homeData.slides = homeData.slides.filter(s => s.id !== currentSlideId);
     currentSlideId = null;
     renderHomeList();
