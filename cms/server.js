@@ -105,11 +105,18 @@ async function processImage(buffer, filename, optimize = true) {
   return `assets/uploads/${outputFilename}`;
 }
 
-async function processImageToDir(buffer, baseName, outputDir, relPath, optimize = true) {
-  const outputFilename = `${baseName}.jpg`;
+async function processImageToDir(buffer, baseName, outputDir, relPath, optimize = true, keepAlpha = false) {
+  const ext = keepAlpha ? 'png' : 'jpg';
+  const outputFilename = `${baseName}.${ext}`;
   const outputPath = path.join(outputDir, outputFilename);
 
-  if (optimize) {
+  if (keepAlpha) {
+    // Save as PNG to preserve transparency (foreground cutouts)
+    await sharp(buffer)
+      .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
+      .png({ compressionLevel: 8 })
+      .toFile(outputPath);
+  } else if (optimize) {
     await sharp(buffer)
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 85 })
@@ -414,12 +421,18 @@ app.post('/api/home/slides', (req, res) => {
   const id = `slide-${Date.now()}`;
   const newSlide = {
     id,
+    title: 'Slide 1',
     background: '',
     foreground: '',
     text: '',
     textX: 50,
     textY: 50,
     textSize: 5,
+    textAlign: 'center',
+    textBold: false,
+    textItalic: false,
+    shadowIntensity: 60,
+    shadowDistance: 4,
     centerLine: 50
   };
   home.slides.push(newSlide);
@@ -450,6 +463,10 @@ app.post('/api/home/slides/:id/background', upload.single('image'), async (req, 
     const slide = home.slides.find(s => s.id === req.params.id);
     if (!slide) return res.status(404).json({ error: 'Slide not found' });
 
+    if (!req.file.mimetype.match(/^image\/jpe?g$/)) {
+      return res.status(400).json({ error: 'Background image must be a JPEG file (.jpg).' });
+    }
+
     const optimize = req.body.optimize !== 'false';
     const imagePath = await processImageToDir(
       req.file.buffer,
@@ -477,13 +494,19 @@ app.post('/api/home/slides/:id/foreground', upload.single('image'), async (req, 
     const slide = home.slides.find(s => s.id === req.params.id);
     if (!slide) return res.status(404).json({ error: 'Slide not found' });
 
+    if (req.file.mimetype !== 'image/png') {
+      return res.status(400).json({ error: 'Foreground image must be a PNG file (.png) to preserve transparency.' });
+    }
+
     const optimize = req.body.optimize !== 'false';
+    // Always save FG as PNG to preserve transparency for cutout subjects
     const imagePath = await processImageToDir(
       req.file.buffer,
       `${req.params.id}-fg`,
       HOME_UPLOADS_DIR,
       'assets/uploads/home',
-      optimize
+      optimize,
+      true // keepAlpha
     );
     slide.foreground = imagePath;
 

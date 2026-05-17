@@ -68,6 +68,15 @@ if [ ! -d "node_modules" ]; then
 fi
 
 echo ""
+
+# Kill any existing process on port 3000 to avoid EADDRINUSE errors
+EXISTING_PID=$(lsof -ti :3000 2>/dev/null)
+if [ -n "$EXISTING_PID" ]; then
+    echo -e "${YELLOW}⚠️  Port 3000 is in use (PID $EXISTING_PID) — stopping it first...${NC}"
+    kill "$EXISTING_PID" 2>/dev/null
+    sleep 1
+fi
+
 echo -e "${GREEN}🚀 Starting CMS server...${NC}"
 echo "   The browser will open automatically."
 echo ""

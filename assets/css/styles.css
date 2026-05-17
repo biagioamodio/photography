@@ -287,6 +287,111 @@ h1, h2, h3 {
   }
 }
 
+/* ── Home Slideshow ─────────────────────────────────────────────────────── */
+.home-slideshow-wrap {
+  padding: 10px 0;
+}
+
+.home-slideshow {
+  position: relative;
+}
+
+.home-slide {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: #111;
+}
+
+.home-slide.active {
+  display: block;
+}
+
+/* BG + FG composite — same structure as CMS preview */
+.home-composite-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.home-bg-img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-fg-img {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* Text overlay */
+.home-slide-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-family: 'Young Serif', serif;
+  max-width: 85%;
+  pointer-events: none;
+  white-space: pre-wrap;
+  z-index: 3;
+}
+
+/* Slide navigation arrows */
+.slide-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border: none;
+  font-size: 2.2rem;
+  line-height: 1;
+  padding: 8px 14px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+  border-radius: 2px;
+}
+
+.slide-nav:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.slide-prev { left: 10px; }
+.slide-next { right: 10px; }
+
+/* Dot indicators */
+.slide-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 10;
+}
+
+.slide-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slide-dot.active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
 /* Series grid */
 .series-grid {
   display: grid;

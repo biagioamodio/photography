@@ -7,6 +7,32 @@ let homeData = { slides: [] };
 let currentSeriesId = null;
 let currentPhotoIndex = null;
 let currentSlideId = null;
+let homeTextFormat = { bold: false, italic: false, align: 'center' };
+let currentTextX = 50;
+let currentTextY = 50;
+let currentAspectRatio = 3 / 2;
+let simulatedDeviceWidth  = null;
+let simulatedDeviceHeight = null;   // physical screen height of selected preset
+let simulatedDeviceBase   = null;   // original portrait width of selected preset
+let simulatedDeviceOrientation = 'portrait';
+
+const DEVICES = {
+  393:  { name: 'iPhone 15',  h: 852,  category: 'phone'   },
+  430:  { name: 'iPhone 15+', h: 932,  category: 'phone'   },
+  744:  { name: 'iPad Mini',  h: 1133, category: 'tablet'  },
+  820:  { name: 'iPad 11"',   h: 1180, category: 'tablet'  },
+  1024: { name: 'iPad 13"',   h: 1366, category: 'tablet'  },
+  1440: { name: '15″ 4K',     h: 900,  category: 'monitor' },
+  1920: { name: '24″ 4K',     h: 1080, category: 'monitor' },
+};
+
+const DEVICE_CATEGORIES = {
+  phone:   [393, 430],
+  tablet:  [744, 820, 1024],
+  monitor: [1440, 1920],
+};
+
+let activeCategory = null;
 let seriesDescriptionEditor = null;
 let aboutContentEditor = null;
 let seriesSortable = null;
@@ -17,7 +43,8 @@ let photosSortable = null;
 document.addEventListener('DOMContentLoaded', () => {
   initEditors();
   initDragDrop();
-  initCropHandle();
+  initPreviewResize();
+  initTextDrag();
   loadData();
   checkGitStatus();
 
@@ -849,7 +876,7 @@ function renderHomeList() {
         : `<div class="series-card-thumb flex items-center justify-center text-2xl bg-gray-100">🖼️</div>`
       }
       <div class="series-card-info">
-        <div class="series-card-title">${slide.text ? escapeHtml(slide.text) : `Slide ${index + 1}`}</div>
+        <div class="series-card-title">${escapeHtml(slide.title || `Slide ${index + 1}`)}</div>
         <div class="series-card-meta">${slide.background ? 'BG ✓' : 'No BG'} · ${slide.foreground ? 'FG ✓' : 'No FG'}</div>
       </div>
     </div>
@@ -878,66 +905,151 @@ function editHomeSlide(id) {
   currentSlideId = id;
 
   // Populate controls
+  document.getElementById('home-title-input').value = slide.title || 'Slide 1';
   document.getElementById('home-text-input').value = slide.text || '';
-  document.getElementById('home-textX-slider').value = slide.textX ?? 50;
-  document.getElementById('home-textY-slider').value = slide.textY ?? 50;
   document.getElementById('home-textSize-slider').value = slide.textSize ?? 5;
-  document.getElementById('home-centerLine-slider').value = slide.centerLine ?? 50;
 
-  updateHomeSliderLabel('textX');
-  updateHomeSliderLabel('textY');
+  currentTextX = slide.textX ?? 50;
+  currentTextY = slide.textY ?? 50;
+
   updateHomeSliderLabel('textSize');
-  updateHomeSliderLabel('centerLine');
 
-  // Update slide title label
+  // Text formatting
+  homeTextFormat.bold   = slide.textBold   || false;
+  homeTextFormat.italic = slide.textItalic || false;
+  homeTextFormat.align  = slide.textAlign  || 'center';
+  updateFormatButtons();
+
+  // Shadow
+  document.getElementById('home-shadowIntensity-slider').value = slide.shadowIntensity ?? 60;
+  document.getElementById('home-shadowDistance-slider').value  = slide.shadowDistance  ?? 4;
+  updateHomeSliderLabel('shadowIntensity');
+  updateHomeSliderLabel('shadowDistance');
+
+  // Update page header to show the slide title
   const slideIndex = homeData.slides.findIndex(s => s.id === id);
   document.getElementById('home-slide-edit-title').textContent =
-    slide.text ? `"${slide.text}"` : `Slide ${slideIndex + 1}`;
+    slide.title || `Slide ${slideIndex + 1}`;
+
+  // Crop position
+  document.getElementById('home-cropX-slider').value = slide.imagePosX ?? 50;
+  document.getElementById('home-cropY-slider').value = slide.imagePosY ?? 50;
+  updateCropLabel('X');
+  updateCropLabel('Y');
 
   // Show view so container has real dimensions, then load images + update UI
   showView('home-slide-edit');
 
   requestAnimationFrame(() => {
-    resetCropHandle();
+    resetPreviewSize();
+    applyCompositeLayout();
     loadHomeImages(slide);
     updateHomePreview();
+    updateRatioLabel();
   });
 }
 
-// Load BG + FG into both thumbnail and preview, update aspect ratio
+// Load BG + FG into the preview — the container is always the user-set aspect ratio
 function loadHomeImages(slide) {
   const bgSrc = slide.background ? '/' + slide.background : null;
   const fgSrc = slide.foreground ? '/' + slide.foreground : null;
 
-  // Thumbnail composite
-  const bgThumb = document.getElementById('home-bg-preview');
-  const fgThumb = document.getElementById('home-fg-preview');
-  if (bgSrc) bgThumb.src = bgSrc;
-  if (fgSrc) fgThumb.src = fgSrc;
-
-  // Large preview
   const bgPrev = document.getElementById('home-preview-bg');
   const fgPrev = document.getElementById('home-preview-fg');
-  if (fgSrc) fgPrev.src = fgSrc;
+  const seam   = document.getElementById('home-fg-seam');
 
+  // Reset seam — will redraw when new FG loads
+  if (seam) seam.style.display = 'none';
+
+  // FG: wire onload before setting src so cached images are caught
+  if (fgSrc) {
+    fgPrev.onload = () => applyCompositeLayout();
+    fgPrev.src = fgSrc;
+    if (fgPrev.complete && fgPrev.naturalWidth > 0) applyCompositeLayout();
+  }
+
+  // BG: recompute composite layout once BG natural dimensions are known
   if (bgSrc) {
-    bgPrev.onload = function () {
-      if (!this.naturalWidth) return;
-      const r = this.naturalWidth / this.naturalHeight;
-      // Snap preview aspect-ratio
-      document.getElementById('home-preview-container').style.aspectRatio =
-        `${this.naturalWidth} / ${this.naturalHeight}`;
-      // Snap thumbnail height
-      const thumb = document.getElementById('home-thumb-wrap');
-      if (thumb && thumb.offsetWidth > 0) {
-        thumb.style.height = Math.round(thumb.offsetWidth / r) + 'px';
-      }
-      updateHomePreview();
-      resetCropHandle();
-    };
+    bgPrev.onload  = () => applyCompositeLayout();
+    bgPrev.onerror = () => console.warn('[CMS] BG failed to load:', bgSrc);
     bgPrev.src = bgSrc;
-    // Already cached — fire immediately
-    if (bgPrev.complete && bgPrev.naturalWidth > 0) bgPrev.onload.call(bgPrev);
+    if (bgPrev.complete && bgPrev.naturalWidth > 0) applyCompositeLayout();
+  }
+}
+
+// For each column of the FG image, find the topmost opaque pixel and build
+// an SVG path that traces that contour from left to right — so the line follows
+// the actual silhouette top-edge of the FG subject rather than a straight line.
+function updateFGSeam() {
+  const fgImg    = document.getElementById('home-preview-fg');
+  const container= document.getElementById('home-preview-container');
+  const seam     = document.getElementById('home-fg-seam');
+  const seamPath = document.getElementById('home-fg-seam-path');
+  if (!fgImg || !container || !seam || !seamPath) return;
+
+  if (!fgImg.naturalWidth || fgImg.src.startsWith('data:')) {
+    seam.style.display = 'none';
+    return;
+  }
+
+  try {
+    const iw = fgImg.naturalWidth;
+    const ih = fgImg.naturalHeight;
+    const cw = container.offsetWidth  || container.getBoundingClientRect().width;
+    const ch = container.offsetHeight || container.getBoundingClientRect().height;
+
+    // Scan at the thumbnail's own pixel width for a smooth 1-point-per-pixel line
+    const scanW = Math.min(iw, Math.round(cw) || 300);
+    const scanH = Math.round(ih * scanW / iw);
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = scanW;
+    canvas.height = scanH;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(fgImg, 0, 0, scanW, scanH);
+    const { data } = ctx.getImageData(0, 0, scanW, scanH);
+
+    // Per-column: find topmost row where alpha > threshold
+    const threshold = 10;
+    const topRow = new Int16Array(scanW).fill(-1);
+    for (let x = 0; x < scanW; x++) {
+      for (let y = 0; y < scanH; y++) {
+        if (data[(y * scanW + x) * 4 + 3] > threshold) {
+          topRow[x] = y;
+          break;
+        }
+      }
+    }
+
+    // Map image-space coords → container CSS-space coords using the composite layout.
+    // FG fills the full width of the composite wrap and is bottom-aligned within it.
+    const { wrapL, wrapT, wrapW, wrapH } = _compositeLayout;
+    const renderedW = wrapW;
+    const renderedH = wrapW * ih / iw;
+    const offX      = wrapL;
+    const offY      = wrapT + wrapH - renderedH;
+
+    // Build SVG path — M to start a segment, L to continue, gaps where column is fully transparent
+    let d = '';
+    let drawing = false;
+    for (let x = 0; x < scanW; x++) {
+      if (topRow[x] < 0) { drawing = false; continue; }
+      const px = (offX + (x / scanW) * renderedW).toFixed(1);
+      const py = (offY + (topRow[x] / scanH) * renderedH).toFixed(1);
+      d += drawing ? `L${px} ${py} ` : `M${px} ${py} `;
+      drawing = true;
+    }
+
+    seamPath.setAttribute('d', d);
+    seam.style.display = d ? 'block' : 'none';
+
+    // Respect visibility toggle
+    const seamToggle = document.getElementById('toggle-seam');
+    if (seamToggle && !seamToggle.checked) seam.style.display = 'none';
+
+  } catch (e) {
+    console.warn('[CMS] FG seam detection failed:', e);
+    seam.style.display = 'none';
   }
 }
 
@@ -945,98 +1057,802 @@ function updateHomeSliderLabel(name) {
   const slider = document.getElementById(`home-${name}-slider`);
   const label  = document.getElementById(`home-${name}-label`);
   if (!slider || !label) return;
-  label.textContent = `${parseFloat(slider.value)}%`;
+  const val = parseFloat(slider.value);
+  label.textContent = name === 'shadowDistance' ? `${val}px` : `${val}%`;
 }
+
+// ==================== Text Formatting ====================
+
+const _BTN_ACTIVE   = 'w-7 h-7 rounded border border-blue-400 bg-blue-50 text-blue-700 flex items-center justify-center text-sm leading-none';
+const _BTN_INACTIVE = 'w-7 h-7 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 flex items-center justify-center text-sm leading-none';
+
+function updateFormatButtons() {
+  const b = homeTextFormat;
+  const q = id => document.getElementById(id);
+  if (q('btn-text-bold'))     q('btn-text-bold').className     = (b.bold            ? _BTN_ACTIVE : _BTN_INACTIVE) + ' font-bold';
+  if (q('btn-text-italic'))   q('btn-text-italic').className   = (b.italic          ? _BTN_ACTIVE : _BTN_INACTIVE) + ' italic';
+  if (q('btn-align-left'))    q('btn-align-left').className    = (b.align==='left'   ? _BTN_ACTIVE : _BTN_INACTIVE);
+  if (q('btn-align-center'))  q('btn-align-center').className  = (b.align==='center' ? _BTN_ACTIVE : _BTN_INACTIVE);
+  if (q('btn-align-right'))   q('btn-align-right').className   = (b.align==='right'  ? _BTN_ACTIVE : _BTN_INACTIVE);
+}
+
+function toggleHomeFormat(type) {
+  homeTextFormat[type] = !homeTextFormat[type];
+  updateFormatButtons();
+  updateHomePreview();
+}
+
+function setHomeAlign(align) {
+  homeTextFormat.align = align;
+  updateFormatButtons();
+  updateHomePreview();
+}
+
+// Toggle visibility of seam/text overlays
+function updatePreviewToggles() {
+  const seamOn = document.getElementById('toggle-seam')?.checked ?? true;
+  const textOn = document.getElementById('toggle-text')?.checked ?? true;
+
+  // Seam: re-run calculation when turning on; force-hide when off
+  if (seamOn) {
+    updateFGSeam();
+  } else {
+    const seam = document.getElementById('home-fg-seam');
+    if (seam) seam.style.display = 'none';
+  }
+
+  // Text
+  const textEl = document.getElementById('home-preview-text');
+  if (textEl) textEl.style.visibility = textOn ? 'visible' : 'hidden';
+}
+
+// ==================== Preview ====================
 
 function updateHomePreview() {
   const slide = homeData.slides.find(s => s.id === currentSlideId);
   if (!slide) return;
 
-  const text       = document.getElementById('home-text-input').value;
-  const textX      = parseFloat(document.getElementById('home-textX-slider').value);
-  const textY      = parseFloat(document.getElementById('home-textY-slider').value);
-  const textSize   = parseFloat(document.getElementById('home-textSize-slider').value);
-  const centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
+  const text     = document.getElementById('home-text-input').value;
+  const textSize = parseFloat(document.getElementById('home-textSize-slider').value);
 
   const container = document.getElementById('home-preview-container');
   const h = container.offsetHeight;
 
-  // Text
+  // Text content + position + size
   const textEl = document.getElementById('home-preview-text');
-  textEl.textContent     = text;
-  textEl.style.left      = textX + '%';
-  textEl.style.top       = textY + '%';
-  textEl.style.fontSize  = (h * textSize / 100) + 'px';
+  textEl.textContent    = text;
+  textEl.style.left     = currentTextX + '%';
+  textEl.style.top      = currentTextY + '%';
+  textEl.style.fontSize = (h * textSize / 100) + 'px';
 
-  // Center line
-  document.getElementById('home-preview-centerline').style.left = centerLine + '%';
-  const clLabel = document.getElementById('home-preview-centerline-label');
-  clLabel.style.left    = centerLine + '%';
-  clLabel.textContent   = Math.round(centerLine) + '%';
+  // Formatting
+  textEl.style.fontWeight = homeTextFormat.bold   ? 'bold'   : 'normal';
+  textEl.style.fontStyle  = homeTextFormat.italic ? 'italic' : 'normal';
+  textEl.style.textAlign  = homeTextFormat.align;
+
+  // Text shadow
+  const shadowIntensity = parseFloat(document.getElementById('home-shadowIntensity-slider')?.value ?? 60) / 100;
+  const shadowDistance  = parseFloat(document.getElementById('home-shadowDistance-slider')?.value  ?? 4);
+  textEl.style.textShadow = shadowIntensity > 0
+    ? `0 ${shadowDistance}px ${shadowDistance * 2}px rgba(0,0,0,${shadowIntensity.toFixed(2)})`
+    : 'none';
+
+  // Apply text visibility toggle
+  const textToggle = document.getElementById('toggle-text');
+  textEl.style.visibility = (!textToggle || textToggle.checked) ? 'visible' : 'hidden';
 }
 
-// ==================== Crop Handle ====================
+// ==================== Padding controls ====================
 
-function initCropHandle() {
-  const handle    = document.getElementById('home-crop-handle');
-  const overlay   = document.getElementById('home-crop-overlay');
-  const container = document.getElementById('home-preview-container');
-  if (!handle) return;
+// ==================== Crop position + composite layout ====================
 
-  let dragging = false;
+// Cached layout used by updateFGSeam — avoids recomputing inside the seam function
+let _compositeLayout = { wrapL: 0, wrapT: 0, wrapW: 0, wrapH: 0 };
 
-  handle.addEventListener('mousedown', e => {
-    dragging = true;
-    e.preventDefault();
-  });
+function updateCropLabel(axis) {
+  const el = document.getElementById(`home-crop${axis}-slider`);
+  const lb = document.getElementById(`home-crop${axis}-label`);
+  if (el && lb) lb.textContent = el.value + '%';
+}
 
-  document.addEventListener('mouseup', () => { dragging = false; });
+/**
+ * Positions and sizes #home-composite-wrap so BG + FG move, scale,
+ * and crop together (cover mode — composite always fills the container).
+ *
+ * The focal point (posX, posY) is placed at the container centre, clamped
+ * so the composite never exposes the container background.
+ *
+ * Guide lines track where the focal point actually lands in the container:
+ *   lineX = (wrapL + posX * wrapW) / cw
+ * When the image has no overflow this equals posX (line is at the slider %).
+ * As the crop gets heavier the clamp pulls the line toward 50 %.
+ */
+function applyCompositeLayout() {
+  const bg   = document.getElementById('home-preview-bg');
+  const wrap = document.getElementById('home-composite-wrap');
+  const cont = document.getElementById('home-preview-container');
+  if (!wrap || !cont) return;
 
+  const cw = cont.offsetWidth;
+  const ch = cont.offsetHeight;
+  if (!cw || !ch) return;
+
+  // Use BG's natural pixel dimensions; fall back to container AR if not yet loaded
+  const bw = (bg && bg.naturalWidth)  || cw;
+  const bh = (bg && bg.naturalHeight) || ch;
+  const compositeAR = bw / bh;
+  const containerAR = cw / ch;
+
+  const posX = parseFloat(document.getElementById('home-cropX-slider')?.value ?? 50) / 100;
+  const posY = parseFloat(document.getElementById('home-cropY-slider')?.value ?? 50) / 100;
+
+  let wrapW, wrapH, wrapL, wrapT;
+
+  // Cover — composite always fills the container.
+  // Place posX% of the image at the horizontal centre; posY% at the vertical centre.
+  // Clamp so the composite never exposes the container background.
+  if (compositeAR > containerAR) {
+    // Composite wider → fill height, pan horizontally
+    wrapH = ch;   wrapW = ch * compositeAR;
+    wrapT = 0;
+    wrapL = Math.min(0, Math.max(-(wrapW - cw), cw / 2 - posX * wrapW));
+  } else {
+    // Composite taller → fill width, pan vertically
+    wrapW = cw;   wrapH = cw / compositeAR;
+    wrapL = 0;
+    wrapT = Math.min(0, Math.max(-(wrapH - ch), ch / 2 - posY * wrapH));
+  }
+
+  wrap.style.width  = wrapW + 'px';
+  wrap.style.height = wrapH + 'px';
+  wrap.style.left   = wrapL + 'px';
+  wrap.style.top    = wrapT + 'px';
+
+  _compositeLayout = { wrapL, wrapT, wrapW, wrapH };
+
+  // Move guide lines to wherever the focal point actually landed in the container.
+  // No crop → line sits at posX% / posY%.  Heavy crop → line converges on 50%.
+  const guideX = document.getElementById('crop-guide-x');
+  const guideY = document.getElementById('crop-guide-y');
+  if (guideX) guideX.style.left = ((wrapL + posX * wrapW) / cw * 100).toFixed(2) + '%';
+  if (guideY) guideY.style.top  = ((wrapT + posY * wrapH) / ch * 100).toFixed(2) + '%';
+
+  // Redraw the FG silhouette seam with the updated composite position
+  updateFGSeam();
+}
+
+// ==================== Preview Resize (right + bottom handles) ====================
+
+let _previewResizing    = null;   // 'right' | 'bottom' | null
+let _previewResizeStart = {};
+let canvasARLocked      = false;
+
+function toggleCanvasARLock() {
+  canvasARLocked = !canvasARLocked;
+  const btn   = document.getElementById('canvas-ar-lock');
+  const label = document.getElementById('canvas-ar-lock-label');
+  const svgPath = canvasARLocked
+    ? 'M7 11V7a5 5 0 0 1 10 0v4'   // closed shackle
+    : 'M7 11V7a5 5 0 0 1 9.9-1';   // open shackle
+  if (btn) {
+    btn.querySelector('path').setAttribute('d', svgPath);
+    btn.style.color = canvasARLocked ? '#6366f1' : '#9ca3af';
+  }
+  if (label) label.textContent = canvasARLocked ? 'locked' : 'free';
+  // Capture current AR as the locked ratio
+  if (canvasARLocked) {
+    const frame = document.getElementById('home-preview-container');
+    const wrap  = document.getElementById('preview-inner-wrap');
+    if (frame && wrap) currentAspectRatio = wrap.offsetWidth / frame.offsetHeight;
+  }
+}
+
+function startPreviewResize(edge, e) {
+  if (simulatedDeviceWidth !== null) return;   // locked in preset / custom-dim mode
+
+  const wrap  = document.getElementById('preview-inner-wrap');
+  const frame = document.getElementById('home-preview-container');
+  if (!wrap || !frame) return;
+
+  // Freeze explicit px height on the frame so width and height become independent
+  const currentH = frame.offsetHeight;
+  const currentW = wrap.offsetWidth;
+  frame.style.aspectRatio = '';
+  frame.style.height      = currentH + 'px';
+  currentAspectRatio      = currentW / currentH;
+
+  wrap.style.width = currentW + 'px';   // pin width too so drag delta is stable
+  _previewResizeStart = { x: e.clientX, y: e.clientY, w: currentW, h: currentH };
+  _previewResizing = edge;
+  e.preventDefault();
+}
+
+function initPreviewResize() {
   document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const rect = container.getBoundingClientRect();
-    const pct  = Math.max(5, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
-    applyCrop(pct);
+    if (!_previewResizing) return;
+
+    const wrap  = document.getElementById('preview-inner-wrap');
+    const frame = document.getElementById('home-preview-container');
+    const area  = document.getElementById('preview-resize-area');
+    if (!wrap || !frame || !area) return;
+
+    const maxW = area.offsetWidth;
+
+    const areaBottom = area.getBoundingClientRect().bottom;
+    const frameTop   = frame.getBoundingClientRect().top;
+    const maxH       = Math.max(60, Math.floor(areaBottom - frameTop));
+
+    if (_previewResizing === 'right') {
+      let newW = Math.max(320, Math.min(maxW, _previewResizeStart.w + (e.clientX - _previewResizeStart.x)));
+      // Enforce 4:1 max landscape AR when in free mode (no simulated device)
+      if (simulatedDeviceWidth === null) {
+        newW = Math.min(newW, Math.round(frame.offsetHeight * FREE_MAX_LANDSCAPE_AR));
+      }
+      wrap.style.width = newW + 'px';
+      if (canvasARLocked) {
+        // Keep AR: height follows width
+        const lockedAR = _previewResizeStart.w / _previewResizeStart.h;
+        frame.style.height = Math.max(60, Math.min(maxH, Math.round(newW / lockedAR))) + 'px';
+      }
+      // Unlocked: height stays fixed (already pinned in startPreviewResize)
+      updatePreviewShellLayout();
+
+    } else {
+      // Bottom handle — clamped so canvas never extends past resize-area boundary
+      let newH = Math.min(maxH, Math.max(60, _previewResizeStart.h + (e.clientY - _previewResizeStart.y)));
+      // Enforce 4:1 max landscape AR in free mode: height must be >= width/4
+      if (simulatedDeviceWidth === null) {
+        newH = Math.max(newH, Math.ceil(wrap.offsetWidth / FREE_MAX_LANDSCAPE_AR));
+      }
+      frame.style.height = newH + 'px';
+      if (canvasARLocked) {
+        // Keep AR: width follows height
+        const lockedAR = _previewResizeStart.w / _previewResizeStart.h;
+        const newW = Math.max(320, Math.min(maxW, Math.round(newH * lockedAR)));
+        wrap.style.width = newW + 'px';
+        updatePreviewShellLayout();
+      }
+      // Unlocked: width stays fixed
+    }
+
+    currentAspectRatio = wrap.offsetWidth / frame.offsetHeight;
+    updateRatioLabel();
+    applyCompositeLayout();
   });
 
-  // Re-size container height on window resize
+  document.addEventListener('mouseup', () => { _previewResizing = null; });
+
   window.addEventListener('resize', () => {
-    const bgImg = document.getElementById('home-preview-bg');
-    if (bgImg && bgImg.naturalWidth > 0) fitPreviewToImage(bgImg);
+    if (simulatedDeviceWidth !== null && simulatedDeviceHeight !== null) {
+      applyPreviewScale();
+    } else {
+      const wrap = document.getElementById('preview-inner-wrap');
+      if (wrap && wrap.style.width && !wrap.style.width.endsWith('%')) {
+        const area = document.getElementById('preview-resize-area');
+        if (area && parseInt(wrap.style.width) > area.offsetWidth) {
+          wrap.style.width = '100%';
+        }
+      }
+    }
+    updateRatioLabel();
   });
 }
 
-function applyCrop(pct) {
-  const handle  = document.getElementById('home-crop-handle');
-  const overlay = document.getElementById('home-crop-overlay');
-  const label   = document.getElementById('home-crop-label');
+// ==================== Text Drag ====================
 
-  // Position handle line
-  handle.style.left  = `calc(${pct}% - 2px)`;
-  handle.style.right = 'auto';
+function initTextDrag() {
+  let _dragging = false;
+  let _dragStart = {};
 
-  // Dimmed overlay: from crop line to right edge
-  overlay.style.left  = pct + '%';
-  overlay.style.width = (100 - pct) + '%';
+  document.addEventListener('mousedown', (e) => {
+    const textEl = document.getElementById('home-preview-text');
+    const container = document.getElementById('home-preview-container');
+    if (!textEl || !container) return;
+    if (!textEl.contains(e.target)) return;
+    // Only drag when toggle-text is on
+    const toggle = document.getElementById('toggle-text');
+    if (toggle && !toggle.checked) return;
 
-  label.textContent = Math.round(pct) + '%';
+    e.preventDefault();
+    e.stopPropagation();
+    _dragging = true;
+    const rect = container.getBoundingClientRect();
+    _dragStart = {
+      mouseX: e.clientX,
+      mouseY: e.clientY,
+      startX: currentTextX,
+      startY: currentTextY,
+      cw: rect.width,
+      ch: rect.height
+    };
+    textEl.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!_dragging) return;
+    const dx = e.clientX - _dragStart.mouseX;
+    const dy = e.clientY - _dragStart.mouseY;
+    currentTextX = Math.max(0, Math.min(100, _dragStart.startX + (dx / _dragStart.cw) * 100));
+    currentTextY = Math.max(0, Math.min(100, _dragStart.startY + (dy / _dragStart.ch) * 100));
+    const textEl = document.getElementById('home-preview-text');
+    if (textEl) {
+      textEl.style.left = currentTextX + '%';
+      textEl.style.top  = currentTextY + '%';
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (_dragging) {
+      _dragging = false;
+      const textEl = document.getElementById('home-preview-text');
+      if (textEl) textEl.style.cursor = 'grab';
+    }
+  });
 }
 
-function resetCropHandle() {
-  const handle  = document.getElementById('home-crop-handle');
-  const overlay = document.getElementById('home-crop-overlay');
-  const label   = document.getElementById('home-crop-label');
-  if (!handle) return;
-  handle.style.left  = 'auto';
-  handle.style.right = '0';
-  overlay.style.left  = '100%';
-  overlay.style.width = '0';
-  label.textContent  = '100%';
+function resetPreviewSize() {
+  simulatedDeviceWidth       = null;
+  simulatedDeviceHeight      = null;
+  simulatedDeviceBase        = null;
+  simulatedDeviceOrientation = 'portrait';
+  currentAspectRatio         = 3 / 2;
+  activeCategory             = null;
+  const wrap  = document.getElementById('preview-inner-wrap');
+  const frame = document.getElementById('home-preview-container');
+  const shell = document.getElementById('preview-website-shell');
+  if (wrap)  { wrap.style.width = '100%'; wrap.style.height = ''; wrap.style.transform = ''; wrap.style.transformOrigin = ''; wrap.style.marginLeft = ''; }
+  if (frame) { frame.style.height = ''; frame.style.aspectRatio = '3/2'; }
+  if (shell) { shell.style.height = ''; shell.style.overflow = 'hidden'; }
+  const orientBtn = document.getElementById('btn-orientation');
+  if (orientBtn) orientBtn.style.display = 'none';
+  _updateCategoryBtns();
+  _hidePanels();
+  ['free-w','free-h','free-ar-w','free-ar-h'].forEach(id => { const el = document.getElementById(id); if (el) { el.value = ''; el.disabled = false; } });
+  freeARLocked = false;  freeResLocked = false;
+  _updateFreeLockUI();
+  requestAnimationFrame(() => { updatePreviewShellLayout(); updateRatioLabel(); applyCompositeLayout(); });
+}
+
+// ==================== Category tabs + Free-mode inputs ====================
+
+const _SVG_LOCK_CLOSED = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+const _SVG_LOCK_OPEN   = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
+
+let freeARLocked  = false;
+let freeResLocked = false;
+
+function _gcd(a, b) { return b === 0 ? a : _gcd(b, a % b); }
+
+function _updateCategoryBtns() {
+  ['phone','tablet','monitor','free'].forEach(cat => {
+    const btn = document.getElementById('cat-' + cat);
+    if (!btn) return;
+    const active = activeCategory === cat;
+    btn.classList.toggle('bg-indigo-600',        active);
+    btn.classList.toggle('text-white',           active);
+    btn.classList.toggle('hover:bg-indigo-700',  active);
+    btn.classList.toggle('bg-gray-100',          !active);
+    btn.classList.toggle('text-gray-600',        !active);
+    btn.classList.toggle('hover:bg-gray-200',    !active);
+  });
+}
+
+function _hidePanels() {
+  ['panel-device','panel-free'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+
+function _showDevicePanel(category) {
+  const sel = document.getElementById('device-model-select');
+  if (!sel) return;
+  sel.innerHTML = '';
+  (DEVICE_CATEGORIES[category] || []).forEach(w => {
+    const opt = document.createElement('option');
+    opt.value       = w;
+    opt.textContent = DEVICES[w].name;
+    sel.appendChild(opt);
+  });
+  const panel = document.getElementById('panel-device');
+  if (panel) panel.style.display = '';
+}
+
+function _updateDeviceInfoDisplay() {
+  // Live bar is now driven by updateRatioLabel(); nothing extra needed here.
+  updateRatioLabel();
+}
+
+function selectCategory(cat) {
+  activeCategory = cat;
+  _updateCategoryBtns();
+  _hidePanels();
+
+  if (cat === 'free') {
+    const fp = document.getElementById('panel-free');
+    if (fp) fp.style.display = '';
+    const orientBtn = document.getElementById('btn-orientation');
+    if (orientBtn) orientBtn.style.display = 'none';
+    setDevicePreset(null);
+  } else {
+    _showDevicePanel(cat);
+    const sel = document.getElementById('device-model-select');
+    if (sel && sel.options.length > 0) {
+      sel.selectedIndex = 0;
+      setDevicePreset(parseInt(sel.value));
+    }
+  }
+}
+
+function onDeviceModelChange() {
+  const sel = document.getElementById('device-model-select');
+  if (!sel) return;
+  const w = parseInt(sel.value);
+  if (w) setDevicePreset(w);
+}
+
+function _updateFreeLockUI() {
+  const arDisabled  = freeARLocked || freeResLocked;
+  const resDisabled = freeResLocked;
+  ['free-ar-w','free-ar-h'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = arDisabled; });
+  ['free-w','free-h'].forEach(id => { const el = document.getElementById(id); if (el) el.disabled = resDisabled; });
+
+  const arLock  = document.getElementById('free-ar-lock');
+  const resLock = document.getElementById('free-res-lock');
+  if (arLock) {
+    arLock.innerHTML   = freeARLocked ? _SVG_LOCK_CLOSED : _SVG_LOCK_OPEN;
+    arLock.style.color = freeARLocked ? '#6366f1' : '#9ca3af';
+    arLock.title       = freeARLocked ? 'Unlock aspect ratio' : 'Lock aspect ratio';
+  }
+  if (resLock) {
+    resLock.innerHTML   = freeResLocked ? _SVG_LOCK_CLOSED : _SVG_LOCK_OPEN;
+    resLock.style.color = freeResLocked ? '#6366f1' : '#9ca3af';
+    resLock.title       = freeResLocked ? 'Unlock resolution' : 'Lock resolution';
+  }
+}
+
+function toggleFreeARLock()  { freeARLocked  = !freeARLocked;  _updateFreeLockUI(); }
+function toggleFreeResLock() { freeResLocked = !freeResLocked; _updateFreeLockUI(); }
+
+function _syncFreeARFromWH() {
+  if (freeARLocked) return;
+  const w = parseInt(document.getElementById('free-w').value);
+  const h = parseInt(document.getElementById('free-h').value);
+  if (w > 0 && h > 0) {
+    const g = _gcd(w, h);
+    document.getElementById('free-ar-w').value = w / g;
+    document.getElementById('free-ar-h').value = h / g;
+  }
+}
+
+function _applyFreeCustomDims() {
+  const w = parseInt(document.getElementById('free-w').value);
+  const h = parseInt(document.getElementById('free-h').value);
+  const wrap  = document.getElementById('preview-inner-wrap');
+  const shell = document.getElementById('preview-website-shell');
+  if (w > 0 && h > 0) {
+    simulatedDeviceWidth  = w;
+    simulatedDeviceHeight = h;
+    updatePreviewShellLayout();
+    requestAnimationFrame(() => { applyPreviewScale(); updateRatioLabel(); applyCompositeLayout(); });
+  } else if (!(w > 0) && !(h > 0)) {
+    simulatedDeviceWidth  = null;
+    simulatedDeviceHeight = null;
+    if (wrap)  { wrap.style.transform = ''; wrap.style.transformOrigin = ''; wrap.style.marginLeft = ''; wrap.style.width = '100%'; wrap.style.height = ''; }
+    if (shell) { shell.style.height = ''; shell.style.overflow = 'hidden'; }
+    updatePreviewShellLayout();
+    requestAnimationFrame(() => { updateRatioLabel(); applyCompositeLayout(); });
+  }
+}
+
+const FREE_MAX_LANDSCAPE_AR = 4; // hard cap: never wider than 4:1
+
+function onFreeWChange() {
+  if (freeResLocked) return;
+  const w = parseInt(document.getElementById('free-w').value);
+  if (freeARLocked) {
+    const arW = parseInt(document.getElementById('free-ar-w').value) || 16;
+    const arH = parseInt(document.getElementById('free-ar-h').value) || 9;
+    if (w > 0) document.getElementById('free-h').value = Math.round(w * arH / arW);
+  }
+  // Enforce 4:1 max: if new width makes ratio too wide, push height up
+  const h = parseInt(document.getElementById('free-h').value);
+  if (w > 0 && h > 0 && w / h > FREE_MAX_LANDSCAPE_AR) {
+    document.getElementById('free-h').value = Math.ceil(w / FREE_MAX_LANDSCAPE_AR);
+  }
+  _syncFreeARFromWH();
+  _applyFreeCustomDims();
+}
+
+function onFreeHChange() {
+  if (freeResLocked) return;
+  const h = parseInt(document.getElementById('free-h').value);
+  if (freeARLocked) {
+    const arW = parseInt(document.getElementById('free-ar-w').value) || 16;
+    const arH = parseInt(document.getElementById('free-ar-h').value) || 9;
+    if (h > 0) document.getElementById('free-w').value = Math.round(h * arW / arH);
+  }
+  // Enforce 4:1 max: if new height makes ratio too wide, cap width
+  const w = parseInt(document.getElementById('free-w').value);
+  if (w > 0 && h > 0 && w / h > FREE_MAX_LANDSCAPE_AR) {
+    document.getElementById('free-w').value = Math.floor(h * FREE_MAX_LANDSCAPE_AR);
+  }
+  _syncFreeARFromWH();
+  _applyFreeCustomDims();
+}
+
+function onFreeARChange() {
+  if (freeARLocked || freeResLocked) return;
+  let arW = parseInt(document.getElementById('free-ar-w').value);
+  const arH = parseInt(document.getElementById('free-ar-h').value);
+  if (arW > 0 && arH > 0) {
+    // Enforce 4:1 max on the AR inputs themselves
+    if (arW / arH > FREE_MAX_LANDSCAPE_AR) {
+      arW = FREE_MAX_LANDSCAPE_AR * arH;
+      document.getElementById('free-ar-w').value = arW;
+    }
+    const w = parseInt(document.getElementById('free-w').value);
+    if (w > 0) {
+      document.getElementById('free-h').value = Math.round(w * arH / arW);
+      _applyFreeCustomDims();
+    }
+  }
+}
+
+// ==================== Device Presets ====================
+
+/**
+ * Match the canvas (home-preview-container) aspect ratio to the currently
+ * simulated device dimensions so the image fills the device screen completely.
+ * Only called for real device presets (phone / tablet / monitor), NOT for
+ * free mode or manual drag-handle resizing.
+ */
+function _syncCanvasToDevice() {
+  const frame = document.getElementById('home-preview-container');
+  if (!frame || !simulatedDeviceWidth || !simulatedDeviceHeight) return;
+  frame.style.height      = '';
+  frame.style.aspectRatio = simulatedDeviceWidth + '/' + simulatedDeviceHeight;
+  currentAspectRatio      = simulatedDeviceWidth / simulatedDeviceHeight;
+}
+
+function setDevicePreset(width) {
+  simulatedDeviceBase        = width;
+  simulatedDeviceWidth       = width;
+  simulatedDeviceOrientation = 'portrait';
+
+  const device    = width ? DEVICES[width] : null;
+  const orientBtn = document.getElementById('btn-orientation');
+  if (orientBtn) {
+    const show = device && device.category !== 'monitor';
+    orientBtn.style.display = show ? '' : 'none';
+    orientBtn.textContent   = 'Portrait';
+    orientBtn.title         = 'Switch to landscape';
+  }
+
+  const wrap  = document.getElementById('preview-inner-wrap');
+  const shell = document.getElementById('preview-website-shell');
+  if (!wrap) return;
+
+  if (width === null) {
+    simulatedDeviceHeight = null;
+    simulatedDeviceWidth  = null;
+    wrap.style.width           = '100%';
+    wrap.style.height          = '';
+    wrap.style.transform       = '';
+    wrap.style.transformOrigin = '';
+    wrap.style.marginLeft      = '';
+    if (shell) { shell.style.height = ''; shell.style.overflow = 'hidden'; }
+    updatePreviewShellLayout();
+    requestAnimationFrame(() => { _applyFreeCustomDims(); updateRatioLabel(); applyCompositeLayout(); });
+  } else {
+    simulatedDeviceHeight = device ? device.h : null;
+    _syncCanvasToDevice();
+    updatePreviewShellLayout();
+    requestAnimationFrame(() => {
+      applyPreviewScale();
+      _updateDeviceInfoDisplay();
+      updateRatioLabel();
+      applyCompositeLayout();
+    });
+  }
+}
+
+function toggleDeviceOrientation() {
+  if (!simulatedDeviceBase) return;
+  const device = DEVICES[simulatedDeviceBase];
+  if (!device || device.category === 'monitor') return;
+
+  simulatedDeviceOrientation = simulatedDeviceOrientation === 'portrait' ? 'landscape' : 'portrait';
+  const isPortrait = simulatedDeviceOrientation === 'portrait';
+
+  if (isPortrait) {
+    simulatedDeviceWidth  = simulatedDeviceBase;
+    simulatedDeviceHeight = device.h;
+  } else {
+    simulatedDeviceWidth  = device.h;
+    simulatedDeviceHeight = simulatedDeviceBase;
+  }
+
+  const orientBtn = document.getElementById('btn-orientation');
+  if (orientBtn) {
+    orientBtn.textContent = isPortrait ? 'Portrait' : 'Landscape';
+    orientBtn.title       = isPortrait ? 'Switch to landscape' : 'Switch to portrait';
+  }
+
+  _syncCanvasToDevice();
+  updatePreviewShellLayout();
+  requestAnimationFrame(() => {
+    applyPreviewScale();
+    _updateDeviceInfoDisplay();
+    updateRatioLabel();
+    applyCompositeLayout();
+  });
+}
+
+function applyPreviewScale() {
+  const wrap  = document.getElementById('preview-inner-wrap');
+  const shell = document.getElementById('preview-website-shell');
+  const area  = document.getElementById('preview-resize-area');
+  if (!wrap || !area || simulatedDeviceWidth === null || simulatedDeviceHeight === null) return;
+
+  // 1. Clip the website shell to the device's physical screen height
+  //    (everything below the fold is hidden, just like on a real device)
+  shell.style.height   = simulatedDeviceHeight + 'px';
+  shell.style.overflow = 'hidden';
+
+  // 2. Make the inner-wrap exactly the device screen size
+  wrap.style.width  = simulatedDeviceWidth  + 'px';
+  wrap.style.height = simulatedDeviceHeight + 'px';
+
+  // 3. Reset transform so we get real offsetWidth for centering
+  wrap.style.transform       = '';
+  wrap.style.transformOrigin = '';
+  wrap.style.marginLeft      = '';
+
+  const availableW = area.offsetWidth  - 4;   // 4 px safety buffer
+  const availableH = area.offsetHeight - 4;
+
+  // 4. Scale the device screen rectangle to fit inside the green preview area
+  //    (scaleW limits width, scaleH limits height — take the smaller one)
+  const scale = Math.min(availableW / simulatedDeviceWidth,
+                         availableH / simulatedDeviceHeight);
+
+  wrap.style.transform       = `scale(${scale})`;
+  wrap.style.transformOrigin = 'top left';
+  wrap.style.marginLeft      = '0';
+}
+
+// Mirror the real website's 840px breakpoint in the preview shell
+function updatePreviewShellLayout() {
+  const shell = document.getElementById('preview-website-shell');
+  if (!shell) return;
+  const w = simulatedDeviceWidth ??
+            (document.getElementById('preview-inner-wrap')?.offsetWidth ?? 9999);
+  shell.setAttribute('data-layout', w <= 840 ? 'mobile' : 'desktop');
+}
+
+function _gcd(a, b) { return b === 0 ? a : _gcd(b, a % b); }
+
+function updateRatioLabel() {
+  // Ratio badge is based on the photo frame dimensions
+  const frame = document.getElementById('home-preview-container');
+  const label = document.getElementById('preview-ratio-label');
+  if (!frame || !label) return;
+  const w = Math.round(frame.offsetWidth);
+  const h = Math.round(frame.offsetHeight);
+  if (!w || !h) return;
+
+  const ratio = w / h;
+  const known = [[21,9],[16,9],[3,2],[4,3],[5,4],[1,1],[4,5],[3,4],[2,3],[9,16],[9,21]];
+  let ratioStr = null;
+  for (const [rw, rh] of known) {
+    if (Math.abs(ratio - rw / rh) < 0.025) { ratioStr = `${rw}:${rh}`; break; }
+  }
+  if (!ratioStr) {
+    const g  = _gcd(w, h);
+    const rw = w / g, rh = h / g;
+    ratioStr = (rw <= 24 && rh <= 24) ? `${rw}:${rh}` : `${ratio.toFixed(2)}:1`;
+  }
+  label.textContent = ratioStr;
+
+  // ── Universal live canvas info bar ──────────────────────────────────────────
+  // For device presets use the simulated pixel dimensions; otherwise use the
+  // actual CSS canvas dimensions (free / default mode).
+  const dispW = simulatedDeviceWidth  || w;
+  const dispH = simulatedDeviceHeight || h;
+  const g2    = _gcd(dispW, dispH);
+  const arW2  = dispW / g2, arH2 = dispH / g2;
+  const arStr = (arW2 <= 99 && arH2 <= 99) ? `${arW2}:${arH2}` : `${(dispW / dispH).toFixed(2)}:1`;
+
+  const liveAR  = document.getElementById('canvas-ar-live');
+  const liveRes = document.getElementById('canvas-res-live');
+  if (liveAR)  liveAR.textContent  = arStr;
+  if (liveRes) liveRes.textContent = `${dispW} × ${dispH}`;
+
+  // ── Sync free-panel inputs from canvas when no simulated device is active ──
+  if (activeCategory === 'free' && !simulatedDeviceWidth) {
+    const elArW = document.getElementById('free-ar-w');
+    const elArH = document.getElementById('free-ar-h');
+    const elW   = document.getElementById('free-w');
+    const elH   = document.getElementById('free-h');
+    if (elArW && !elArW.matches(':focus')) elArW.value = (arW2 <= 99) ? arW2 : (dispW/dispH).toFixed(2);
+    if (elArH && !elArH.matches(':focus')) elArH.value = (arH2 <= 99) ? arH2 : 1;
+    if (elW   && !elW.matches(':focus'))   elW.value   = dispW;
+    if (elH   && !elH.matches(':focus'))   elH.value   = dispH;
+  }
+}
+
+// ── Error modal ──────────────────────────────────────────────────────────────
+function showErrorModal(message) {
+  const modal = document.getElementById('error-modal');
+  document.getElementById('error-modal-message').textContent = message;
+  modal.style.display = 'flex';
+}
+
+function closeErrorModal() {
+  document.getElementById('error-modal').style.display = 'none';
+}
+
+// Helper: resolve an image file to its natural dimensions
+function getImageDimensions(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload  = () => { URL.revokeObjectURL(url); resolve({ w: img.naturalWidth, h: img.naturalHeight }); };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read image')); };
+    img.src = url;
+  });
 }
 
 async function uploadHomeImage(type, event) {
   const file = event.target.files[0];
   if (!file || !currentSlideId) return;
+
+  // ── Client-side validations ───────────────────────────────────────────────
+  const slide = homeData.slides.find(s => s.id === currentSlideId);
+
+  if (type === 'foreground') {
+    // 1. FG requires a BG to already exist
+    if (!slide || !slide.background) {
+      showErrorModal('you need to upload a background image first');
+      event.target.value = '';
+      return;
+    }
+    // 3. FG must be .png
+    if (file.type !== 'image/png') {
+      showErrorModal('foreground image need to be a .png');
+      event.target.value = '';
+      return;
+    }
+    // 4. FG width must match BG width
+    try {
+      const fgDims = await getImageDimensions(file);
+      // Load BG to get its width
+      const bgDims = await new Promise((resolve, reject) => {
+        const bgImg = new Image();
+        bgImg.onload  = () => resolve({ w: bgImg.naturalWidth });
+        bgImg.onerror = reject;
+        bgImg.src = slide.background;
+      });
+      if (fgDims.w !== bgDims.w) {
+        showErrorModal('the foreground image need to match the background image width');
+        event.target.value = '';
+        return;
+      }
+    } catch {
+      // If we can't compare, proceed and let server validate
+    }
+  }
+
+  if (type === 'background') {
+    // 2. BG must be .jpg
+    if (!file.type.match(/^image\/jpe?g$/)) {
+      showErrorModal('background image need to be a .jpg');
+      event.target.value = '';
+      return;
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   const optimize = document.getElementById('home-optimize-checkbox').checked;
   const formData = new FormData();
@@ -1049,11 +1865,13 @@ async function uploadHomeImage(type, event) {
       method: 'POST',
       body: formData
     });
-    if (!res.ok) throw new Error('Upload failed');
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Upload failed');
+    }
     const result = await res.json();
 
     // Update local slide data then reload all images
-    const slide = homeData.slides.find(s => s.id === currentSlideId);
     if (slide) {
       slide[type] = result.image;
       loadHomeImages(slide);
@@ -1063,7 +1881,7 @@ async function uploadHomeImage(type, event) {
     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');
     checkGitStatus();
   } catch (err) {
-    showToast(`Failed to upload ${type} image`, 'error');
+    showToast(err.message || `Failed to upload ${type} image`, 'error');
   }
   hideLoading();
   event.target.value = '';
@@ -1073,11 +1891,20 @@ async function saveHomeSlide() {
   const slide = homeData.slides.find(s => s.id === currentSlideId);
   if (!slide) return;
 
-  slide.text       = document.getElementById('home-text-input').value;
-  slide.textX      = parseFloat(document.getElementById('home-textX-slider').value);
-  slide.textY      = parseFloat(document.getElementById('home-textY-slider').value);
-  slide.textSize   = parseFloat(document.getElementById('home-textSize-slider').value);
-  slide.centerLine = parseFloat(document.getElementById('home-centerLine-slider').value);
+  slide.title           = document.getElementById('home-title-input').value || 'Slide 1';
+  slide.text            = document.getElementById('home-text-input').value;
+  slide.textX           = currentTextX;
+  slide.textY           = currentTextY;
+  slide.textSize        = parseFloat(document.getElementById('home-textSize-slider').value);
+  slide.textBold        = homeTextFormat.bold;
+  slide.textItalic      = homeTextFormat.italic;
+  slide.textAlign       = homeTextFormat.align;
+  slide.shadowIntensity = parseFloat(document.getElementById('home-shadowIntensity-slider').value);
+  slide.shadowDistance  = parseFloat(document.getElementById('home-shadowDistance-slider').value);
+
+  // Crop position
+  slide.imagePosX = parseInt(document.getElementById('home-cropX-slider').value);
+  slide.imagePosY = parseInt(document.getElementById('home-cropY-slider').value);
 
   showLoading('Saving...');
   try {

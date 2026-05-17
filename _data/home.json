@@ -1,14 +1,22 @@
 {
   "slides": [
     {
-      "id": "slide-1777203035031",
-      "background": "assets/uploads/home/slide-1777203035031-bg.jpg",
-      "foreground": "assets/uploads/home/slide-1777203035031-fg.jpg",
-      "text": "Test di prova per home page?",
-      "textX": 50,
-      "textY": 50,
-      "textSize": 5,
-      "centerLine": 50
+      "id": "slide-1777221426004",
+      "background": "assets/uploads/home/slide-1777221426004-bg.jpg",
+      "foreground": "assets/uploads/home/slide-1777221426004-fg.png",
+      "text": "Test per vedere se funziona?",
+      "textX": 51,
+      "textY": 64,
+      "textSize": 7,
+      "centerLine": 50,
+      "title": "Slide 1",
+      "textBold": false,
+      "textItalic": false,
+      "textAlign": "center",
+      "shadowIntensity": 60,
+      "shadowDistance": 4,
+      "imagePosX": 60,
+      "imagePosY": 66
     }
   ]
 }

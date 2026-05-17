@@ -36,10 +36,9 @@ $(document).ready(function() {
     }
   });
 
-  // Initialize Masonry for homepage
+  // Initialize home slideshow
   if (currentPage === 'index.html' || currentPage === '') {
-    // Load random images for homepage
-    loadRandomImagesForHomepage();
+    loadHomeSlides();
   }
 
   // Series page hover effect
@@ -295,6 +294,162 @@ function loadSerieContent(serie) {
 $(document).ready(function() {
   loadSeriesData();
 });
+
+// ── Home Slideshow ────────────────────────────────────────────────────────────
+
+function loadHomeSlides() {
+  const jsonPath = (window.baseUrl || '/') + '_data/home.json';
+
+  $.getJSON(jsonPath, function(data) {
+    const slides = (data.slides || []).filter(function(s) { return s.background; });
+    if (slides.length === 0) { loadRandomImagesForHomepage(); return; }
+
+    const $wrap = $('.home-slideshow-wrap');
+    $wrap.empty();
+
+    const $show = $('<div class="home-slideshow"></div>');
+
+    // Build each slide
+    slides.forEach(function(slide, index) {
+      const $slide = $('<div class="home-slide' + (index === 0 ? ' active' : '') + '"></div>');
+
+      // Composite wrap: BG behind, FG in front at bottom
+      const $cwrap = $('<div class="home-composite-wrap"></div>');
+      const $bg    = $('<img class="home-bg-img" alt="">');
+      const $fg    = $('<img class="home-fg-img" alt="">');
+
+      if (slide.background) $bg.attr('src', resolveUrl(slide.background));
+      if (slide.foreground)  $fg.attr('src', resolveUrl(slide.foreground));
+      else                   $fg.hide();
+
+      $cwrap.append($bg, $fg);
+      $slide.append($cwrap);
+
+      // Text overlay
+      if (slide.text && slide.text.trim()) {
+        const $txt = $('<div class="home-slide-text"></div>').text(slide.text);
+        const alpha = Math.min(1, (slide.shadowIntensity || 0) / 100);
+        const dist  = slide.shadowDistance || 0;
+        $txt.css({
+          left:        (slide.textX || 50) + '%',
+          top:         (slide.textY || 50) + '%',
+          fontWeight:  slide.textBold   ? 'bold'   : 'normal',
+          fontStyle:   slide.textItalic ? 'italic' : 'normal',
+          textAlign:   slide.textAlign  || 'center',
+          textShadow:  '0 ' + dist + 'px ' + (dist * 2) + 'px rgba(0,0,0,' + alpha + ')',
+        });
+        $slide.append($txt);
+      }
+
+      $show.append($slide);
+
+      // Apply composite layout whenever BG loads (or immediately if cached)
+      var posX = (slide.imagePosX != null ? slide.imagePosX : 50) / 100;
+      var posY = (slide.imagePosY != null ? slide.imagePosY : 50) / 100;
+      var tSize = slide.textSize || 5;
+
+      function layout() {
+        homeCompositeLayout($slide[0], $bg[0], $cwrap[0], posX, posY);
+        // Font size: textSize % of container height
+        var fsPx = $slide[0].offsetHeight * (tSize / 100);
+        $slide.find('.home-slide-text').css('font-size', fsPx + 'px');
+      }
+
+      $bg[0].onload = layout;
+      if ($bg[0].complete && $bg[0].naturalWidth > 0) layout();
+    });
+
+    // Navigation (only when multiple slides)
+    if (slides.length > 1) {
+      var current = 0;
+
+      var $prev = $('<button class="slide-nav slide-prev" aria-label="Previous">&#8249;</button>');
+      var $next = $('<button class="slide-nav slide-next" aria-label="Next">&#8250;</button>');
+      var $dots = $('<div class="slide-dots"></div>');
+
+      slides.forEach(function(_, i) {
+        $dots.append($('<span class="slide-dot' + (i === 0 ? ' active' : '') + '" data-index="' + i + '"></span>'));
+      });
+
+      function goTo(n) {
+        current = ((n % slides.length) + slides.length) % slides.length;
+        $show.find('.home-slide').removeClass('active').eq(current).addClass('active');
+        $dots.find('.slide-dot').removeClass('active').eq(current).addClass('active');
+      }
+
+      $prev.on('click', function() { goTo(current - 1); });
+      $next.on('click', function() { goTo(current + 1); });
+      $dots.on('click', '.slide-dot', function() { goTo(+$(this).data('index')); });
+
+      // Keyboard navigation
+      $(document).on('keydown.homeSlides', function(e) {
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+      });
+
+      $show.append($prev, $next, $dots);
+    }
+
+    $wrap.append($show);
+
+    // Reapply composite layout on window resize
+    $(window).on('resize.homeSlides', function() {
+      $show.find('.home-slide').each(function(i) {
+        var slide = slides[i];
+        var $bg   = $(this).find('.home-bg-img');
+        if ($bg[0] && $bg[0].naturalWidth > 0) {
+          homeCompositeLayout(
+            this, $bg[0], $(this).find('.home-composite-wrap')[0],
+            (slide.imagePosX != null ? slide.imagePosX : 50) / 100,
+            (slide.imagePosY != null ? slide.imagePosY : 50) / 100
+          );
+          var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
+          $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
+        }
+      });
+    });
+
+  }).fail(function() {
+    // Graceful fallback to old masonry if home.json is missing or empty
+    loadRandomImagesForHomepage();
+  });
+}
+
+// Same cover-with-focal-point math as the CMS applyCompositeLayout()
+function homeCompositeLayout(container, bgImg, compositeWrap, posX, posY) {
+  var cw = container.offsetWidth;
+  var ch = container.offsetHeight;
+  if (!cw || !ch) return;
+
+  var bw = bgImg.naturalWidth  || cw;
+  var bh = bgImg.naturalHeight || ch;
+  var compositeAR = bw / bh;
+  var containerAR = cw / ch;
+
+  var wrapW, wrapH, wrapL, wrapT;
+  if (compositeAR > containerAR) {
+    wrapH = ch;  wrapW = ch * compositeAR;
+    wrapT = 0;
+    wrapL = Math.min(0, Math.max(-(wrapW - cw), cw / 2 - posX * wrapW));
+  } else {
+    wrapW = cw;  wrapH = cw / compositeAR;
+    wrapL = 0;
+    wrapT = Math.min(0, Math.max(-(wrapH - ch), ch / 2 - posY * wrapH));
+  }
+
+  compositeWrap.style.width  = wrapW + 'px';
+  compositeWrap.style.height = wrapH + 'px';
+  compositeWrap.style.left   = wrapL + 'px';
+  compositeWrap.style.top    = wrapT + 'px';
+}
+
+function resolveUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return (window.baseUrl || '/') + path;
+}
+
+// ── Legacy masonry (kept as fallback) ─────────────────────────────────────────
 
 // Function to load random images for homepage
 function loadRandomImagesForHomepage() {
