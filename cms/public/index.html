@@ -346,6 +346,10 @@
                       class="w-7 h-7 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 flex items-center justify-center">
                 <svg width="13" height="11" viewBox="0 0 13 11" fill="currentColor"><rect x="0" y="0" width="13" height="1.8" rx="0.9"/><rect x="5" y="4.6" width="8" height="1.8" rx="0.9"/><rect x="2" y="9.2" width="11" height="1.8" rx="0.9"/></svg>
               </button>
+              <div class="w-px h-5 bg-gray-200 mx-0.5"></div>
+              <input type="color" id="home-textColor-picker" value="#ffffff" title="Text color"
+                     class="w-7 h-7 rounded border border-gray-300 cursor-pointer p-0.5"
+                     oninput="onTextColorPickerChange()">
             </div>
           </div>
 
@@ -387,42 +391,6 @@
               <div class="flex justify-between text-xs mb-0.5"><span class="text-gray-600">Distance</span><span class="text-gray-400" id="home-shadowDistance-label">4px</span></div>
               <input type="range" id="home-shadowDistance-slider" min="0" max="30" value="4" step="1" class="w-full"
                      oninput="updateHomeSliderLabel('shadowDistance'); updateHomePreview()">
-            </div>
-          </div>
-
-          <!-- Text color -->
-          <div class="space-y-2 pt-2 border-t border-gray-100">
-            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Text color</p>
-            <div class="flex items-center gap-3">
-              <input type="color" id="home-textColor-picker" value="#ffffff"
-                     class="w-8 h-8 rounded border border-gray-200 cursor-pointer p-0.5 flex-shrink-0"
-                     oninput="onTextColorPickerChange()">
-              <div class="grid grid-cols-4 gap-1.5 flex-1">
-                <div class="flex flex-col items-center gap-0.5">
-                  <span class="text-xs text-gray-400">C</span>
-                  <input type="number" id="home-cmyk-c" min="0" max="100" value="0"
-                         class="w-full text-xs text-center border border-gray-200 rounded p-1 outline-none focus:border-blue-400"
-                         oninput="onCmykChange()">
-                </div>
-                <div class="flex flex-col items-center gap-0.5">
-                  <span class="text-xs text-gray-400">M</span>
-                  <input type="number" id="home-cmyk-m" min="0" max="100" value="0"
-                         class="w-full text-xs text-center border border-gray-200 rounded p-1 outline-none focus:border-blue-400"
-                         oninput="onCmykChange()">
-                </div>
-                <div class="flex flex-col items-center gap-0.5">
-                  <span class="text-xs text-gray-400">Y</span>
-                  <input type="number" id="home-cmyk-y" min="0" max="100" value="0"
-                         class="w-full text-xs text-center border border-gray-200 rounded p-1 outline-none focus:border-blue-400"
-                         oninput="onCmykChange()">
-                </div>
-                <div class="flex flex-col items-center gap-0.5">
-                  <span class="text-xs text-gray-400">K</span>
-                  <input type="number" id="home-cmyk-k" min="0" max="100" value="0"
-                         class="w-full text-xs text-center border border-gray-200 rounded p-1 outline-none focus:border-blue-400"
-                         oninput="onCmykChange()">
-                </div>
-              </div>
             </div>
           </div>
 

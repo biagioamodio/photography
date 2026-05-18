@@ -930,9 +930,7 @@ function editHomeSlide(id) {
   updateHomeSliderLabel('shadowDistance');
 
   // Text color
-  const color = slide.textColor || '#ffffff';
-  document.getElementById('home-textColor-picker').value = color;
-  updateCmykFromHex(color);
+  document.getElementById('home-textColor-picker').value = slide.textColor || '#ffffff';
 
   // Update page header to show the slide title
   const slideIndex = homeData.slides.findIndex(s => s.id === id);
@@ -1093,27 +1091,7 @@ function cmykToRgb(c, m, y, k) {
   };
 }
 
-function updateCmykFromHex(hex) {
-  const { r, g, b } = hexToRgb(hex);
-  const { c, m, y, k } = rgbToCmyk(r, g, b);
-  document.getElementById('home-cmyk-c').value = c;
-  document.getElementById('home-cmyk-m').value = m;
-  document.getElementById('home-cmyk-y').value = y;
-  document.getElementById('home-cmyk-k').value = k;
-}
-
 function onTextColorPickerChange() {
-  updateCmykFromHex(document.getElementById('home-textColor-picker').value);
-  updateHomePreview();
-}
-
-function onCmykChange() {
-  const c = parseInt(document.getElementById('home-cmyk-c').value) || 0;
-  const m = parseInt(document.getElementById('home-cmyk-m').value) || 0;
-  const y = parseInt(document.getElementById('home-cmyk-y').value) || 0;
-  const k = parseInt(document.getElementById('home-cmyk-k').value) || 0;
-  const { r, g, b } = cmykToRgb(c, m, y, k);
-  document.getElementById('home-textColor-picker').value = rgbToHex(r, g, b);
   updateHomePreview();
 }
 
