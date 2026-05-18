@@ -33,6 +33,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Serve main project assets (images, fonts, etc.)
 app.use('/assets', express.static(path.join(PROJECT_ROOT, 'assets')));
 
+// ── Website preview server (port 3001) ──────────────────────────────────────
+// Serves the main photography website so you can preview changes locally
+// before publishing. Visit http://localhost:3001 to see the live site.
+const siteApp = express();
+siteApp.use(express.static(PROJECT_ROOT, { index: 'index.html' }));
+siteApp.listen(3001, () => {
+  console.log('   Website preview → http://localhost:3001');
+});
+
 // Multer setup for file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ 

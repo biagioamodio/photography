@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "photography-main",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
-      "port": 3001
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["browser-sync", "start", "--server", "--port", "3002", "--files", "*.html, assets/css/*.css, assets/js/*.js, _data/*.json", "--no-notify"],
+      "port": 3002
     }
   ]
 }

@@ -288,8 +288,30 @@ h1, h2, h3 {
 }
 
 /* ── Home Slideshow ─────────────────────────────────────────────────────── */
+/* Home page: fill viewport height and vertically center the image.
+   Use body > to avoid matching the navbar's inner .container-fluid. */
+body.home-page > .container-fluid {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.home-page .navbar {
+  margin-bottom: 0;
+}
+
+body.home-page > .container-fluid > .page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 40px;
+  min-height: 0;
+}
+
 .home-slideshow-wrap {
-  padding: 10px 0;
+  padding: 0;
+  width: 100%;
 }
 
 .home-slideshow {
@@ -330,6 +352,7 @@ h1, h2, h3 {
   left: 0;
   width: 100%;
   height: auto;
+  z-index: 4;
 }
 
 /* Text overlay */

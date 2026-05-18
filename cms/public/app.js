@@ -907,12 +907,14 @@ function editHomeSlide(id) {
   // Populate controls
   document.getElementById('home-title-input').value = slide.title || 'Slide 1';
   document.getElementById('home-text-input').value = slide.text || '';
-  document.getElementById('home-textSize-slider').value = slide.textSize ?? 5;
+  document.getElementById('home-textSize-slider').value       = slide.textSize       ?? 5;
+  document.getElementById('home-textLineHeight-slider').value = slide.textLineHeight ?? 1.2;
 
   currentTextX = slide.textX ?? 50;
   currentTextY = slide.textY ?? 50;
 
   updateHomeSliderLabel('textSize');
+  updateHomeSliderLabel('textLineHeight');
 
   // Text formatting
   homeTextFormat.bold   = slide.textBold   || false;
@@ -1058,7 +1060,7 @@ function updateHomeSliderLabel(name) {
   const label  = document.getElementById(`home-${name}-label`);
   if (!slider || !label) return;
   const val = parseFloat(slider.value);
-  label.textContent = name === 'shadowDistance' ? `${val}px` : `${val}%`;
+  label.textContent = name === 'shadowDistance' ? `${val}px` : name === 'textLineHeight' ? `${val}` : `${val}%`;
 }
 
 // ==================== Text Formatting ====================
@@ -1123,7 +1125,8 @@ function updateHomePreview() {
   textEl.textContent    = text;
   textEl.style.left     = currentTextX + '%';
   textEl.style.top      = currentTextY + '%';
-  textEl.style.fontSize = (h * textSize / 100) + 'px';
+  textEl.style.fontSize   = (h * textSize / 100) + 'px';
+  textEl.style.lineHeight = parseFloat(document.getElementById('home-textLineHeight-slider')?.value ?? 1.2);
 
   // Formatting
   textEl.style.fontWeight = homeTextFormat.bold   ? 'bold'   : 'normal';
@@ -1896,6 +1899,7 @@ async function saveHomeSlide() {
   slide.textX           = currentTextX;
   slide.textY           = currentTextY;
   slide.textSize        = parseFloat(document.getElementById('home-textSize-slider').value);
+  slide.textLineHeight  = parseFloat(document.getElementById('home-textLineHeight-slider').value);
   slide.textBold        = homeTextFormat.bold;
   slide.textItalic      = homeTextFormat.italic;
   slide.textAlign       = homeTextFormat.align;

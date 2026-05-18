@@ -333,9 +333,10 @@ function loadHomeSlides() {
         $txt.css({
           left:        (slide.textX || 50) + '%',
           top:         (slide.textY || 50) + '%',
-          fontWeight:  slide.textBold   ? 'bold'   : 'normal',
-          fontStyle:   slide.textItalic ? 'italic' : 'normal',
-          textAlign:   slide.textAlign  || 'center',
+          fontWeight:  slide.textBold       ? 'bold'   : 'normal',
+          fontStyle:   slide.textItalic     ? 'italic' : 'normal',
+          textAlign:   slide.textAlign      || 'center',
+          lineHeight:  slide.textLineHeight || 1.2,
           textShadow:  '0 ' + dist + 'px ' + (dist * 2) + 'px rgba(0,0,0,' + alpha + ')',
         });
         $slide.append($txt);
@@ -356,7 +357,8 @@ function loadHomeSlides() {
       }
 
       $bg[0].onload = layout;
-      if ($bg[0].complete && $bg[0].naturalWidth > 0) layout();
+      // Don't call layout() here — slide is not in the DOM yet so offsetWidth = 0.
+      // The initial pass runs via requestAnimationFrame below after $wrap.append($show).
     });
 
     // Navigation (only when multiple slides)
@@ -392,8 +394,7 @@ function loadHomeSlides() {
 
     $wrap.append($show);
 
-    // Reapply composite layout on window resize
-    $(window).on('resize.homeSlides', function() {
+    function applyAllLayouts() {
       $show.find('.home-slide').each(function(i) {
         var slide = slides[i];
         var $bg   = $(this).find('.home-bg-img');
@@ -407,7 +408,13 @@ function loadHomeSlides() {
           $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
         }
       });
-    });
+    }
+
+    // Initial pass — rAF ensures the browser has laid out the DOM so offsetWidth is valid
+    requestAnimationFrame(applyAllLayouts);
+
+    // Reapply on window resize
+    $(window).on('resize.homeSlides', applyAllLayouts);
 
   }).fail(function() {
     // Graceful fallback to old masonry if home.json is missing or empty
