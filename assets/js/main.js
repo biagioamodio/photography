@@ -337,7 +337,10 @@ function loadHomeSlides() {
           fontStyle:   slide.textItalic     ? 'italic' : 'normal',
           textAlign:   slide.textAlign      || 'center',
           lineHeight:  slide.textLineHeight || 1.2,
-          textShadow:  '0 ' + dist + 'px ' + (dist * 2) + 'px rgba(0,0,0,' + alpha + ')',
+          color:       slide.textColor      || '#ffffff',
+          textShadow:  (slide.shadowEnabled !== false && alpha > 0)
+                         ? '0 ' + dist + 'px ' + (dist * 2) + 'px rgba(0,0,0,' + alpha + ')'
+                         : 'none',
         });
         $slide.append($txt);
       }

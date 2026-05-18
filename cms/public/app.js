@@ -923,10 +923,16 @@ function editHomeSlide(id) {
   updateFormatButtons();
 
   // Shadow
+  document.getElementById('toggle-shadow').checked             = slide.shadowEnabled ?? true;
   document.getElementById('home-shadowIntensity-slider').value = slide.shadowIntensity ?? 60;
   document.getElementById('home-shadowDistance-slider').value  = slide.shadowDistance  ?? 4;
   updateHomeSliderLabel('shadowIntensity');
   updateHomeSliderLabel('shadowDistance');
+
+  // Text color
+  const color = slide.textColor || '#ffffff';
+  document.getElementById('home-textColor-picker').value = color;
+  updateCmykFromHex(color);
 
   // Update page header to show the slide title
   const slideIndex = homeData.slides.findIndex(s => s.id === id);
@@ -1055,6 +1061,62 @@ function updateFGSeam() {
   }
 }
 
+// ==================== Text Color / CMYK ====================
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function rgbToHex(r, g, b) {
+  return '#' + [r, g, b].map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+}
+
+function rgbToCmyk(r, g, b) {
+  const r1 = r / 255, g1 = g / 255, b1 = b / 255;
+  const k = 1 - Math.max(r1, g1, b1);
+  if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+  return {
+    c: Math.round((1 - r1 - k) / (1 - k) * 100),
+    m: Math.round((1 - g1 - k) / (1 - k) * 100),
+    y: Math.round((1 - b1 - k) / (1 - k) * 100),
+    k: Math.round(k * 100),
+  };
+}
+
+function cmykToRgb(c, m, y, k) {
+  const k1 = k / 100;
+  return {
+    r: Math.round(255 * (1 - c / 100) * (1 - k1)),
+    g: Math.round(255 * (1 - m / 100) * (1 - k1)),
+    b: Math.round(255 * (1 - y / 100) * (1 - k1)),
+  };
+}
+
+function updateCmykFromHex(hex) {
+  const { r, g, b } = hexToRgb(hex);
+  const { c, m, y, k } = rgbToCmyk(r, g, b);
+  document.getElementById('home-cmyk-c').value = c;
+  document.getElementById('home-cmyk-m').value = m;
+  document.getElementById('home-cmyk-y').value = y;
+  document.getElementById('home-cmyk-k').value = k;
+}
+
+function onTextColorPickerChange() {
+  updateCmykFromHex(document.getElementById('home-textColor-picker').value);
+  updateHomePreview();
+}
+
+function onCmykChange() {
+  const c = parseInt(document.getElementById('home-cmyk-c').value) || 0;
+  const m = parseInt(document.getElementById('home-cmyk-m').value) || 0;
+  const y = parseInt(document.getElementById('home-cmyk-y').value) || 0;
+  const k = parseInt(document.getElementById('home-cmyk-k').value) || 0;
+  const { r, g, b } = cmykToRgb(c, m, y, k);
+  document.getElementById('home-textColor-picker').value = rgbToHex(r, g, b);
+  updateHomePreview();
+}
+
 function updateHomeSliderLabel(name) {
   const slider = document.getElementById(`home-${name}-slider`);
   const label  = document.getElementById(`home-${name}-label`);
@@ -1134,11 +1196,15 @@ function updateHomePreview() {
   textEl.style.textAlign  = homeTextFormat.align;
 
   // Text shadow
+  const shadowEnabled   = document.getElementById('toggle-shadow')?.checked ?? true;
   const shadowIntensity = parseFloat(document.getElementById('home-shadowIntensity-slider')?.value ?? 60) / 100;
   const shadowDistance  = parseFloat(document.getElementById('home-shadowDistance-slider')?.value  ?? 4);
-  textEl.style.textShadow = shadowIntensity > 0
+  textEl.style.textShadow = (shadowEnabled && shadowIntensity > 0)
     ? `0 ${shadowDistance}px ${shadowDistance * 2}px rgba(0,0,0,${shadowIntensity.toFixed(2)})`
     : 'none';
+
+  // Text color
+  textEl.style.color = document.getElementById('home-textColor-picker')?.value ?? '#ffffff';
 
   // Apply text visibility toggle
   const textToggle = document.getElementById('toggle-text');
@@ -1903,8 +1969,10 @@ async function saveHomeSlide() {
   slide.textBold        = homeTextFormat.bold;
   slide.textItalic      = homeTextFormat.italic;
   slide.textAlign       = homeTextFormat.align;
+  slide.shadowEnabled   = document.getElementById('toggle-shadow').checked;
   slide.shadowIntensity = parseFloat(document.getElementById('home-shadowIntensity-slider').value);
   slide.shadowDistance  = parseFloat(document.getElementById('home-shadowDistance-slider').value);
+  slide.textColor       = document.getElementById('home-textColor-picker').value;
 
   // Crop position
   slide.imagePosX = parseInt(document.getElementById('home-cropX-slider').value);

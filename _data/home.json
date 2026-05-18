@@ -4,20 +4,22 @@
       "id": "slide-1777221426004",
       "background": "assets/uploads/home/slide-1777221426004-bg.jpg",
       "foreground": "assets/uploads/home/slide-1777221426004-fg.png",
-      "text": "N'aggia capit,\nch guard a fa?!",
-      "textX": 36.788113695090445,
-      "textY": 55.085271317829445,
-      "textSize": 11,
+      "text": "ma ch guard\na fa?!",
+      "textX": 50.483204134366936,
+      "textY": 41.32558139534883,
+      "textSize": 20,
       "centerLine": 50,
       "title": "Slide 1",
       "textBold": false,
       "textItalic": false,
-      "textAlign": "right",
+      "textAlign": "left",
       "shadowIntensity": 10,
       "shadowDistance": 1,
       "imagePosX": 60,
       "imagePosY": 66,
-      "textLineHeight": 1.2
+      "textLineHeight": 0.9,
+      "shadowEnabled": true,
+      "textColor": "#1e586c"
     }
   ]
 }
