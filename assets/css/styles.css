@@ -28,8 +28,8 @@ body { outline: 6px solid green !important; }
     max-height: calc(100vh - 150px) !important;
     object-fit: contain !important;
   }
-  /* TEMP: highlight center column boundary */
-  .serie-container .col-xs-8 {
+  /* TEMP: highlight content container (text/photo frame) */
+  .content-container {
     outline: 2px solid red;
   }
   /* Zero out Bootstrap's default outer padding to force equal side widths */
