@@ -1,5 +1,5 @@
 /* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
-@media (max-width: 2870px) and (max-height: 1330px) {
+@media (max-width: 2870px) and (max-height: 1330px) and (orientation: landscape) {
   body::after {
     content: '';
     position: fixed;
