@@ -7,10 +7,15 @@ body { outline: 6px solid green !important; }
   /* Move navbar (title + nav links + toggle) up 20px */
   .navbar {
     margin-top: -20px;
+    margin-bottom: 5px !important;
   }
   /* Push serie title + prev/next series down 50px (reduce bottom offset) */
   .serie-nav-row {
     bottom: -10px !important;
+  }
+  /* Reduce vertical gaps around photo */
+  .serie-container {
+    padding-bottom: 80px !important;
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
