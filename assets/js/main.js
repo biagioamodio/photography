@@ -305,9 +305,14 @@ function loadSerieContent(serie) {
     $('body').css('overflow', '');
   }
 
-  $('#lightbox-backdrop, #lightbox-close').on('click', closeLightbox);
+  // Backdrop tap closes lightbox — unless a swipe just fired
+  var _lbDidSwipe = false;
+  $('#lightbox-backdrop').on('click', function() {
+    if (_lbDidSwipe) { _lbDidSwipe = false; return; }
+    closeLightbox();
+  });
 
-  // Keyboard navigation: Escape closes lightbox, arrows navigate slides
+  // Keyboard: Escape closes, arrows navigate
   $(document).on('keydown.serieNav', function(e) {
     if (e.key === 'Escape') {
       closeLightbox();
@@ -326,11 +331,13 @@ function loadSerieContent(serie) {
   lbEl.addEventListener('touchstart', function(e) {
     _lbStartX = e.touches[0].clientX;
     _lbStartY = e.touches[0].clientY;
+    _lbDidSwipe = false;
   }, { passive: true });
   lbEl.addEventListener('touchend', function(e) {
     var dx = e.changedTouches[0].clientX - _lbStartX;
     var dy = e.changedTouches[0].clientY - _lbStartY;
     if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    _lbDidSwipe = true;
     if (dx < 0 && currentSlideIndex < slides.length - 1) {
       currentSlideIndex++;
       loadSlide(currentSlideIndex);
