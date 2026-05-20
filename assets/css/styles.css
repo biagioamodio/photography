@@ -4,6 +4,10 @@ body { outline: 6px solid green !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   body { outline: 6px solid red !important; }
+  /* Slim navbar bottom padding: keep content identical, reduce dead space below */
+  .navbar .container-fluid {
+    padding-bottom: 5px !important;
+  }
   /* Move navbar (title + nav links + toggle) up 20px */
   .navbar {
     margin-top: -20px;
