@@ -17,20 +17,31 @@ body { outline: 6px solid green !important; }
   .serie-container {
     padding-bottom: 90px !important;
   }
-  /* Cap photo height to available space so image always fits without cropping */
-  .photo-container {
+  /* Give content-container a fixed height so photo and text use identical frame */
+  .content-container {
     height: calc(100vh - 150px) !important;
-    max-height: calc(100vh - 150px) !important;
-    overflow: visible !important;
+    align-items: stretch !important;
+    outline: 2px solid red; /* TEMP inspection */
   }
-  .photo-image,
-  .photo-container img {
-    max-height: calc(100vh - 150px) !important;
+  /* Make content-display fill the full frame */
+  #content-display {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  /* Photo fills the frame exactly, scales down to fit without cropping */
+  .photo-image {
+    width: auto !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     object-fit: contain !important;
   }
-  /* TEMP: highlight content container (text/photo frame) */
-  .content-container {
-    outline: 2px solid red;
+  /* Description scrolls within the same frame if text is too long */
+  .serie-description {
+    max-height: 100% !important;
   }
   /* Zero out Bootstrap's default outer padding to force equal side widths */
   .serie-container .col-xs-2.side-column:first-child {
