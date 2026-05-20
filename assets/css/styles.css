@@ -17,6 +17,15 @@ body { outline: 6px solid green !important; }
   .serie-container {
     padding-bottom: 80px !important;
   }
+  /* Narrow side columns by 50px each, widen center accordingly */
+  .serie-container .col-xs-2.side-column,
+  .serie-nav-row .col-xs-2 {
+    width: calc(16.667% - 50px) !important;
+  }
+  .serie-container .row .col-xs-8,
+  .serie-nav-row .col-xs-8 {
+    width: calc(66.667% + 100px) !important;
+  }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
 @media (max-width: 840px) {
