@@ -4,13 +4,13 @@ body { outline: 6px solid green !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   body { outline: 6px solid red !important; }
-  /* Move navbar (title + nav links + toggle) up 10px */
+  /* Move navbar (title + nav links + toggle) up 20px */
   .navbar {
-    margin-top: -10px;
+    margin-top: -20px;
   }
-  /* Push serie title + prev/next series down 20px (reduce bottom offset) */
+  /* Push serie title + prev/next series down 50px (reduce bottom offset) */
   .serie-nav-row {
-    bottom: 20px;
+    bottom: -10px;
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
