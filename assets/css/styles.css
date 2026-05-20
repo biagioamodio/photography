@@ -1,3 +1,15 @@
+/* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
+@media (max-width: 2870px) and (max-height: 1330px) {
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--color-background);
+    z-index: 99999;
+  }
+}
+/* ── END TEMP TEST ──────────────────────────────────────────────────────── */
+
 /* Prevent scrollbar on serie page */
 body.serie-page {
   overflow: hidden;
