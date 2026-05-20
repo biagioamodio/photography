@@ -15,7 +15,7 @@ body { outline: 6px solid green !important; }
   }
   /* Reduce vertical gaps around photo */
   .serie-container {
-    padding-bottom: 80px !important;
+    padding-bottom: 64px !important;
   }
   /* Push side column content (arrows + metadata) 50px toward center */
   .serie-container .col-xs-2.side-column:first-child,
