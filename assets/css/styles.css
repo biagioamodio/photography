@@ -28,6 +28,13 @@ body { outline: 6px solid green !important; }
     max-height: calc(100vh - 150px) !important;
     object-fit: contain !important;
   }
+  /* Zero out Bootstrap's default outer padding to force equal side widths */
+  .serie-container .col-xs-2.side-column:first-child {
+    padding-left: 0 !important;
+  }
+  .serie-container .col-xs-2.side-column:last-child {
+    padding-right: 0 !important;
+  }
   /* Elevate side columns so translated arrows stay clickable above center column */
   .serie-container .col-xs-2.side-column {
     z-index: 5;
@@ -40,6 +47,12 @@ body { outline: 6px solid green !important; }
   .serie-container .col-xs-2.side-column:last-child .arrow-container,
   .serie-container .col-xs-2.side-column:last-child .photo-darkroom {
     transform: translateX(-20px);
+  }
+  /* Ensure arrow links always receive pointer events */
+  .arrow-container a {
+    pointer-events: all !important;
+    position: relative;
+    z-index: 10;
   }
   /* Nav row cols use same translateX so prev/next series aligns with arrows */
   .serie-nav-row .col-xs-2:first-child {
