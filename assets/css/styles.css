@@ -994,6 +994,72 @@ body.home-page > .container-fluid > .page-content {
   opacity: 0;
 }
 
+/* ===== Fullscreen Photo Lightbox (Serie page) ===== */
+.photo-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-lightbox.active {
+  display: flex;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+}
+
+.lightbox-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.lightbox-inner img {
+  display: block;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border: 3px solid #ffffff;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+  cursor: default;
+}
+
+.photo-image {
+  cursor: zoom-in;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #ababab;
+  background: transparent;
+  color: #ababab;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 2;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+  opacity: 0.6;
+  outline: none;
+}
+
 /* ===== Image Modal (Homepage Masonry) ===== */
 .image-modal {
   position: fixed;

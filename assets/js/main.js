@@ -288,6 +288,25 @@ function loadSerieContent(serie) {
     }
   });
   
+  // Fullscreen lightbox — tap/click photo to expand
+  $('#content-display').on('click', '.photo-image', function() {
+    $('#lightbox-img').attr('src', this.src).attr('alt', $(this).attr('alt') || '');
+    $('#photo-lightbox').addClass('active');
+    $('body').css('overflow', 'hidden');
+  });
+
+  function closeLightbox() {
+    $('#photo-lightbox').removeClass('active');
+    $('body').css('overflow', '');
+  }
+
+  $('#lightbox-backdrop, #lightbox-close').on('click', closeLightbox);
+
+  // Also close on Escape key
+  $(document).on('keydown.lightbox', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
   // Set navigation links for series
   if (window.seriesData) {
     const serieIndex = window.seriesData.findIndex(s => s.id === serie.id);
