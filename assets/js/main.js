@@ -195,6 +195,11 @@ function loadSerieContent(serie) {
           class: 'photo-image fade-transition'
         });
         contentDisplay.append(photoElement);
+
+        // If lightbox is open, update it with the new photo
+        if ($('#photo-lightbox').hasClass('active')) {
+          $('#lightbox-img').attr('src', imgSrc);
+        }
         
         // Set metadata — only filled fields, compacted to top in CMS order
         const meta = slide.content.metadata;
@@ -306,6 +311,26 @@ function loadSerieContent(serie) {
   $(document).on('keydown.lightbox', function(e) {
     if (e.key === 'Escape') closeLightbox();
   });
+
+  // Swipe inside lightbox to navigate photos
+  var _lbStartX = 0, _lbStartY = 0;
+  var lbEl = document.getElementById('photo-lightbox');
+  lbEl.addEventListener('touchstart', function(e) {
+    _lbStartX = e.touches[0].clientX;
+    _lbStartY = e.touches[0].clientY;
+  }, { passive: true });
+  lbEl.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - _lbStartX;
+    var dy = e.changedTouches[0].clientY - _lbStartY;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0 && currentSlideIndex < slides.length - 1) {
+      currentSlideIndex++;
+      loadSlide(currentSlideIndex);
+    } else if (dx > 0 && currentSlideIndex > 0) {
+      currentSlideIndex--;
+      loadSlide(currentSlideIndex);
+    }
+  }, { passive: true });
 
   // Set navigation links for series
   if (window.seriesData) {
