@@ -9,17 +9,17 @@ body { outline: 6px solid green !important; }
     margin-top: -20px;
     margin-bottom: 5px !important;
   }
-  /* Push serie title + prev/next series down (reduce bottom offset) */
+  /* Push serie title + prev/next series down */
   .serie-nav-row {
-    bottom: -5px !important;
+    bottom: -15px !important;
   }
-  /* Adjust vertical centering bias: +padding-bottom = less space above */
+  /* Centering bias: increase to move frame 20px higher */
   .serie-container {
-    padding-bottom: 90px !important;
+    padding-bottom: 130px !important;
   }
-  /* Give content-container a fixed height so photo and text use identical frame */
+  /* Content frame: 30px taller (20px on top + 10px on bottom) */
   .content-container {
-    height: calc(100vh - 150px) !important;
+    height: calc(100vh - 120px) !important;
     align-items: stretch !important;
     outline: 2px solid red; /* TEMP inspection */
   }
