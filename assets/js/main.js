@@ -307,9 +307,17 @@ function loadSerieContent(serie) {
 
   $('#lightbox-backdrop, #lightbox-close').on('click', closeLightbox);
 
-  // Also close on Escape key
-  $(document).on('keydown.lightbox', function(e) {
-    if (e.key === 'Escape') closeLightbox();
+  // Keyboard navigation: Escape closes lightbox, arrows navigate slides
+  $(document).on('keydown.serieNav', function(e) {
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowRight' && currentSlideIndex < slides.length - 1) {
+      currentSlideIndex++;
+      loadSlide(currentSlideIndex);
+    } else if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+      currentSlideIndex--;
+      loadSlide(currentSlideIndex);
+    }
   });
 
   // Swipe inside lightbox to navigate photos
