@@ -17,14 +17,14 @@ body { outline: 6px solid green !important; }
   .serie-container {
     padding-bottom: 80px !important;
   }
-  /* Narrow side columns by 50px each, widen center accordingly */
-  .serie-container .col-xs-2.side-column,
-  .serie-nav-row .col-xs-2 {
-    width: calc(16.667% - 50px) !important;
+  /* Push side column content (arrows + metadata) 50px toward center */
+  .serie-container .col-xs-2.side-column:first-child,
+  .serie-nav-row .col-xs-2:first-child {
+    padding-left: 50px !important;
   }
-  .serie-container .row .col-xs-8,
-  .serie-nav-row .col-xs-8 {
-    width: calc(66.667% + 100px) !important;
+  .serie-container .col-xs-2.side-column:last-child,
+  .serie-nav-row .col-xs-2:last-child {
+    padding-right: 50px !important;
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
