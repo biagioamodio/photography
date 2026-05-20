@@ -9,17 +9,18 @@ body { outline: 6px solid green !important; }
     margin-top: -20px;
     margin-bottom: 5px !important;
   }
-  /* Push serie title + prev/next series down */
+  /* Keep nav-row in original position */
   .serie-nav-row {
-    bottom: -15px !important;
+    bottom: -5px !important;
   }
-  /* Centering bias: increase to move frame 20px higher */
+  /* Expand serie-container to fill space freed by navbar moving up 20px */
   .serie-container {
-    padding-bottom: 130px !important;
+    height: calc(100vh - 30px) !important;
+    padding-bottom: 90px !important;
   }
-  /* Content frame: 30px taller (20px on top + 10px on bottom) */
+  /* Content frame: 20px taller — fits within the extra serie-container space */
   .content-container {
-    height: calc(100vh - 120px) !important;
+    height: calc(100vh - 130px) !important;
     align-items: stretch !important;
     outline: 2px solid red; /* TEMP inspection */
   }
