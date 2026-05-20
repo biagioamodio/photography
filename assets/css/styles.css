@@ -1,8 +1,12 @@
 /* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
+/* Green: large screens — anything not caught below */
+body { outline: 6px solid green !important; }
+/* Red: landscape AND width ≤2870px AND height ≤1330px */
 @media (max-width: 2870px) and (max-height: 1330px) and (orientation: landscape) {
   body { outline: 6px solid red !important; }
 }
-@media not all and (max-width: 2870px) and (max-height: 1330px) and (orientation: landscape) {
+/* Blue: existing ≤840px breakpoint (mobile/tablet) */
+@media (max-width: 840px) {
   body { outline: 6px solid blue !important; }
 }
 /* ── END TEMP TEST ──────────────────────────────────────────────────────── */
