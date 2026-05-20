@@ -254,39 +254,33 @@ function loadSerieContent(serie) {
     loadSlide(currentSlideIndex);
   });
   
-  // Swipe gesture — navigate slides on touch devices
-  (function() {
-    var el = document.getElementById('content-display');
-    if (!el) return;
-    var startX = 0, startY = 0, moved = false;
+  // Swipe gesture — attach to document so the full screen is swipeable
+  var _swipeStartX = 0, _swipeStartY = 0, _swipeMoved = false;
 
-    el.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      moved = false;
-    }, { passive: true });
+  document.addEventListener('touchstart', function(e) {
+    _swipeStartX = e.touches[0].clientX;
+    _swipeStartY = e.touches[0].clientY;
+    _swipeMoved = false;
+  }, { passive: true });
 
-    el.addEventListener('touchmove', function(e) {
-      moved = true;
-    }, { passive: true });
+  document.addEventListener('touchmove', function(e) {
+    _swipeMoved = true;
+  }, { passive: true });
 
-    el.addEventListener('touchend', function(e) {
-      if (!moved) return;
-      var dx = e.changedTouches[0].clientX - startX;
-      var dy = e.changedTouches[0].clientY - startY;
-      // Only trigger on primarily horizontal swipes
-      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
-      if (dx < 0 && currentSlideIndex < slides.length - 1) {
-        // Swipe left → next
-        currentSlideIndex++;
-        loadSlide(currentSlideIndex);
-      } else if (dx > 0 && currentSlideIndex > 0) {
-        // Swipe right → prev
-        currentSlideIndex--;
-        loadSlide(currentSlideIndex);
-      }
-    }, { passive: true });
-  })();
+  document.addEventListener('touchend', function(e) {
+    if (!_swipeMoved) return;
+    var dx = e.changedTouches[0].clientX - _swipeStartX;
+    var dy = e.changedTouches[0].clientY - _swipeStartY;
+    // Only trigger on primarily horizontal swipes (≥50px, more horizontal than vertical)
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0 && currentSlideIndex < slides.length - 1) {
+      currentSlideIndex++;
+      loadSlide(currentSlideIndex);
+    } else if (dx > 0 && currentSlideIndex > 0) {
+      currentSlideIndex--;
+      loadSlide(currentSlideIndex);
+    }
+  }, { passive: true });
 
   // Click handler for serie title - go back to first slide
   $('.serie-title').css('cursor', 'pointer').click(function(e) {
