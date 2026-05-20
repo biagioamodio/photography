@@ -9,13 +9,24 @@ body { outline: 6px solid green !important; }
     margin-top: -20px;
     margin-bottom: 5px !important;
   }
-  /* Push serie title + prev/next series down 50px (reduce bottom offset) */
+  /* Push serie title + prev/next series down (reduce bottom offset) */
   .serie-nav-row {
-    bottom: -10px !important;
+    bottom: -5px !important;
   }
-  /* Reduce top gap: padding-bottom bias works in reverse on flex center */
+  /* Adjust vertical centering bias: +padding-bottom = less space above */
   .serie-container {
-    padding-bottom: 80px !important;
+    padding-bottom: 90px !important;
+  }
+  /* Cap photo height to available space so image always fits without cropping */
+  .photo-container {
+    height: calc(100vh - 150px) !important;
+    max-height: calc(100vh - 150px) !important;
+    overflow: visible !important;
+  }
+  .photo-image,
+  .photo-container img {
+    max-height: calc(100vh - 150px) !important;
+    object-fit: contain !important;
   }
   /* Move arrows and metadata 50px toward center (must use transform — they're position:absolute) */
   .serie-container .col-xs-2.side-column:first-child .arrow-container,
