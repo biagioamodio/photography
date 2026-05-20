@@ -10,7 +10,7 @@ body { outline: 6px solid green !important; }
   }
   /* Push serie title + prev/next series down 50px (reduce bottom offset) */
   .serie-nav-row {
-    bottom: -10px;
+    bottom: -10px !important;
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
