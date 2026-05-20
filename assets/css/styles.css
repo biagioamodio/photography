@@ -13,16 +13,23 @@ body { outline: 6px solid green !important; }
   .serie-nav-row {
     bottom: -10px !important;
   }
-  /* Reduce vertical gaps around photo */
+  /* Reduce top gap: padding-bottom bias works in reverse on flex center */
   .serie-container {
-    padding-bottom: 64px !important;
+    padding-bottom: 80px !important;
   }
-  /* Push side column content (arrows + metadata) 50px toward center */
-  .serie-container .col-xs-2.side-column:first-child,
+  /* Move arrows and metadata 50px toward center (must use transform — they're position:absolute) */
+  .serie-container .col-xs-2.side-column:first-child .arrow-container,
+  .serie-container .col-xs-2.side-column:first-child .photo-metadata {
+    transform: translateX(50px);
+  }
+  .serie-container .col-xs-2.side-column:last-child .arrow-container,
+  .serie-container .col-xs-2.side-column:last-child .photo-darkroom {
+    transform: translateX(-50px);
+  }
+  /* Nav row items are in normal flow so padding works there */
   .serie-nav-row .col-xs-2:first-child {
     padding-left: 50px !important;
   }
-  .serie-container .col-xs-2.side-column:last-child,
   .serie-nav-row .col-xs-2:last-child {
     padding-right: 50px !important;
   }
