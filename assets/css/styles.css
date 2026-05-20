@@ -17,6 +17,9 @@ body { outline: 6px solid green !important; }
   .serie-nav-row {
     bottom: -5px !important;
   }
+  .serie-title {
+    margin-top: 0 !important;
+  }
   /* Adjust vertical centering bias: +padding-bottom = less space above */
   .serie-container {
     padding-bottom: 90px !important;
