@@ -196,9 +196,9 @@ function loadSerieContent(serie) {
         });
         contentDisplay.append(photoElement);
 
-        // If lightbox is open, update it with the new photo
+        // If lightbox is open, crossfade to the new photo
         if ($('#photo-lightbox').hasClass('active')) {
-          $('#lightbox-img').attr('src', imgSrc);
+          fadeLightboxTo(imgSrc);
         }
         
         // Set metadata — only filled fields, compacted to top in CMS order
@@ -293,6 +293,15 @@ function loadSerieContent(serie) {
     }
   });
   
+  // Lightbox fade helper — mirrors the slide dissolve timing
+  function fadeLightboxTo(src) {
+    var $img = $('#lightbox-img');
+    $img.css('opacity', 0);
+    setTimeout(function() {
+      $img.attr('src', src).css('opacity', 1);
+    }, 300);
+  }
+
   // Fullscreen lightbox — tap/click photo to expand
   $('#content-display').on('click', '.photo-image', function() {
     $('#lightbox-img').attr('src', this.src).attr('alt', $(this).attr('alt') || '');

@@ -1002,7 +1002,7 @@ body.home-page > .container-fluid > .page-content {
   z-index: 1000;
   align-items: center;
   justify-content: center;
-  touch-action: pan-y;
+  touch-action: none;
 }
 
 .photo-lightbox.active {
@@ -1030,6 +1030,10 @@ body.home-page > .container-fluid > .page-content {
   border: 10px solid #ffffff;
   box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
   cursor: default;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  transition: opacity 0.3s ease;
 }
 
 .photo-image {
