@@ -6,7 +6,7 @@ body { outline: 6px solid green !important; }
   body { outline: 6px solid red !important; }
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
   .navbar .container-fluid {
-    padding-bottom: 5px !important;
+    padding-bottom: 0px !important;
   }
   /* Move navbar (title + nav links + toggle) up 20px */
   .navbar {
