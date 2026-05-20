@@ -28,6 +28,10 @@ body { outline: 6px solid green !important; }
     max-height: calc(100vh - 150px) !important;
     object-fit: contain !important;
   }
+  /* Elevate side columns so translated arrows stay clickable above center column */
+  .serie-container .col-xs-2.side-column {
+    z-index: 5;
+  }
   /* Move arrows and metadata 20px toward center */
   .serie-container .col-xs-2.side-column:first-child .arrow-container,
   .serie-container .col-xs-2.side-column:first-child .photo-metadata {
