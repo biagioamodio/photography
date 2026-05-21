@@ -31,7 +31,6 @@ body { outline: 6px solid green !important; }
   .content-container {
     height: calc(100vh - 150px) !important;
     align-items: stretch !important;
-    outline: 2px solid red; /* TEMP inspection */
   }
   /* Make content-display fill the full frame */
   #content-display {
@@ -40,6 +39,7 @@ body { outline: 6px solid green !important; }
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    outline: 2px solid red; /* TEMP inspection */
   }
   /* Photo fills the frame exactly, scales down to fit without cropping */
   .photo-image {
