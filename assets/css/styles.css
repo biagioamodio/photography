@@ -2,7 +2,7 @@
 /* Green: large screens — anything not caught below */
 body { outline: 6px solid green !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
-@media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
+@media (min-width: 841px) and (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   body { outline: 6px solid red !important; }
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
   .navbar .container-fluid {
@@ -44,10 +44,9 @@ body { outline: 6px solid green !important; }
   /* Photo fills the frame exactly, scales down to fit without cropping */
   .photo-image {
     width: auto !important;
-    height: 100% !important;
+    height: auto !important;
     max-width: 100% !important;
     max-height: 100% !important;
-    object-fit: contain !important;
   }
   /* Description scrolls within the same frame if text is too long */
   .serie-description {
