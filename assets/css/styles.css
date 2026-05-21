@@ -15,7 +15,7 @@ body { outline: 6px solid green !important; }
   }
   /* Push serie title + prev/next series down (reduce bottom offset) */
   .serie-nav-row {
-    bottom: -5px !important;
+    bottom: 20px !important;
   }
   .serie-title {
     margin-top: 0 !important;
