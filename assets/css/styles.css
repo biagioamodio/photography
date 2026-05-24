@@ -127,6 +127,9 @@ body { outline: 6px solid green !important; }
   .serie-description {
     max-height: 100% !important;
   }
+  .serie-nav-row {
+    bottom: 30px !important;
+  }
 }
 /* ── END TEMP TEST ──────────────────────────────────────────────────────── */
 
@@ -779,7 +782,7 @@ body.home-page > .container-fluid > .page-content {
 
 .serie-nav-row {
   position: fixed;
-  bottom: 30px;
+  bottom: 25px;
   left: 0;
   right: 0;
   width: 100%;
