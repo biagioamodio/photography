@@ -59,9 +59,10 @@ body { outline: 6px solid green !important; }
   .serie-container .col-xs-2.side-column:last-child {
     padding-right: 0 !important;
   }
-  /* Elevate side columns so translated arrows stay clickable above center column */
+  /* Elevate side columns; center them vertically so height can be set to image height by JS */
   .serie-container .col-xs-2.side-column {
     z-index: 5;
+    align-self: center;
   }
   /* Move arrows and metadata 20px toward center */
   .serie-container .col-xs-2.side-column:first-child .arrow-container,

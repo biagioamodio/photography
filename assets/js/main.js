@@ -748,24 +748,20 @@ function toggleTheme() {
 // Align metadata/darkroom bottom edge with the rendered image bottom in the red breakpoint.
 // Side columns stretch to the full content-container height, so padding-bottom is used
 // to push the flex-end metadata up exactly to where the image bottom sits.
-// In the red breakpoint the side column stretches taller than the image.
-// photo-metadata/darkroom use position:absolute; bottom: -4.5px (green default).
-// We override "bottom" so their bottom edge aligns with the image bottom edge.
+// In the red breakpoint the content-container is taller than the image.
+// Replicate the green-condition behaviour: set side column height = rendered
+// image height and align-self:center so photo-metadata's bottom:-4.5px
+// naturally lands at the image bottom edge, exactly as in the green condition.
 function alignMetadataToImage() {
   var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape)');
+  var $cols = $('.serie-container .col-xs-2.side-column');
   if (!mq.matches) {
-    $('#photo-metadata').css('bottom', '');
-    $('#photo-darkroom').css('bottom', '');
+    $cols.css('height', '');
     return;
   }
-  var $img     = $('#content-display .photo-image');
-  var $display = $('#content-display');
-  if (!$img.length || !$display.length) return;
-  var containerH = $display[0].getBoundingClientRect().height;
-  var imgH       = $img[0].getBoundingClientRect().height;
-  // bottom = (containerH - imgH) / 2 places the element's bottom edge
-  // exactly at the image bottom (image is vertically centred in the container).
-  var bottom = Math.max(0, (containerH - imgH) / 2);
-  $('#photo-metadata').css('bottom', bottom + 'px');
-  $('#photo-darkroom').css('bottom', bottom + 'px');
+  var $img = $('#content-display .photo-image');
+  if (!$img.length) return;
+  var imgH = $img[0].getBoundingClientRect().height;
+  if (imgH === 0) return;
+  $cols.css('height', imgH + 'px');
 }
