@@ -602,7 +602,7 @@ body.home-page > .container-fluid > .page-content {
   max-height: 70vh;
   overflow-y: auto;
   margin: 0 auto;
-  padding-right: 10px;
+  padding-right: 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
