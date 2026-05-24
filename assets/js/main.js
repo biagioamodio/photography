@@ -495,6 +495,13 @@ function loadHomeSlides() {
     $wrap.append($show);
 
     function applyAllLayouts() {
+      // Constrain slide so its bottom edge stays 30px above viewport bottom.
+      // Measure actual navbar height so this works in both red and blue conditions.
+      var navH = $('#navbar-container')[0] ? $('#navbar-container')[0].offsetHeight : 80;
+      var maxH = window.innerHeight - navH - 30;
+      var maxW = Math.round(maxH * 1.5);
+      $show.find('.home-slide').css('max-width', maxW + 'px');
+
       $show.find('.home-slide').each(function(i) {
         var slide = slides[i];
         var $bg   = $(this).find('.home-bg-img');
