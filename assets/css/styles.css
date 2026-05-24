@@ -91,7 +91,17 @@ body { outline: 6px solid green !important; }
 @media (max-width: 840px) {
   body { outline: 6px solid blue !important; }
 }
-/* Blue + short viewport, portrait only (landscape is handled by the red breakpoint) */
+/* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
+   Blue navbar is ~170px, so override content height to prevent bottom overflow. */
+@media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
+  .serie-container {
+    padding-bottom: 70px !important;
+  }
+  .content-container {
+    height: calc(100vh - 240px) !important;
+  }
+}
+/* Blue + short viewport, portrait only (landscape handled above) */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: portrait) {
   /* Blue navbar is ~170px tall (stacked); bottom bar ~75px from bottom */
   .serie-container {
