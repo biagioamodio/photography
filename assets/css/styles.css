@@ -25,11 +25,11 @@ body { outline: 6px solid green !important; }
   }
   /* Adjust vertical centering bias: +padding-bottom = less space above */
   .serie-container {
-    padding-bottom: 90px !important;
+    padding-bottom: 45px !important;
   }
   /* Give content-container a fixed height so photo and text use identical frame */
   .content-container {
-    height: calc(100vh - 150px) !important;
+    height: calc(100vh - 105px) !important;
     align-items: stretch !important;
   }
   /* Make content-display fill the full frame */
