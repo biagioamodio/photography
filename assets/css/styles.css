@@ -86,6 +86,12 @@ body { outline: 6px solid green !important; }
   .serie-nav-row .col-xs-2:last-child {
     transform: translateX(-20px);
   }
+  /* Home page: prevent slide from exceeding viewport height */
+  /* max-width = (100vh - navbar~50px - 20px padding) * (3/2 aspect ratio) */
+  .home-slide {
+    max-width: calc((100vh - 70px) * 1.5) !important;
+    margin: 0 auto;
+  }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
 @media (max-width: 840px) {
