@@ -37,7 +37,7 @@ body { outline: 6px solid green !important; }
     width: 100%;
     height: 100%;
     display: flex !important;
-    align-items: flex-end !important;
+    align-items: center !important;
     justify-content: center !important;
     outline: 2px solid red; /* TEMP inspection */
   }
@@ -53,22 +53,40 @@ body { outline: 6px solid green !important; }
     max-height: 100% !important;
   }
   /* Zero out Bootstrap's default outer padding to force equal side widths */
+  /* Side columns: flex column so arrow can be centered and metadata sits at bottom */
   .serie-container .col-xs-2.side-column:first-child {
     padding-left: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
   }
   .serie-container .col-xs-2.side-column:last-child {
     padding-right: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
   }
   /* Elevate side columns so translated arrows stay clickable above center column */
   .serie-container .col-xs-2.side-column {
     z-index: 5;
   }
-  /* Move arrows and metadata 20px toward center */
-  .serie-container .col-xs-2.side-column:first-child .arrow-container,
+  /* Arrows absolutely centered in side column (vertically = image center) */
+  .serie-container .col-xs-2.side-column:first-child .arrow-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(20px);
+  }
+  .serie-container .col-xs-2.side-column:last-child .arrow-container {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-20px);
+  }
+  /* Metadata/darkroom shifted toward center; bottom edge set by JS padding-bottom */
   .serie-container .col-xs-2.side-column:first-child .photo-metadata {
     transform: translateX(20px);
   }
-  .serie-container .col-xs-2.side-column:last-child .arrow-container,
   .serie-container .col-xs-2.side-column:last-child .photo-darkroom {
     transform: translateX(-20px);
   }

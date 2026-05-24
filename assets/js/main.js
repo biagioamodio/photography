@@ -195,6 +195,8 @@ function loadSerieContent(serie) {
           class: 'photo-image fade-transition'
         });
         contentDisplay.append(photoElement);
+        photoElement.on('load', alignMetadataToImage);
+        if (photoElement[0].complete) alignMetadataToImage();
 
         // If lightbox is open, crossfade to the new photo
         if ($('#photo-lightbox').hasClass('active')) {
@@ -719,6 +721,9 @@ function initializeTheme() {
     document.documentElement.setAttribute('data-theme', 'light');
   }
   
+  // Re-align metadata when window resizes (breakpoint or image size may change)
+  $(window).on('resize', alignMetadataToImage);
+
   // Add click handler for theme toggle button
   $(document).on('click', '#theme-toggle', function(e) {
     e.preventDefault();
@@ -730,10 +735,29 @@ function initializeTheme() {
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  
+
   // Apply new theme
   document.documentElement.setAttribute('data-theme', newTheme);
-  
+
   // Save preference to localStorage
   localStorage.setItem('theme', newTheme);
+}
+
+// Align metadata/darkroom bottom edge with the rendered image bottom in the red breakpoint.
+// Side columns stretch to the full content-container height, so padding-bottom is used
+// to push the flex-end metadata up exactly to where the image bottom sits.
+function alignMetadataToImage() {
+  var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape)');
+  if (!mq.matches) {
+    $('.col-xs-2.side-column').css('padding-bottom', '');
+    return;
+  }
+  var $img = $('.photo-image');
+  var $display = $('#content-display');
+  if (!$img.length || !$display.length) return;
+  var containerH = $display[0].offsetHeight;
+  var imgH = $img[0].offsetHeight;
+  var offset = Math.max(0, (containerH - imgH) / 2);
+  $('.col-xs-2.side-column:first-child').css('padding-bottom', offset + 'px');
+  $('.col-xs-2.side-column:last-child').css('padding-bottom', offset + 'px');
 }
