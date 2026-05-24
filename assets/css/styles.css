@@ -986,11 +986,10 @@ body.home-page > .container-fluid > .page-content {
     align-items: center;
   }
 
-  /* padding-bottom shifts the flex centre point upward so the photo sits
-     at the viewport's vertical centre (equal space from page top and bottom).
-     Formula: container.top(160) + (vh-50-P)/2 = vh/2  →  P = 270px */
+  /* Dynamic padding so image always sits ~20px below the container top.
+     Formula: P = (100vh-50px) - 60vh - 40px = 40vh - 90px */
   .serie-container {
-    padding-bottom: 270px;
+    padding-bottom: calc(40vh - 90px);
   }
 }
 
