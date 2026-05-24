@@ -96,6 +96,10 @@ body { outline: 6px solid green !important; }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
 @media (max-width: 840px) {
   body { outline: 6px solid blue !important; }
+  .home-slide {
+    max-width: calc((100vh - 80px) * 1.5) !important;
+    margin: 0 auto;
+  }
 }
 /* ── END TEMP TEST ──────────────────────────────────────────────────────── */
 
