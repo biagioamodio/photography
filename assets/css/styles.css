@@ -986,9 +986,11 @@ body.home-page > .container-fluid > .page-content {
     align-items: center;
   }
 
+  /* padding-bottom shifts the flex centre point upward so the photo sits
+     at the viewport's vertical centre (equal space from page top and bottom).
+     Formula: container.top(160) + (vh-50-P)/2 = vh/2  →  P = 270px */
   .serie-container {
-    justify-content: flex-start;
-    padding-bottom: 80px;
+    padding-bottom: 270px;
   }
 }
 
