@@ -195,8 +195,10 @@ function loadSerieContent(serie) {
           class: 'photo-image fade-transition'
         });
         contentDisplay.append(photoElement);
-        photoElement.on('load', alignMetadataToImage);
-        if (photoElement[0].complete) alignMetadataToImage();
+        photoElement.on('load', function() {
+          requestAnimationFrame(alignMetadataToImage);
+        });
+        if (photoElement[0].complete) requestAnimationFrame(alignMetadataToImage);
 
         // If lightbox is open, crossfade to the new photo
         if ($('#photo-lightbox').hasClass('active')) {
@@ -748,16 +750,19 @@ function toggleTheme() {
 // to push the flex-end metadata up exactly to where the image bottom sits.
 function alignMetadataToImage() {
   var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape)');
+  var $leftCol  = $('.serie-container .col-xs-2.side-column').first();
+  var $rightCol = $('.serie-container .col-xs-2.side-column').last();
   if (!mq.matches) {
-    $('.col-xs-2.side-column').css('padding-bottom', '');
+    $leftCol.css('padding-bottom', '');
+    $rightCol.css('padding-bottom', '');
     return;
   }
-  var $img = $('.photo-image');
+  var $img     = $('#content-display .photo-image');
   var $display = $('#content-display');
   if (!$img.length || !$display.length) return;
-  var containerH = $display[0].offsetHeight;
-  var imgH = $img[0].offsetHeight;
-  var offset = Math.max(0, (containerH - imgH) / 2);
-  $('.col-xs-2.side-column:first-child').css('padding-bottom', offset + 'px');
-  $('.col-xs-2.side-column:last-child').css('padding-bottom', offset + 'px');
+  var containerH = $display[0].getBoundingClientRect().height;
+  var imgH       = $img[0].getBoundingClientRect().height;
+  var offset     = Math.max(0, (containerH - imgH) / 2);
+  $leftCol.css('padding-bottom',  offset + 'px');
+  $rightCol.css('padding-bottom', offset + 'px');
 }
