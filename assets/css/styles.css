@@ -296,7 +296,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 20px;
+    padding: 20px;
   }
 
   .navbar-header {
