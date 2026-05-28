@@ -23,8 +23,9 @@
   .prev-serie, .next-serie {
     margin-top: 0 !important;
   }
-  /* Adjust vertical centering bias: +padding-bottom = less space above */
+  /* Flush layout: content starts immediately below the navbar */
   .serie-container {
+    justify-content: flex-start !important;
     padding-bottom: 65px !important;
   }
   /* Frame = full available area between navbar and nav-row */
