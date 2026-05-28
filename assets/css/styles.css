@@ -1,6 +1,7 @@
 /* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
 /* Green: large screens — anything not caught below */
 body { outline: 6px solid green !important; }
+.content-container { outline: 2px solid red !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   body { outline: 6px solid red !important; }
