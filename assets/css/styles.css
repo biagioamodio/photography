@@ -11,7 +11,7 @@
   /* Move navbar (title + nav links + toggle) up 20px */
   .navbar {
     margin-top: -20px;
-    margin-bottom: 5px !important;
+    margin-bottom: 0 !important;
   }
   /* Push serie title + prev/next series down (reduce bottom offset) */
   .serie-nav-row {
@@ -151,7 +151,7 @@ body.serie-page {
 /* Remove Bootstrap's default navbar bottom margin on the serie page
    so the content-container starts flush below the navbar */
 body.serie-page .navbar {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
 /* Color variables */
