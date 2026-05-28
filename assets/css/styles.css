@@ -1,10 +1,7 @@
 /* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
-/* Green: large screens — anything not caught below */
-body { outline: 6px solid green !important; }
 .content-container { outline: 2px solid red !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
-  body { outline: 6px solid orange !important; }
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
   .navbar .container-fluid {
     padding-bottom: 0px !important;
@@ -88,9 +85,6 @@ body { outline: 6px solid green !important; }
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
-@media (max-width: 840px) {
-  body { outline: 6px solid blue !important; }
-}
 /* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
