@@ -1,3 +1,140 @@
+/* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
+/* Green: large screens — anything not caught below */
+body { outline: 6px solid green !important; }
+.content-container { outline: 2px solid red !important; }
+/* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
+@media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
+  body { outline: 6px solid red !important; }
+  /* Slim navbar bottom padding: keep content identical, reduce dead space below */
+  .navbar .container-fluid {
+    padding-bottom: 0px !important;
+  }
+  /* Move navbar (title + nav links + toggle) up 20px */
+  .navbar {
+    margin-top: -20px;
+    margin-bottom: 5px !important;
+  }
+  /* Push serie title + prev/next series down (reduce bottom offset) */
+  .serie-nav-row {
+    bottom: -5px !important;
+  }
+  .serie-title {
+    margin-top: 0 !important;
+  }
+  .prev-serie, .next-serie {
+    margin-top: 0 !important;
+  }
+  /* Adjust vertical centering bias: +padding-bottom = less space above */
+  .serie-container {
+    padding-bottom: 65px !important;
+  }
+  /* Content-container auto-height so it wraps the image tightly (no dead space) */
+  .content-container {
+    height: auto !important;
+    align-items: center !important;
+  }
+  /* content-display is a flex container so the image centres inside it */
+  #content-display {
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    outline: 2px solid red; /* TEMP inspection */
+  }
+  /* Photo scales to fill the available height, preserving aspect ratio */
+  .photo-image {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: calc(100vh - 125px) !important;
+  }
+  /* Description scrolls within the same frame if text is too long */
+  .serie-description {
+    max-height: 100% !important;
+  }
+  /* Zero out Bootstrap's default outer padding to force equal side widths */
+  .serie-container .col-xs-2.side-column:first-child {
+    padding-left: 0 !important;
+  }
+  .serie-container .col-xs-2.side-column:last-child {
+    padding-right: 0 !important;
+  }
+  /* Elevate side columns; center them vertically so height can be set to image height by JS */
+  .serie-container .col-xs-2.side-column {
+    z-index: 5;
+    align-self: center;
+  }
+  /* Move arrows and metadata 20px toward center */
+  .serie-container .col-xs-2.side-column:first-child .arrow-container,
+  .serie-container .col-xs-2.side-column:first-child .photo-metadata {
+    transform: translateX(20px);
+  }
+  .serie-container .col-xs-2.side-column:last-child .arrow-container,
+  .serie-container .col-xs-2.side-column:last-child .photo-darkroom {
+    transform: translateX(-20px);
+  }
+  /* Ensure arrow links always receive pointer events */
+  .arrow-container a {
+    pointer-events: all !important;
+    position: relative;
+    z-index: 10;
+  }
+  /* Nav row cols use same translateX so prev/next series aligns with arrows */
+  .serie-nav-row .col-xs-2:first-child {
+    transform: translateX(20px);
+  }
+  .serie-nav-row .col-xs-2:last-child {
+    transform: translateX(-20px);
+  }
+}
+/* Blue: existing ≤840px breakpoint (mobile/tablet) */
+@media (max-width: 840px) {
+  body { outline: 6px solid blue !important; }
+}
+/* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
+   Blue navbar is ~170px, so override content height to prevent bottom overflow. */
+@media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
+  .serie-container {
+    padding-bottom: 110px !important;
+  }
+  .content-container {
+    height: auto !important;
+  }
+  .photo-image {
+    max-height: calc(100vh - 240px) !important;
+  }
+}
+/* Blue + short viewport, portrait only (landscape handled above) */
+@media (max-width: 840px) and (max-height: 665px) and (orientation: portrait) {
+  /* Blue navbar is ~170px tall (stacked); bottom bar ~75px from bottom */
+  .serie-container {
+    padding-bottom: 165px !important;
+  }
+  .content-container {
+    height: auto !important;
+    align-items: center !important;
+  }
+  #content-display {
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .photo-image {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: calc(100vh - 245px) !important;
+  }
+  .serie-description {
+    max-height: calc(100vh - 245px) !important;
+  }
+  .serie-nav-row {
+    bottom: 30px !important;
+  }
+}
+/* ── END TEMP TEST ──────────────────────────────────────────────────────── */
+
 /* Prevent scrollbar on serie page */
 body.serie-page {
   overflow: hidden;
@@ -97,11 +234,28 @@ html, body {
   padding: 20px;
 }
 
+@media (min-width: 841px) {
+  .navbar-nav .theme-toggle-container {
+    position: relative;
+    top: 5.5px;
+  }
+
+  .navbar-nav li:not(.theme-toggle-container) {
+    margin-top: 6px;
+  }
+}
+
 .navbar-brand {
   font-family: 'Oswald', sans-serif;
   font-size: 24px;
   color: var(--color-primary);
   text-transform: uppercase;
+}
+
+.navbar-brand:hover,
+.navbar-brand:focus {
+  color: var(--color-primary);
+  outline: none;
 }
 
 .navbar-nav li {
@@ -142,22 +296,29 @@ html, body {
 }
 
 /* Responsive navigation */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .navbar .container-fluid {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px 20px;
+    padding: 20px;
   }
-  
+
   .navbar-header {
     width: 100%;
+    float: none;
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     position: relative;
   }
-  
+
+  /* Override Bootstrap's high-specificity .navbar > .container-fluid .navbar-brand { margin-left: -15px } */
+  .navbar > .container-fluid .navbar-brand {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .navbar-brand {
     font-size: 24px;
     display: inline-block;
@@ -188,9 +349,9 @@ html, body {
   
   .navbar-nav .theme-toggle-container {
     position: absolute;
-    top: 32%;
+    top: 25.5px;
     right: 0;
-    transform: translateY(-50%);
+    transform: none;
     margin: 0;
   }
 }
@@ -263,6 +424,135 @@ h1, h2, h3 {
   }
 }
 
+/* ── Home Slideshow ─────────────────────────────────────────────────────── */
+/* Home page: fill viewport height and vertically center the image.
+   Use body > to avoid matching the navbar's inner .container-fluid. */
+body.home-page > .container-fluid {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body.home-page .navbar {
+  margin-bottom: 0;
+}
+
+body.home-page > .container-fluid > .page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 40px;
+  min-height: 0;
+}
+
+.home-slideshow-wrap {
+  padding: 0;
+  width: 100%;
+}
+
+.home-slideshow {
+  position: relative;
+}
+
+.home-slide {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  background: #111;
+  margin: 0 auto;
+}
+
+.home-slide.active {
+  display: block;
+}
+
+/* BG + FG composite — same structure as CMS preview */
+.home-composite-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.home-bg-img {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.home-fg-img {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 4;
+}
+
+/* Text overlay */
+.home-slide-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-family: 'Young Serif', serif;
+  max-width: 85%;
+  pointer-events: none;
+  white-space: pre-wrap;
+  z-index: 3;
+}
+
+/* Slide navigation arrows */
+.slide-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border: none;
+  font-size: 2.2rem;
+  line-height: 1;
+  padding: 8px 14px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+  border-radius: 2px;
+}
+
+.slide-nav:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.slide-prev { left: 10px; }
+.slide-next { right: 10px; }
+
+/* Dot indicators */
+.slide-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 10;
+}
+
+.slide-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slide-dot.active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
 /* Series grid */
 .series-grid {
   display: grid;
@@ -274,7 +564,7 @@ h1, h2, h3 {
 }
 
 /* Responsive series grid */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .series-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -337,10 +627,10 @@ h1, h2, h3 {
 /* Serie content */
 .content-container {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Photo row: flex so side columns stretch to image height */
@@ -356,7 +646,7 @@ h1, h2, h3 {
   max-height: 70vh;
   overflow-y: auto;
   margin: 0 auto;
-  padding-right: 10px;
+  padding-right: 0;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
@@ -413,7 +703,7 @@ h1, h2, h3 {
 
 .photo-metadata {
   position: absolute;
-  bottom: -3px;
+  bottom: -4.5px;
   right: 0px;
   color: var(--color-secondary);
   font-size: 13px;
@@ -423,7 +713,20 @@ h1, h2, h3 {
   font-family: 'Inconsolata', monospace;
 }
 
-#photo-metadata {
+.photo-darkroom {
+  position: absolute;
+  bottom: -4.5px;
+  left: 0px;
+  color: var(--color-secondary);
+  font-size: 13px;
+  text-align: left;
+  z-index: 1;
+  width: 100%;
+  font-family: 'Inconsolata', monospace;
+}
+
+#photo-metadata,
+#photo-darkroom {
   margin-bottom: 0 !important;
   white-space: nowrap;
 }
@@ -456,8 +759,10 @@ h1, h2, h3 {
   left: 0;
 }
 
-.arrow-container a:hover {
-  opacity: 0.7;
+.arrow-container a:hover,
+.arrow-container a:focus {
+  opacity: 1;
+  outline: none;
 }
 
 .arrow-container img {
@@ -469,17 +774,36 @@ h1, h2, h3 {
   font-size: 24px;
   text-align: center;
   margin: 20px 0;
+  color: var(--color-primary);
+  display: inline-block;
+}
+
+.serie-title:hover {
+  color: var(--color-primary);
 }
 
 .serie-nav-row {
   position: fixed;
-  bottom: 40px;
+  bottom: 25px;
   left: 0;
   right: 0;
   width: 100%;
   background: var(--color-background);
   z-index: 100;
   margin: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* Outer column padding: 5px row + 20px col = 25px total outer space.
+   Row padding matches photo row's 5px effective margin so inner col
+   boundaries align with arrow positions at any viewport width. */
+.serie-nav-row .col-xs-2:first-child {
+  padding-left: 20px;
+}
+
+.serie-nav-row .col-xs-2:last-child {
+  padding-right: 20px;
 }
 
 .prev-serie, .next-serie {
@@ -487,19 +811,30 @@ h1, h2, h3 {
   font-size: 20px;
   color: var(--color-secondary);
   text-decoration: none;
-  display: block;
+  display: inline-block;
+  white-space: nowrap;
   margin: 20px 0;
   cursor: pointer;
 }
 
-.prev-serie:hover, .next-serie:hover {
+.serie-nav-arrows {
+  display: none;
+}
+
+.double-arrow-first {
+  margin-right: -4px;
+}
+
+.prev-serie:hover, .next-serie:hover,
+.prev-serie:focus, .next-serie:focus {
   color: var(--color-secondary);
   text-decoration: none;
+  outline: none;
 }
 
 /* Reduce side margins on mobile: collapse empty spacer columns, expand content */
-@media (max-width: 767px) {
-  .col-xs-2:not(.side-column) {
+@media (max-width: 840px) {
+  .col-xs-2:not(.side-column):not(.serie-nav-col) {
     display: none;
   }
 
@@ -525,30 +860,45 @@ h1, h2, h3 {
 }
 
 /* Responsive serie page */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .content-container {
-    height: 60vh;
+    height: auto;
     padding-left: 10px;
     padding-right: 10px;
   }
-  
+
+  /* content-display centres the image inside the auto-height container */
+  #content-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* Photo scales up to fill available height, preserving aspect ratio */
+  .photo-image {
+    max-height: calc(100vh - 245px);
+  }
+
   .photo-container {
-    height: 60vh;
+    height: calc(100vh - 245px);
   }
-  
+
   .photo-container img {
-    max-height: 60vh;
+    max-height: calc(100vh - 245px);
   }
-  
-  /* Keep side columns with height matching photo container for arrow centering */
+
+  /* Side columns auto-height: the flex row's align-items:stretch makes them
+     match the centre column (image) height automatically */
   .side-column {
-    height: 60vh;
+    height: auto;
     position: relative;
     margin: 0;
   }
   
   /* Hide metadata on small screens to prevent layout disruption */
-  .photo-metadata {
+  .photo-metadata,
+  .photo-darkroom {
     display: none;
   }
   
@@ -588,6 +938,25 @@ h1, h2, h3 {
     font-size: 14px;
     margin: 10px 0;
   }
+
+  /* Replace prev/next series text with double arrows on mobile */
+  .serie-nav-text {
+    display: none;
+  }
+
+  .serie-nav-arrows {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    top: -5px;
+  }
+
+  /* Center double arrows in their columns to align with content arrows above */
+  .serie-nav-col {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
   
   /* Keep text alignment for series navigation */
   .prev-serie {
@@ -598,39 +967,43 @@ h1, h2, h3 {
     text-align: left;
   }
   
-  /* Add lateral padding to serie title and remove top margin */
+  /* Serie title: same font-size as desktop, no side padding needed
+     since the col is now naturally bounded by the arrow columns */
   .serie-title {
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 0;
+    padding-right: 0;
     margin-top: 5px;
+    font-size: 24px;
   }
 
   /* Limit serie description height for mobile and enable scroll */
   .serie-description {
-    max-height: 60vh;
+    max-height: calc(100vh - 245px);
   }
 
-  /* Fix nav row title: override the .serie-container .col-xs-8 rule that
-     sets 66.66% width + float:left, so the title column takes full width
-     and centers correctly in the fixed nav bar */
+  /* Compensate for the change in which column drives nav-row height on mobile
+     (side cols drive on desktop via taller 20px font; center col drives on mobile
+     via shorter 14px font). Adding 2px padding-bottom extends the row so the
+     title y-position matches the desktop value exactly. */
+  .serie-nav-row {
+    padding-bottom: 2px;
+  }
+
+  /* Nav row uses a 3-col layout on mobile (arrows + title + arrows).
+     Restore Bootstrap col-xs-8 width so all three columns sit in one row. */
   .serie-nav-row .col-xs-8 {
-    width: 100%;
-    float: none;
+    width: 66.66667%;
+    float: left;
     text-align: center;
   }
 
-  /* Center image vertically within the content container on mobile.
-     Desktop uses flex-end (bottom-align) to equalise top/bottom gaps,
-     but on mobile that pushes the image to the bottom of the 60vh zone
-     while the arrows stay at 50% — they end up at different heights. */
-  .content-container {
-    align-items: center;
-  }
-
-  /* Increase padding-bottom so the flex centre point sits higher on mobile
-     and the image is vertically centred between the navbar and the fixed nav bar */
+  /* Centre the image in the available space above the fixed nav row.
+     padding-bottom = navbar_height(170) + nav_reserved(75) − base_offset(50) = 195px
+     This shifts the flex centre point so the image sits at the midpoint of the
+     space between the bottom of the navbar and the top of the nav row. */
   .serie-container {
-    padding-bottom: 190px;
+    justify-content: center;
+    padding-bottom: 195px;
   }
 }
 
@@ -655,6 +1028,7 @@ h1, h2, h3 {
 .about-content {
   flex: 1;
   padding-left: 20px;
+  margin-top: -4px;
 }
 
 .about-content p {
@@ -662,7 +1036,7 @@ h1, h2, h3 {
 }
 
 /* Responsive about page */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .about-container {
     flex-direction: column;
     min-height: auto;
@@ -672,16 +1046,21 @@ h1, h2, h3 {
     flex: none;
     padding-right: 0;
     padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
   }
 
   .about-content {
     flex: none;
     padding-left: 0;
+    margin-top: 0;
   }
 
   .about-image img {
+    width: auto;
+    max-width: 100%;
     max-height: 50vh;
-    width: 100%;
+    object-fit: fill;
   }
 }
 
@@ -703,9 +1082,11 @@ h1, h2, h3 {
   transition: color 0.3s ease;
 }
 
-.about-links a.contact-link:hover {
+.about-links a.contact-link:hover,
+.about-links a.contact-link:focus {
   color: var(--color-primary);
   text-decoration: none;
+  outline: none;
 }
 
 .about-links a.contact-link i {
@@ -758,6 +1139,53 @@ h1, h2, h3 {
 .page-content.fade-out {
   opacity: 0;
 }
+
+/* ===== Fullscreen Photo Lightbox (Serie page) ===== */
+.photo-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.photo-lightbox.active {
+  display: flex;
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+}
+
+.lightbox-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.lightbox-inner img {
+  display: block;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border: 10px solid #ffffff;
+  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
+  cursor: default;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  transition: opacity 0.3s ease;
+}
+
+.photo-image {
+  cursor: zoom-in;
+}
+
 
 /* ===== Image Modal (Homepage Masonry) ===== */
 .image-modal {
@@ -900,7 +1328,7 @@ h1, h2, h3 {
 }
 
 /* Responsive modal styles */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .modal-content {
     max-width: 95vw;
     padding: 15px;
@@ -1066,7 +1494,7 @@ h1, h2, h3 {
 }
 
 /* Responsive theme toggle */
-@media (max-width: 767px) {
+@media (max-width: 840px) {
   .theme-toggle-container {
     margin-left: 10px;
     margin-top: 5px;
