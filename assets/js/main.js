@@ -367,18 +367,39 @@ function loadSerieContent(serie) {
     _lbDidSwipe = false;
   }, { passive: true });
   lbEl.addEventListener('touchend', function(e) {
-    var dx = e.changedTouches[0].clientX - _lbStartX;
-    var dy = e.changedTouches[0].clientY - _lbStartY;
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
-    _lbDidSwipe = true;
-    if (dx < 0 && currentSlideIndex < slides.length - 1) {
-      quickLightboxNav(currentSlideIndex + 1);
-    } else if (dx > 0 && currentSlideIndex > 0) {
-      quickLightboxNav(currentSlideIndex - 1);
+    var tx = e.changedTouches[0].clientX;
+    var ty = e.changedTouches[0].clientY;
+    var dx = tx - _lbStartX;
+    var dy = ty - _lbStartY;
+
+    // Swipe: primarily horizontal, >= 40px
+    if (Math.abs(dx) >= 40 && Math.abs(dx) >= Math.abs(dy)) {
+      _lbDidSwipe = true;
+      if (dx < 0 && currentSlideIndex < slides.length - 1) {
+        quickLightboxNav(currentSlideIndex + 1);
+      } else if (dx > 0 && currentSlideIndex > 0) {
+        quickLightboxNav(currentSlideIndex - 1);
+      }
+      return;
+    }
+
+    // Tap: minimal movement — check if finger landed on the image
+    if (Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+      var r = document.getElementById('lightbox-img').getBoundingClientRect();
+      if (tx >= r.left && tx <= r.right && ty >= r.top && ty <= r.bottom) {
+        _lbDidSwipe = true; // block the ghost click that follows on mobile
+        var half = window.innerWidth / 2;
+        if (tx < half) {
+          if (currentSlideIndex > 0) quickLightboxNav(currentSlideIndex - 1);
+        } else {
+          if (currentSlideIndex < slides.length - 1) quickLightboxNav(currentSlideIndex + 1);
+        }
+      }
     }
   }, { passive: true });
 
-  // Tap left half of photo → previous, tap right half → next
+  // Desktop mouse fallback: click left/right half of image to navigate
+  // On mobile this is handled above in touchend; _lbDidSwipe blocks ghost clicks
   $('#lightbox-img').on('click', function(e) {
     if (_lbDidSwipe) { _lbDidSwipe = false; return; }
     var half = window.innerWidth / 2;
