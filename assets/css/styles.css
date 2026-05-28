@@ -1210,8 +1210,9 @@ body.home-page > .container-fluid > .page-content {
   height: auto;
   border: 10px solid #ffffff;
   box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
-  cursor: default;
-  pointer-events: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 150ms ease;
   -webkit-user-drag: none;
   user-select: none;
   transition: opacity 0.3s ease;

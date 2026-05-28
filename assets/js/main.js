@@ -308,16 +308,21 @@ function loadSerieContent(serie) {
     }, 300);
   }
 
-  // Instant lightbox navigation — no fade delay.
-  // Swaps #lightbox-img immediately; loadSlide() syncs #content-display in the background
-  // and fadeLightboxTo becomes a no-op because the src already matches.
+  // Lightbox navigation with quick dissolve — no 300ms delay.
+  // Fades out over 150ms, swaps src, fades back in (CSS transition on .lightbox-inner img).
+  // loadSlide() syncs #content-display in the background; fadeLightboxTo is a no-op
+  // because the src already matches by the time it runs.
   function quickLightboxNav(newIndex) {
     var slide = slides[newIndex];
     if (!slide || slide.type !== 'photo') return;
     currentSlideIndex = newIndex;
     var imgSrc = slide.content.image;
     if (imgSrc.startsWith('assets/')) imgSrc = (window.baseUrl || '/') + imgSrc;
-    $('#lightbox-img').attr('src', imgSrc);
+    var $img = $('#lightbox-img');
+    $img.css('opacity', 0);
+    setTimeout(function() {
+      $img.attr('src', imgSrc).css('opacity', 1); // CSS transition handles the fade-in
+    }, 150);
     loadSlide(newIndex); // background sync (fadeLightboxTo will be a no-op)
   }
 
