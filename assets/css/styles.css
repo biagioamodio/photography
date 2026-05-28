@@ -95,7 +95,7 @@ body { outline: 6px solid green !important; }
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
   .serie-container {
-    padding-bottom: 190px !important;
+    padding-bottom: 110px !important;
   }
   .content-container {
     height: calc(100vh - 240px) !important;
@@ -105,7 +105,7 @@ body { outline: 6px solid green !important; }
 @media (max-width: 840px) and (max-height: 665px) and (orientation: portrait) {
   /* Blue navbar is ~170px tall (stacked); bottom bar ~75px from bottom */
   .serie-container {
-    padding-bottom: 195px !important;
+    padding-bottom: 165px !important;
   }
   .content-container {
     height: calc(100vh - 245px) !important;
