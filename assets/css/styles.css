@@ -861,22 +861,22 @@ body.home-page > .container-fluid > .page-content {
 /* Responsive serie page */
 @media (max-width: 840px) {
   .content-container {
-    height: 60vh;
+    height: calc(100vh - 245px);
     padding-left: 10px;
     padding-right: 10px;
   }
-  
+
   .photo-container {
-    height: 60vh;
+    height: calc(100vh - 245px);
   }
-  
+
   .photo-container img {
-    max-height: 60vh;
+    max-height: calc(100vh - 245px);
   }
-  
-  /* Keep side columns with height matching photo container for arrow centering */
+
+  /* Keep side columns with height matching content container for arrow centering */
   .side-column {
-    height: 60vh;
+    height: calc(100vh - 245px);
     position: relative;
     margin: 0;
   }
@@ -963,7 +963,7 @@ body.home-page > .container-fluid > .page-content {
 
   /* Limit serie description height for mobile and enable scroll */
   .serie-description {
-    max-height: 60vh;
+    max-height: calc(100vh - 245px);
   }
 
   /* Compensate for the change in which column drives nav-row height on mobile
@@ -990,10 +990,11 @@ body.home-page > .container-fluid > .page-content {
     align-items: center;
   }
 
-  /* Dynamic padding so image always sits ~20px below the container top.
-     Formula: P = (100vh-50px) - 60vh - 40px = 40vh - 90px */
+  /* Content fills from container top to just above the fixed nav row.
+     justify-content: flex-start removes top/bottom dead space. */
   .serie-container {
-    padding-bottom: calc(40vh - 90px);
+    justify-content: flex-start;
+    padding-bottom: 0;
   }
 }
 
