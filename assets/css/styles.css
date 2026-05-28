@@ -1,10 +1,7 @@
 /* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
-/* Green: large screens — anything not caught below */
-body { outline: 6px solid green !important; }
 .content-container { outline: 2px solid red !important; }
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
-  body { outline: 6px solid red !important; }
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
   .navbar .container-fluid {
     padding-bottom: 0px !important;
@@ -28,21 +25,20 @@ body { outline: 6px solid green !important; }
   .serie-container {
     padding-bottom: 65px !important;
   }
-  /* Give content-container a fixed height so photo and text use identical frame */
+  /* Frame = full available area between navbar and nav-row */
   .content-container {
     height: calc(100vh - 125px) !important;
     align-items: stretch !important;
   }
-  /* Make content-display fill the full frame */
+  /* content-display fills the frame; image centres inside via flex */
   #content-display {
     width: 100%;
     height: 100%;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    outline: 2px solid red; /* TEMP inspection */
   }
-  /* Photo fills the frame exactly, scales down to fit without cropping */
+  /* object-fit:contain → landscape touches sides, portrait touches top/bottom */
   .photo-image {
     width: auto !important;
     height: auto !important;
@@ -89,9 +85,6 @@ body { outline: 6px solid green !important; }
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
-@media (max-width: 840px) {
-  body { outline: 6px solid blue !important; }
-}
 /* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
@@ -100,6 +93,20 @@ body { outline: 6px solid green !important; }
   }
   .content-container {
     height: calc(100vh - 240px) !important;
+    align-items: stretch !important;
+  }
+  #content-display {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .photo-image {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
 /* Blue + short viewport, portrait only (landscape handled above) */
@@ -626,10 +633,20 @@ body.home-page > .container-fluid > .page-content {
 /* Serie content */
 .content-container {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* content-display fills the frame; image is centred inside.
+   For green (no explicit container height) this is the same as block-auto. */
+#content-display {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Photo row: flex so side columns stretch to image height */
@@ -860,10 +877,29 @@ body.home-page > .container-fluid > .page-content {
 
 /* Responsive serie page */
 @media (max-width: 840px) {
+  /* Frame = full available area between navbar and nav-row */
   .content-container {
     height: calc(100vh - 245px);
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 0;
+    padding-right: 0;
+    align-items: stretch;
+  }
+
+  /* content-display fills the frame; image centres inside via flex */
+  #content-display {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* object-fit:contain → landscape touches sides, portrait touches top/bottom */
+  .photo-image {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .photo-container {
@@ -874,7 +910,7 @@ body.home-page > .container-fluid > .page-content {
     max-height: calc(100vh - 245px);
   }
 
-  /* Keep side columns with height matching content container for arrow centering */
+  /* Side columns match the frame height so arrows stay centred */
   .side-column {
     height: calc(100vh - 245px);
     position: relative;
@@ -982,16 +1018,8 @@ body.home-page > .container-fluid > .page-content {
     text-align: center;
   }
 
-  /* Center image vertically within the content container on mobile.
-     Desktop uses flex-end (bottom-align) to equalise top/bottom gaps,
-     but on mobile that pushes the image to the bottom of the 60vh zone
-     while the arrows stay at 50% — they end up at different heights. */
-  .content-container {
-    align-items: center;
-  }
-
-  /* Content fills from container top to just above the fixed nav row.
-     justify-content: flex-start removes top/bottom dead space. */
+  /* flex-start so the frame starts immediately below the navbar; the fixed
+     height on .content-container fills the space down to the nav-row. */
   .serie-container {
     justify-content: flex-start;
     padding-bottom: 0;
