@@ -28,25 +28,25 @@ body { outline: 6px solid green !important; }
   .serie-container {
     padding-bottom: 65px !important;
   }
-  /* Content-container auto-height so it wraps the image tightly (no dead space) */
+  /* Frame = full available area between navbar and nav-row */
   .content-container {
-    height: auto !important;
-    align-items: center !important;
+    height: calc(100vh - 125px) !important;
+    align-items: stretch !important;
   }
-  /* content-display is a flex container so the image centres inside it */
+  /* content-display fills the frame; image centres inside via flex */
   #content-display {
     width: 100%;
+    height: 100%;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    outline: 2px solid red; /* TEMP inspection */
   }
-  /* Photo scales to fill the available height, preserving aspect ratio */
+  /* object-fit:contain → landscape touches sides, portrait touches top/bottom */
   .photo-image {
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
-    max-height: calc(100vh - 125px) !important;
+    max-height: 100% !important;
   }
   /* Description scrolls within the same frame if text is too long */
   .serie-description {
@@ -98,10 +98,21 @@ body { outline: 6px solid green !important; }
     padding-bottom: 110px !important;
   }
   .content-container {
-    height: auto !important;
+    height: calc(100vh - 240px) !important;
+    align-items: stretch !important;
+  }
+  #content-display {
+    width: 100%;
+    height: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   .photo-image {
-    max-height: calc(100vh - 240px) !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
   }
 }
 /* Blue + short viewport, portrait only (landscape handled above) */
@@ -111,11 +122,12 @@ body { outline: 6px solid green !important; }
     padding-bottom: 165px !important;
   }
   .content-container {
-    height: auto !important;
-    align-items: center !important;
+    height: calc(100vh - 245px) !important;
+    align-items: stretch !important;
   }
   #content-display {
     width: 100%;
+    height: 100%;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -124,10 +136,10 @@ body { outline: 6px solid green !important; }
     width: auto !important;
     height: auto !important;
     max-width: 100% !important;
-    max-height: calc(100vh - 245px) !important;
+    max-height: 100% !important;
   }
   .serie-description {
-    max-height: calc(100vh - 245px) !important;
+    max-height: 100% !important;
   }
   .serie-nav-row {
     bottom: 30px !important;
@@ -633,6 +645,16 @@ body.home-page > .container-fluid > .page-content {
   padding-right: 0;
 }
 
+/* content-display fills the frame; image is centred inside.
+   For green (no explicit container height) this is the same as block-auto. */
+#content-display {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Photo row: flex so side columns stretch to image height */
 .serie-container > .row:first-child {
   display: flex;
@@ -861,23 +883,29 @@ body.home-page > .container-fluid > .page-content {
 
 /* Responsive serie page */
 @media (max-width: 840px) {
+  /* Frame = full available area between navbar and nav-row */
   .content-container {
-    height: auto;
+    height: calc(100vh - 245px);
     padding-left: 10px;
     padding-right: 10px;
+    align-items: stretch;
   }
 
-  /* content-display centres the image inside the auto-height container */
+  /* content-display fills the frame; image centres inside via flex */
   #content-display {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
   }
 
-  /* Photo scales up to fill available height, preserving aspect ratio */
+  /* object-fit:contain → landscape touches sides, portrait touches top/bottom */
   .photo-image {
-    max-height: calc(100vh - 245px);
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .photo-container {
@@ -888,10 +916,9 @@ body.home-page > .container-fluid > .page-content {
     max-height: calc(100vh - 245px);
   }
 
-  /* Side columns auto-height: the flex row's align-items:stretch makes them
-     match the centre column (image) height automatically */
+  /* Side columns match the frame height so arrows stay centred */
   .side-column {
-    height: auto;
+    height: calc(100vh - 245px);
     position: relative;
     margin: 0;
   }
@@ -997,13 +1024,11 @@ body.home-page > .container-fluid > .page-content {
     text-align: center;
   }
 
-  /* Centre the image in the available space above the fixed nav row.
-     padding-bottom = navbar_height(170) + nav_reserved(75) − base_offset(50) = 195px
-     This shifts the flex centre point so the image sits at the midpoint of the
-     space between the bottom of the navbar and the top of the nav row. */
+  /* flex-start so the frame starts immediately below the navbar; the fixed
+     height on .content-container fills the space down to the nav-row. */
   .serie-container {
-    justify-content: center;
-    padding-bottom: 195px;
+    justify-content: flex-start;
+    padding-bottom: 0;
   }
 }
 
