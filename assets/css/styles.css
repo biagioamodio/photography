@@ -146,6 +146,12 @@ body.serie-page {
   overflow: hidden;
 }
 
+/* Remove Bootstrap's default navbar bottom margin on the serie page
+   so the content-container starts flush below the navbar */
+body.serie-page .navbar {
+  margin-bottom: 0;
+}
+
 /* Color variables */
 :root {
   --color-primary: #000000;
