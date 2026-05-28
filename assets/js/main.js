@@ -36,10 +36,9 @@ $(document).ready(function() {
     }
   });
 
-  // Initialize Masonry for homepage
+  // Initialize home slideshow
   if (currentPage === 'index.html' || currentPage === '') {
-    // Load random images for homepage
-    loadRandomImagesForHomepage();
+    loadHomeSlides();
   }
 
   // Series page hover effect
@@ -182,6 +181,7 @@ function loadSerieContent(serie) {
         
         // Hide metadata for description
         $('#photo-metadata').text('');
+        $('#photo-darkroom').text('');
       } else {
         // Load photo with proper path
         let imgSrc = slide.content.image;
@@ -195,15 +195,31 @@ function loadSerieContent(serie) {
           class: 'photo-image fade-transition'
         });
         contentDisplay.append(photoElement);
+        photoElement.on('load', function() {
+          requestAnimationFrame(alignMetadataToImage);
+        });
+        if (photoElement[0].complete) requestAnimationFrame(alignMetadataToImage);
+
+        // If lightbox is open, crossfade to the new photo
+        if ($('#photo-lightbox').hasClass('active')) {
+          fadeLightboxTo(imgSrc);
+        }
         
-        // Set metadata — always 3 fixed rows (one per field, empty fields show as blank lines)
+        // Set metadata — only filled fields, compacted to top in CMS order
         const meta = slide.content.metadata;
         if (meta && typeof meta === 'object') {
-          const rows = [meta.camera || '', meta.lens || '', meta.filmRoll || '']
+          const gearRows = [meta.camera, meta.lens, meta.filmRoll]
+            .filter(v => v && v.trim())
             .map(v => $('<span>').text(v).prop('outerHTML'));
-          $('#photo-metadata').html(rows.join('<br>'));
+          $('#photo-metadata').html(gearRows.join('<br>'));
+
+          const darkroomRows = [meta.developing, meta.scanning, meta.printing]
+            .filter(v => v && v.trim())
+            .map(v => $('<span>').text(v).prop('outerHTML'));
+          $('#photo-darkroom').html(darkroomRows.join('<br>'));
         } else {
           $('#photo-metadata').html($('<span>').text(typeof meta === 'string' ? meta : '').prop('outerHTML'));
+          $('#photo-darkroom').html('');
         }
       }
       
@@ -247,6 +263,31 @@ function loadSerieContent(serie) {
     loadSlide(currentSlideIndex);
   });
   
+  // Swipe gesture — restricted to the photo container area
+  var _swipeEl = document.querySelector('.content-container');
+  if (_swipeEl) {
+    var _swipeStartX = 0, _swipeStartY = 0;
+
+    _swipeEl.addEventListener('touchstart', function(e) {
+      _swipeStartX = e.touches[0].clientX;
+      _swipeStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    _swipeEl.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - _swipeStartX;
+      var dy = e.changedTouches[0].clientY - _swipeStartY;
+      // Only trigger on primarily horizontal swipes (≥40px, more horizontal than vertical)
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0 && currentSlideIndex < slides.length - 1) {
+        currentSlideIndex++;
+        loadSlide(currentSlideIndex);
+      } else if (dx > 0 && currentSlideIndex > 0) {
+        currentSlideIndex--;
+        loadSlide(currentSlideIndex);
+      }
+    }, { passive: true });
+  }
+
   // Click handler for serie title - go back to first slide
   $('.serie-title').css('cursor', 'pointer').click(function(e) {
     e.preventDefault();
@@ -256,6 +297,93 @@ function loadSerieContent(serie) {
     }
   });
   
+  // Lightbox fade helper — only runs when src actually changed
+  // (quickLightboxNav sets the src first, so fadeLightboxTo becomes a no-op)
+  function fadeLightboxTo(src) {
+    var $img = $('#lightbox-img');
+    if ($img.attr('src') === src) return; // already updated by quickLightboxNav
+    $img.css('opacity', 0);
+    setTimeout(function() {
+      $img.attr('src', src).css('opacity', 1);
+    }, 300);
+  }
+
+  // Instant lightbox navigation — no fade delay.
+  // Swaps #lightbox-img immediately; loadSlide() syncs #content-display in the background
+  // and fadeLightboxTo becomes a no-op because the src already matches.
+  function quickLightboxNav(newIndex) {
+    var slide = slides[newIndex];
+    if (!slide || slide.type !== 'photo') return;
+    currentSlideIndex = newIndex;
+    var imgSrc = slide.content.image;
+    if (imgSrc.startsWith('assets/')) imgSrc = (window.baseUrl || '/') + imgSrc;
+    $('#lightbox-img').attr('src', imgSrc);
+    loadSlide(newIndex); // background sync (fadeLightboxTo will be a no-op)
+  }
+
+  // Fullscreen lightbox — tap/click photo to expand
+  $('#content-display').on('click', '.photo-image', function() {
+    $('#lightbox-img').attr('src', this.src).attr('alt', $(this).attr('alt') || '');
+    $('#photo-lightbox').addClass('active');
+    $('body').css('overflow', 'hidden');
+  });
+
+  function closeLightbox() {
+    $('#photo-lightbox').removeClass('active');
+    $('body').css('overflow', '');
+  }
+
+  // Backdrop tap closes lightbox — unless a swipe just fired
+  var _lbDidSwipe = false;
+  $('#lightbox-backdrop').on('click', function() {
+    if (_lbDidSwipe) { _lbDidSwipe = false; return; }
+    closeLightbox();
+  });
+
+  // Keyboard: Escape closes, arrows navigate
+  $(document).on('keydown.serieNav', function(e) {
+    if (e.key === 'Escape') {
+      closeLightbox();
+    } else if (e.key === 'ArrowRight' && currentSlideIndex < slides.length - 1) {
+      currentSlideIndex++;
+      loadSlide(currentSlideIndex);
+    } else if (e.key === 'ArrowLeft' && currentSlideIndex > 0) {
+      currentSlideIndex--;
+      loadSlide(currentSlideIndex);
+    }
+  });
+
+  // Swipe inside lightbox to navigate photos
+  var _lbStartX = 0, _lbStartY = 0;
+  var lbEl = document.getElementById('photo-lightbox');
+  lbEl.addEventListener('touchstart', function(e) {
+    _lbStartX = e.touches[0].clientX;
+    _lbStartY = e.touches[0].clientY;
+    _lbDidSwipe = false;
+  }, { passive: true });
+  lbEl.addEventListener('touchend', function(e) {
+    var dx = e.changedTouches[0].clientX - _lbStartX;
+    var dy = e.changedTouches[0].clientY - _lbStartY;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    _lbDidSwipe = true;
+    if (dx < 0 && currentSlideIndex < slides.length - 1) {
+      quickLightboxNav(currentSlideIndex + 1);
+    } else if (dx > 0 && currentSlideIndex > 0) {
+      quickLightboxNav(currentSlideIndex - 1);
+    }
+  }, { passive: true });
+
+  // Tap left half of photo → previous, tap right half → next
+  $('#lightbox-img').on('click', function(e) {
+    if (_lbDidSwipe) { _lbDidSwipe = false; return; }
+    var half = window.innerWidth / 2;
+    if (e.clientX < half) {
+      if (currentSlideIndex > 0) quickLightboxNav(currentSlideIndex - 1);
+    } else {
+      if (currentSlideIndex < slides.length - 1) quickLightboxNav(currentSlideIndex + 1);
+    }
+  });
+
   // Set navigation links for series
   if (window.seriesData) {
     const serieIndex = window.seriesData.findIndex(s => s.id === serie.id);
@@ -287,6 +415,179 @@ function loadSerieContent(serie) {
 $(document).ready(function() {
   loadSeriesData();
 });
+
+// ── Home Slideshow ────────────────────────────────────────────────────────────
+
+function loadHomeSlides() {
+  const jsonPath = (window.baseUrl || '/') + '_data/home.json';
+
+  $.getJSON(jsonPath, function(data) {
+    const slides = (data.slides || []).filter(function(s) { return s.background; });
+    if (slides.length === 0) { loadRandomImagesForHomepage(); return; }
+
+    const $wrap = $('.home-slideshow-wrap');
+    $wrap.empty();
+
+    const $show = $('<div class="home-slideshow"></div>');
+
+    // Build each slide
+    slides.forEach(function(slide, index) {
+      const $slide = $('<div class="home-slide' + (index === 0 ? ' active' : '') + '"></div>');
+
+      // Composite wrap: BG behind, FG in front at bottom
+      const $cwrap = $('<div class="home-composite-wrap"></div>');
+      const $bg    = $('<img class="home-bg-img" alt="">');
+      const $fg    = $('<img class="home-fg-img" alt="">');
+
+      if (slide.background) $bg.attr('src', resolveUrl(slide.background));
+      if (slide.foreground)  $fg.attr('src', resolveUrl(slide.foreground));
+      else                   $fg.hide();
+
+      $cwrap.append($bg, $fg);
+      $slide.append($cwrap);
+
+      // Text overlay
+      if (slide.text && slide.text.trim()) {
+        const $txt = $('<div class="home-slide-text"></div>').text(slide.text);
+        const alpha = Math.min(1, (slide.shadowIntensity || 0) / 100);
+        const dist  = slide.shadowDistance || 0;
+        $txt.css({
+          left:        (slide.textX || 50) + '%',
+          top:         (slide.textY || 50) + '%',
+          fontWeight:  slide.textBold       ? 'bold'   : 'normal',
+          fontStyle:   slide.textItalic     ? 'italic' : 'normal',
+          textAlign:   slide.textAlign      || 'center',
+          lineHeight:  slide.textLineHeight || 1.2,
+          color:       slide.textColor      || '#ffffff',
+          textShadow:  (slide.shadowEnabled !== false && alpha > 0)
+                         ? '0 ' + dist + 'px ' + (dist * 2) + 'px rgba(0,0,0,' + alpha + ')'
+                         : 'none',
+        });
+        $slide.append($txt);
+      }
+
+      $show.append($slide);
+
+      // Apply composite layout whenever BG loads (or immediately if cached)
+      var posX = (slide.imagePosX != null ? slide.imagePosX : 50) / 100;
+      var posY = (slide.imagePosY != null ? slide.imagePosY : 50) / 100;
+      var tSize = slide.textSize || 5;
+
+      function layout() {
+        homeCompositeLayout($slide[0], $bg[0], $cwrap[0], posX, posY);
+        // Font size: textSize % of container height
+        var fsPx = $slide[0].offsetHeight * (tSize / 100);
+        $slide.find('.home-slide-text').css('font-size', fsPx + 'px');
+      }
+
+      $bg[0].onload = layout;
+      // Don't call layout() here — slide is not in the DOM yet so offsetWidth = 0.
+      // The initial pass runs via requestAnimationFrame below after $wrap.append($show).
+    });
+
+    // Navigation (only when multiple slides)
+    if (slides.length > 1) {
+      var current = 0;
+
+      var $prev = $('<button class="slide-nav slide-prev" aria-label="Previous">&#8249;</button>');
+      var $next = $('<button class="slide-nav slide-next" aria-label="Next">&#8250;</button>');
+      var $dots = $('<div class="slide-dots"></div>');
+
+      slides.forEach(function(_, i) {
+        $dots.append($('<span class="slide-dot' + (i === 0 ? ' active' : '') + '" data-index="' + i + '"></span>'));
+      });
+
+      function goTo(n) {
+        current = ((n % slides.length) + slides.length) % slides.length;
+        $show.find('.home-slide').removeClass('active').eq(current).addClass('active');
+        $dots.find('.slide-dot').removeClass('active').eq(current).addClass('active');
+      }
+
+      $prev.on('click', function() { goTo(current - 1); });
+      $next.on('click', function() { goTo(current + 1); });
+      $dots.on('click', '.slide-dot', function() { goTo(+$(this).data('index')); });
+
+      // Keyboard navigation
+      $(document).on('keydown.homeSlides', function(e) {
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+      });
+
+      $show.append($prev, $next, $dots);
+    }
+
+    $wrap.append($show);
+
+    function applyAllLayouts() {
+      // Constrain slide so its bottom edge stays 30px above viewport bottom.
+      // Measure actual navbar height so this works in both red and blue conditions.
+      var navH = $('#navbar-container')[0] ? $('#navbar-container')[0].offsetHeight : 80;
+      var maxH = window.innerHeight - navH - 30;
+      var maxW = Math.round(maxH * 1.5);
+      $show.find('.home-slide').css('max-width', maxW + 'px');
+
+      $show.find('.home-slide').each(function(i) {
+        var slide = slides[i];
+        var $bg   = $(this).find('.home-bg-img');
+        if ($bg[0] && $bg[0].naturalWidth > 0) {
+          homeCompositeLayout(
+            this, $bg[0], $(this).find('.home-composite-wrap')[0],
+            (slide.imagePosX != null ? slide.imagePosX : 50) / 100,
+            (slide.imagePosY != null ? slide.imagePosY : 50) / 100
+          );
+          var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
+          $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
+        }
+      });
+    }
+
+    // Initial pass — rAF ensures the browser has laid out the DOM so offsetWidth is valid
+    requestAnimationFrame(applyAllLayouts);
+
+    // Reapply on window resize
+    $(window).on('resize.homeSlides', applyAllLayouts);
+
+  }).fail(function() {
+    // Graceful fallback to old masonry if home.json is missing or empty
+    loadRandomImagesForHomepage();
+  });
+}
+
+// Same cover-with-focal-point math as the CMS applyCompositeLayout()
+function homeCompositeLayout(container, bgImg, compositeWrap, posX, posY) {
+  var cw = container.offsetWidth;
+  var ch = container.offsetHeight;
+  if (!cw || !ch) return;
+
+  var bw = bgImg.naturalWidth  || cw;
+  var bh = bgImg.naturalHeight || ch;
+  var compositeAR = bw / bh;
+  var containerAR = cw / ch;
+
+  var wrapW, wrapH, wrapL, wrapT;
+  if (compositeAR > containerAR) {
+    wrapH = ch;  wrapW = ch * compositeAR;
+    wrapT = 0;
+    wrapL = Math.min(0, Math.max(-(wrapW - cw), cw / 2 - posX * wrapW));
+  } else {
+    wrapW = cw;  wrapH = cw / compositeAR;
+    wrapL = 0;
+    wrapT = Math.min(0, Math.max(-(wrapH - ch), ch / 2 - posY * wrapH));
+  }
+
+  compositeWrap.style.width  = wrapW + 'px';
+  compositeWrap.style.height = wrapH + 'px';
+  compositeWrap.style.left   = wrapL + 'px';
+  compositeWrap.style.top    = wrapT + 'px';
+}
+
+function resolveUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return (window.baseUrl || '/') + path;
+}
+
+// ── Legacy masonry (kept as fallback) ─────────────────────────────────────────
 
 // Function to load random images for homepage
 function loadRandomImagesForHomepage() {
@@ -453,6 +754,9 @@ function initializeTheme() {
     document.documentElement.setAttribute('data-theme', 'light');
   }
   
+  // Re-align metadata when window resizes (breakpoint or image size may change)
+  $(window).on('resize', alignMetadataToImage);
+
   // Add click handler for theme toggle button
   $(document).on('click', '#theme-toggle', function(e) {
     e.preventDefault();
@@ -464,10 +768,31 @@ function initializeTheme() {
 function toggleTheme() {
   const currentTheme = document.documentElement.getAttribute('data-theme');
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  
+
   // Apply new theme
   document.documentElement.setAttribute('data-theme', newTheme);
-  
+
   // Save preference to localStorage
   localStorage.setItem('theme', newTheme);
+}
+
+// Align metadata/darkroom bottom edge with the rendered image bottom in the red breakpoint.
+// Side columns stretch to the full content-container height, so padding-bottom is used
+// to push the flex-end metadata up exactly to where the image bottom sits.
+// In the red breakpoint the content-container is taller than the image.
+// Replicate the green-condition behaviour: set side column height = rendered
+// image height and align-self:center so photo-metadata's bottom:-4.5px
+// naturally lands at the image bottom edge, exactly as in the green condition.
+function alignMetadataToImage() {
+  var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape)');
+  var $cols = $('.serie-container .col-xs-2.side-column');
+  if (!mq.matches) {
+    $cols.css('height', '');
+    return;
+  }
+  var $img = $('#content-display .photo-image');
+  if (!$img.length) return;
+  var imgH = $img[0].getBoundingClientRect().height;
+  if (imgH === 0) return;
+  $cols.css('height', imgH + 'px');
 }
