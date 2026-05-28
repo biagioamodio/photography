@@ -23,8 +23,9 @@
   .prev-serie, .next-serie {
     margin-top: 0 !important;
   }
-  /* Adjust vertical centering bias: +padding-bottom = less space above */
+  /* Flush layout: content starts immediately below the navbar */
   .serie-container {
+    justify-content: flex-start !important;
     padding-bottom: 65px !important;
   }
   /* Frame = full available area between navbar and nav-row */
@@ -90,11 +91,18 @@
 /* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
+  /* nav-row is position:fixed → not in flex flow, no padding-bottom needed */
   .serie-container {
-    padding-bottom: 110px !important;
+    padding-bottom: 0 !important;
   }
+  /* Let the content row grow to fill the entire serie-container height */
+  .serie-container > .row:first-child {
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+  /* content-container fills the row, which fills the serie-container */
   .content-container {
-    height: calc(100vh - 240px) !important;
+    height: 100% !important;
     align-items: stretch !important;
   }
   #content-display {
@@ -143,9 +151,11 @@
 }
 /* ── END TEMP TEST ──────────────────────────────────────────────────────── */
 
-/* Prevent scrollbar on serie page */
+/* Prevent scrollbar on serie page; remove body side padding so content fills edge-to-edge */
 body.serie-page {
   overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Remove Bootstrap's default navbar bottom margin on the serie page
@@ -888,8 +898,8 @@ body.home-page > .container-fluid > .page-content {
   /* Frame = full available area between navbar and nav-row */
   .content-container {
     height: calc(100vh - 245px);
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     align-items: stretch;
   }
 
@@ -1202,8 +1212,9 @@ body.home-page > .container-fluid > .page-content {
   height: auto;
   border: 10px solid #ffffff;
   box-shadow: 0 8px 48px rgba(0, 0, 0, 0.7);
-  cursor: default;
-  pointer-events: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: opacity 150ms ease;
   -webkit-user-drag: none;
   user-select: none;
   transition: opacity 0.3s ease;
