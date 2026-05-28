@@ -91,11 +91,14 @@
 /* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
+  /* nav-row is position:fixed so no padding-bottom needed; just fill the space */
   .serie-container {
-    padding-bottom: 110px !important;
+    padding-bottom: 0 !important;
   }
+  /* compact-landscape block shrinks navbar with margin-top:-20px (~90px bottom),
+     nav-row is fixed at bottom:-5px (~55px tall) → subtract ~150px total */
   .content-container {
-    height: calc(100vh - 240px) !important;
+    height: calc(100vh - 150px) !important;
     align-items: stretch !important;
   }
   #content-display {
