@@ -1594,7 +1594,7 @@ html.red-viewport .serie-container .col-xs-2.side-column:first-child .arrow-cont
 html.red-viewport .serie-container .col-xs-2.side-column:first-child .photo-metadata { transform: translateX(0); }
 html.red-viewport .serie-container .col-xs-2.side-column:last-child .arrow-container,
 html.red-viewport .serie-container .col-xs-2.side-column:last-child .photo-darkroom { transform: translateX(0); }
-html.red-viewport .arrow-container a { pointer-events: all !important; position: relative; z-index: 10; }
+html.red-viewport .arrow-container a { pointer-events: all !important; z-index: 10; }
 html.red-viewport .serie-nav-row .col-xs-2:first-child { transform: translateX(0); }
 html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0); }
 
@@ -1659,7 +1659,8 @@ html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0)
   .serie-container .col-xs-2.side-column:first-child .photo-metadata { transform: translateX(0); }
   .serie-container .col-xs-2.side-column:last-child .arrow-container,
   .serie-container .col-xs-2.side-column:last-child .photo-darkroom { transform: translateX(0); }
-  .arrow-container a { pointer-events: all !important; position: relative; z-index: 10; }
+  /* Keep base absolute centering (position:absolute; top:50%; translateY(-50%)) — don't override it */
+  .arrow-container a { pointer-events: all !important; z-index: 10; }
   .serie-nav-row .col-xs-2:first-child { transform: translateX(0); }
   .serie-nav-row .col-xs-2:last-child { transform: translateX(0); }
 }
