@@ -1,7 +1,11 @@
-/* ── TEMP BREAKPOINT TEST (remove after confirmed) ─────────────────────── */
-/* inset shadow draws inside the element — not clipped by parent overflow:hidden
-   and not hidden behind the navbar when the container is flush at the top */
-.content-container { box-shadow: inset 0 0 0 2px red !important; overflow: hidden !important; }
+/* ── VIEWPORT CONDITIONS ────────────────────────────────────────────────────
+   Green  : default — large viewport, no override
+   Red    : compact landscape  (max-width:1435px  AND max-height:665px AND landscape)
+   Blue   : mobile/tablet      (max-width:840px)
+     Blue + short landscape    (max-width:840px   AND max-height:665px AND landscape)
+     Blue + short portrait     (max-width:840px   AND max-height:665px AND portrait)
+   ───────────────────────────────────────────────────────────────────────── */
+
 /* Red: landscape AND width ≤1435px AND height ≤665px (≈ 2870×1330 physical at 2x Retina) */
 @media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
@@ -149,7 +153,7 @@
     bottom: 30px !important;
   }
 }
-/* ── END TEMP TEST ──────────────────────────────────────────────────────── */
+/* ── END VIEWPORT CONDITIONS ────────────────────────────────────────────── */
 
 /* Prevent scrollbar on serie page; remove body side padding so content fills edge-to-edge */
 body.serie-page {
@@ -653,6 +657,7 @@ body.home-page > .container-fluid > .page-content {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   padding-left: 0;
   padding-right: 0;
 }
