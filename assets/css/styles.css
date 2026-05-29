@@ -1655,26 +1655,30 @@ html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0)
   .serie-description { max-height: 100% !important; }
   .serie-container .col-xs-2.side-column:first-child { padding-left: 0 !important; }
   .serie-container .col-xs-2.side-column:last-child { padding-right: 0 !important; }
-  /* Stretch side columns to full row height, use flex to center the arrow inside */
+  /* Stretch side columns to full row height, use flex to vertically center the arrow */
   .serie-container .col-xs-2.side-column {
     z-index: 5;
     align-self: stretch !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
+  }
+  /* Left col: arrow at right/inner edge (matches prev series text alignment) */
+  .serie-container .col-xs-2.side-column:first-child {
+    justify-content: flex-end !important;
+  }
+  /* Right col: arrow at left/inner edge (matches next series text alignment) */
+  .serie-container .col-xs-2.side-column:last-child {
+    justify-content: flex-start !important;
   }
   /* Make arrow-container in-flow so the flex centering above works */
   .serie-container .col-xs-2.side-column .arrow-container {
     position: relative !important;
-    width: 100% !important;
+    width: auto !important;
     height: auto !important;
     top: auto !important;
     left: auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
   }
-  /* Arrow link: relative position, centred by parent flex */
+  /* Arrow link: relative position, centred vertically by parent flex */
   .serie-container .col-xs-2.side-column .arrow-container a {
     position: relative !important;
     top: auto !important;
@@ -1684,10 +1688,11 @@ html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0)
     pointer-events: all !important;
     z-index: 10;
   }
-  .serie-container .col-xs-2.side-column:first-child .arrow-container,
-  .serie-container .col-xs-2.side-column:first-child .photo-metadata { transform: translateX(0); }
-  .serie-container .col-xs-2.side-column:last-child .arrow-container,
-  .serie-container .col-xs-2.side-column:last-child .photo-darkroom { transform: translateX(0); }
+  /* Hide metadata/darkroom on phone — too small to read, clutters layout */
+  .serie-container .col-xs-2.side-column .photo-metadata,
+  .serie-container .col-xs-2.side-column .photo-darkroom { display: none !important; }
+  .serie-container .col-xs-2.side-column:first-child .arrow-container { transform: translateX(0); }
+  .serie-container .col-xs-2.side-column:last-child .arrow-container { transform: translateX(0); }
   .serie-nav-row .col-xs-2:first-child { transform: translateX(0); }
   .serie-nav-row .col-xs-2:last-child { transform: translateX(0); }
 }
