@@ -996,7 +996,7 @@ body.home-page > .container-fluid > .page-content {
   /* Smaller font size for series navigation on small screens */
   .prev-serie, .next-serie {
     font-size: 14px;
-    margin: 10px 0;
+    margin: 0;
   }
 
   /* Replace prev/next series text with double arrows on mobile */
@@ -1007,8 +1007,6 @@ body.home-page > .container-fluid > .page-content {
   .serie-nav-arrows {
     display: inline-flex;
     align-items: center;
-    position: relative;
-    top: -5px;
   }
 
   /* Center double arrows in their col-xs-2, matching single arrow centering logic */
@@ -1046,14 +1044,16 @@ body.home-page > .container-fluid > .page-content {
      via shorter 14px font). Adding 2px padding-bottom extends the row so the
      title y-position matches the desktop value exactly. */
   .serie-nav-row {
-    padding-bottom: 2px;
+    padding-bottom: 0;
+    display: flex;
+    align-items: center;
   }
 
   /* Nav row uses a 3-col layout on mobile (arrows + title + arrows).
      Restore Bootstrap col-xs-8 width so all three columns sit in one row. */
   .serie-nav-row .col-xs-8 {
     width: 66.66667%;
-    float: left;
+    float: none;
     text-align: center;
   }
 
