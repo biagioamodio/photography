@@ -732,8 +732,8 @@ body.home-page > .container-fluid > .page-content {
 }
 
 .serie-container .row .col-xs-8 {
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .serie-container .row .col-xs-2:last-child {
