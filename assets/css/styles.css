@@ -1103,8 +1103,8 @@ body.home-page > .container-fluid > .page-content {
   text-align: justify;
 }
 
-/* Responsive about page */
-@media (max-width: 840px) {
+/* Responsive about page — portrait only; landscape keeps side-by-side layout */
+@media (max-width: 840px) and (orientation: portrait) {
   .about-container {
     flex-direction: column;
     min-height: auto;
@@ -1396,8 +1396,8 @@ body.home-page > .container-fluid > .page-content {
   opacity: 0.85;
 }
 
-/* Responsive modal styles */
-@media (max-width: 840px) {
+/* Responsive modal styles — portrait only */
+@media (max-width: 840px) and (orientation: portrait) {
   .modal-content {
     max-width: 95vw;
     padding: 15px;
@@ -1562,8 +1562,8 @@ body.home-page > .container-fluid > .page-content {
   color: black;
 }
 
-/* Responsive theme toggle */
-@media (max-width: 840px) {
+/* Responsive theme toggle — portrait only */
+@media (max-width: 840px) and (orientation: portrait) {
   .theme-toggle-container {
     margin-left: 10px;
     margin-top: 5px;
