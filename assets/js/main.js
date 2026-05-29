@@ -811,8 +811,9 @@ function toggleTheme() {
 // naturally lands at the image bottom edge, exactly as in the green condition.
 function alignMetadataToImage() {
   var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape)');
+  var isRedClass = document.documentElement.classList.contains('red-viewport');
   var $cols = $('.serie-container .col-xs-2.side-column');
-  if (!mq.matches) {
+  if (!mq.matches && !isRedClass) {
     $cols.css('height', '');
     return;
   }
@@ -822,3 +823,27 @@ function alignMetadataToImage() {
   if (imgH === 0) return;
   $cols.css('height', imgH + 'px');
 }
+
+// ── Red-viewport class (Safari iOS media-query fallback) ──────────────────────
+// Safari on iOS sometimes mis-reports max-height in CSS media queries.
+// We use window.innerWidth/innerHeight (always accurate) to toggle a class on
+// <html> that mirrors the red breakpoint condition.  CSS rules prefixed with
+// html.red-viewport act as a reliable fallback alongside the @media block.
+function applyRedViewportClass() {
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  var isLandscape = w > h;
+  var isRed = isLandscape && w <= 1435 && h <= 665;
+  document.documentElement.classList.toggle('red-viewport', isRed);
+  // Keep matchMedia-based logic in sync when it differs (e.g. Safari)
+  if (typeof alignMetadataToImage === 'function') {
+    alignMetadataToImage();
+  }
+}
+
+applyRedViewportClass();
+window.addEventListener('resize', applyRedViewportClass);
+window.addEventListener('orientationchange', function () {
+  // Brief delay lets the browser finish rotating before we sample dimensions
+  setTimeout(applyRedViewportClass, 150);
+});
