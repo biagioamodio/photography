@@ -34,7 +34,7 @@
   }
   /* Frame = full available area between navbar and nav-row */
   .content-container {
-    height: calc(100vh - 115px) !important;
+    height: calc(100vh - 110px) !important;
     align-items: stretch !important;
   }
   /* content-display fills the frame; image centres inside via flex */
