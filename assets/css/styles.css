@@ -918,7 +918,7 @@ body.home-page > .container-fluid > .page-content {
 
   /* Frame = full available area between navbar and nav-row */
   .content-container {
-    height: calc(100vh - 235px);
+    height: calc(100vh - 230px);
     padding-left: 0 !important;
     padding-right: 0 !important;
     align-items: stretch;
