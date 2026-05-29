@@ -323,8 +323,8 @@ html, body {
   background-color: transparent !important;
 }
 
-/* Responsive navigation */
-@media (max-width: 840px) {
+/* Responsive navigation — portrait only; landscape uses red condition instead */
+@media (max-width: 840px) and (orientation: portrait) {
   .navbar .container-fluid {
     display: flex;
     flex-direction: column;
@@ -879,8 +879,8 @@ body.home-page > .container-fluid > .page-content {
   outline: none;
 }
 
-/* Reduce side margins on mobile: collapse empty spacer columns, expand content */
-@media (max-width: 840px) {
+/* Reduce side margins on mobile — portrait only; landscape uses red condition */
+@media (max-width: 840px) and (orientation: portrait) {
   /* Remove navbar bottom margin in blue condition */
   .navbar {
     margin-bottom: 0 !important;
@@ -911,8 +911,8 @@ body.home-page > .container-fluid > .page-content {
   }
 }
 
-/* Responsive serie page */
-@media (max-width: 840px) {
+/* Responsive serie page — portrait only; landscape uses red condition */
+@media (max-width: 840px) and (orientation: portrait) {
   /* Blue condition: remove side padding from central col so content fills edge-to-edge */
   .serie-container .row .col-xs-8 {
     padding-left: 0 !important;
