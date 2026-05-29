@@ -997,11 +997,16 @@ body.home-page > .container-fluid > .page-content {
     top: -5px;
   }
 
-  /* Center double arrows in their columns to align with content arrows above */
+  /* Push double arrows toward the outer edges of the viewport */
   .serie-nav-col {
-    text-align: center;
     padding-left: 0;
     padding-right: 0;
+  }
+  .serie-nav-row .col-xs-2:first-child.serie-nav-col {
+    text-align: left;
+  }
+  .serie-nav-row .col-xs-2:last-child.serie-nav-col {
+    text-align: right;
   }
   
   /* Keep text alignment for series navigation */
