@@ -878,6 +878,11 @@ body.home-page > .container-fluid > .page-content {
 
 /* Reduce side margins on mobile: collapse empty spacer columns, expand content */
 @media (max-width: 840px) {
+  /* Remove navbar bottom margin in blue condition */
+  .navbar {
+    margin-bottom: 0 !important;
+  }
+
   .col-xs-2:not(.side-column):not(.serie-nav-col) {
     display: none;
   }
