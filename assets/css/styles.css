@@ -85,10 +85,10 @@
   }
   /* Nav row cols: nudge prev/next series outward 5px */
   .serie-nav-row .col-xs-2:first-child {
-    transform: translateX(0);
+    transform: translateX(1px);
   }
   .serie-nav-row .col-xs-2:last-child {
-    transform: translateX(5px);
+    transform: translateX(6px);
   }
 }
 /* Blue: existing ≤840px breakpoint (mobile/tablet) */
