@@ -30,7 +30,7 @@
   /* Flush layout: content starts immediately below the navbar */
   .serie-container {
     justify-content: flex-start !important;
-    padding-bottom: 65px !important;
+    padding-bottom: 0 !important;
   }
   /* Frame = full available area between navbar and nav-row */
   .content-container {
