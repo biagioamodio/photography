@@ -810,7 +810,7 @@ function toggleTheme() {
 // image height and align-self:center so photo-metadata's bottom:-4.5px
 // naturally lands at the image bottom edge, exactly as in the green condition.
 function alignMetadataToImage() {
-  var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape), (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-width: 932px)');
+  var mq = window.matchMedia('(max-width: 1435px) and (max-height: 665px) and (orientation: landscape), (orientation: landscape) and (max-width: 932px)');
   var isRedClass = document.documentElement.classList.contains('red-viewport');
   var $cols = $('.serie-container .col-xs-2.side-column');
   if (!mq.matches && !isRedClass) {
@@ -835,9 +835,8 @@ function applyRedViewportClass() {
   var isLandscape = w > h;
   // Original compact-landscape desktop check
   var isRedPixels = isLandscape && w <= 1435 && h <= 665;
-  // Smartphone (touch, no hover, ≤932px wide) in landscape — catches Safari iOS
-  var isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-  var isRedMobile = isTouchDevice && isLandscape && w <= 932;
+  // Phone in landscape: ≤932px wide covers all iPhones, excludes tablets (1024px+)
+  var isRedMobile = isLandscape && w <= 932;
   var isRed = isRedPixels || isRedMobile;
   document.documentElement.classList.toggle('red-viewport', isRed);
   // Keep matchMedia-based logic in sync when it differs (e.g. Safari)
