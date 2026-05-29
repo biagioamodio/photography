@@ -905,6 +905,12 @@ body.home-page > .container-fluid > .page-content {
 
 /* Responsive serie page */
 @media (max-width: 840px) {
+  /* Blue condition: remove side padding from central col so content fills edge-to-edge */
+  .serie-container .row .col-xs-8 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   /* Frame = full available area between navbar and nav-row */
   .content-container {
     height: calc(100vh - 245px);
