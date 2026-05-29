@@ -6,9 +6,8 @@
      Blue + short portrait     (max-width:840px   AND max-height:665px AND portrait)
    ───────────────────────────────────────────────────────────────────────── */
 
-/* Red: compact landscape desktop  OR  smartphone (touch, ≤932px) in landscape */
-@media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape),
-       (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-width: 932px) {
+/* Red: compact landscape desktop (width ≤1435px AND height ≤665px AND landscape) */
+@media (max-width: 1435px) and (max-height: 665px) and (orientation: landscape) {
   /* Slim navbar bottom padding: keep content identical, reduce dead space below */
   .navbar .container-fluid {
     padding-bottom: 0px !important;
@@ -1598,3 +1597,31 @@ html.red-viewport .serie-container .col-xs-2.side-column:last-child .photo-darkr
 html.red-viewport .arrow-container a { pointer-events: all !important; position: relative; z-index: 10; }
 html.red-viewport .serie-nav-row .col-xs-2:first-child { transform: translateX(0); }
 html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0); }
+
+/* ── Red condition for smartphones in landscape ──────────────────────────────
+   MUST be at end of file — after the blue ≤840px block — so it overrides blue
+   when both conditions match (e.g. iPhone SE: 667px wide in landscape triggers
+   both blue max-width:840px AND this touch+landscape rule).
+   ─────────────────────────────────────────────────────────────────────────── */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) and (max-width: 932px) {
+  .navbar .container-fluid { padding-bottom: 0px !important; }
+  .navbar { margin-top: -20px !important; margin-bottom: 0 !important; }
+  .serie-nav-row { bottom: -5px !important; }
+  .serie-title { margin-top: 0 !important; }
+  .prev-serie, .next-serie { margin-top: 0 !important; }
+  .serie-container { justify-content: flex-start !important; padding-bottom: 0 !important; }
+  .content-container { height: calc(100vh - 105px) !important; align-items: stretch !important; }
+  #content-display { width: 100%; height: 100%; display: flex !important; align-items: center !important; justify-content: center !important; }
+  .photo-image { width: auto !important; height: auto !important; max-width: 100% !important; max-height: 100% !important; }
+  .serie-description { max-height: 100% !important; }
+  .serie-container .col-xs-2.side-column:first-child { padding-left: 0 !important; }
+  .serie-container .col-xs-2.side-column:last-child { padding-right: 0 !important; }
+  .serie-container .col-xs-2.side-column { z-index: 5; align-self: center; }
+  .serie-container .col-xs-2.side-column:first-child .arrow-container,
+  .serie-container .col-xs-2.side-column:first-child .photo-metadata { transform: translateX(0); }
+  .serie-container .col-xs-2.side-column:last-child .arrow-container,
+  .serie-container .col-xs-2.side-column:last-child .photo-darkroom { transform: translateX(0); }
+  .arrow-container a { pointer-events: all !important; position: relative; z-index: 10; }
+  .serie-nav-row .col-xs-2:first-child { transform: translateX(0); }
+  .serie-nav-row .col-xs-2:last-child { transform: translateX(0); }
+}
