@@ -847,6 +847,12 @@ body.home-page > .container-fluid > .page-content {
   text-align: left;
 }
 
+/* Green + Red: extend title col 2px on each side to align with content col width */
+.serie-nav-row .col-xs-8 {
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
 .prev-serie, .next-serie {
   font-family: 'Young Serif', serif;
   font-size: 20px;
@@ -1059,6 +1065,8 @@ body.home-page > .container-fluid > .page-content {
     width: 66.66667%;
     float: none;
     text-align: center;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   /* flex-start so the frame starts immediately below the navbar; the fixed
