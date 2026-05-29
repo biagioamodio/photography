@@ -672,10 +672,14 @@ body.home-page > .container-fluid > .page-content {
   justify-content: center;
 }
 
-/* Photo row: flex so side columns stretch to image height */
+/* Photo row: flex so side columns stretch to image height.
+   margin:0 removes Bootstrap's default -15px row margins so the row width
+   matches the fixed nav-row width, keeping col-xs-8 widths identical. */
 .serie-container > .row:first-child {
   display: flex;
   align-items: stretch;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .serie-description {
@@ -847,11 +851,6 @@ body.home-page > .container-fluid > .page-content {
   text-align: left;
 }
 
-/* Green + Red: extend title col 2px on each side to align with content col width */
-.serie-nav-row .col-xs-8 {
-  margin-left: -2px;
-  margin-right: -2px;
-}
 
 .prev-serie, .next-serie {
   font-family: 'Young Serif', serif;
@@ -1065,8 +1064,6 @@ body.home-page > .container-fluid > .page-content {
     width: 66.66667%;
     float: none;
     text-align: center;
-    margin-left: 0;
-    margin-right: 0;
   }
 
   /* flex-start so the frame starts immediately below the navbar; the fixed
