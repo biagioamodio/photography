@@ -151,9 +151,11 @@
 }
 /* ── END TEMP TEST ──────────────────────────────────────────────────────── */
 
-/* Prevent scrollbar on serie page */
+/* Prevent scrollbar on serie page; remove body side padding so content fills edge-to-edge */
 body.serie-page {
   overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 /* Remove Bootstrap's default navbar bottom margin on the serie page
@@ -896,8 +898,8 @@ body.home-page > .container-fluid > .page-content {
   /* Frame = full available area between navbar and nav-row */
   .content-container {
     height: calc(100vh - 245px);
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     align-items: stretch;
   }
 
