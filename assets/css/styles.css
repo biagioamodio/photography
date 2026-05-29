@@ -1007,6 +1007,13 @@ body.home-page > .container-fluid > .page-content {
   .serie-nav-arrows {
     display: inline-flex;
     align-items: center;
+    position: relative;
+    top: 2px;
+  }
+
+  .serie-nav-row .serie-title {
+    position: relative;
+    top: 5px;
   }
 
   /* Center double arrows in their col-xs-2, matching single arrow centering logic */
