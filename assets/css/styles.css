@@ -1008,12 +1008,12 @@ body.home-page > .container-fluid > .page-content {
     display: inline-flex;
     align-items: center;
     position: relative;
-    top: 2px;
+    top: 3px;
   }
 
   .serie-nav-row .serie-title {
     position: relative;
-    top: 5px;
+    top: 7px;
   }
 
   /* Center double arrows in their col-xs-2, matching single arrow centering logic */
