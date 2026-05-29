@@ -672,14 +672,10 @@ body.home-page > .container-fluid > .page-content {
   justify-content: center;
 }
 
-/* Photo row: flex so side columns stretch to image height.
-   margin:0 removes Bootstrap's default -15px row margins so the row width
-   matches the fixed nav-row width, keeping col-xs-8 widths identical. */
+/* Photo row: flex so side columns stretch to image height */
 .serie-container > .row:first-child {
   display: flex;
   align-items: stretch;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .serie-description {
@@ -849,6 +845,12 @@ body.home-page > .container-fluid > .page-content {
 .serie-nav-row .col-xs-2:last-child {
   padding-right: 20px;
   text-align: left;
+}
+
+/* Green + Red: nav row lacks Bootstrap's -15px row margins that widen the photo row by 30px.
+   Adding 20px (= 30 × 2/3) to the nav col-xs-8 compensates exactly — no negative margins. */
+.serie-nav-row .col-xs-8 {
+  width: calc(66.66667% + 20px);
 }
 
 
@@ -1064,6 +1066,7 @@ body.home-page > .container-fluid > .page-content {
     width: 66.66667%;
     float: none;
     text-align: center;
+    /* reset green/red calc() override */
   }
 
   /* flex-start so the frame starts immediately below the navbar; the fixed
