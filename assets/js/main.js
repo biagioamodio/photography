@@ -839,6 +839,8 @@ function applyRedViewportClass() {
   var isRedMobile = isLandscape && w <= 932;
   var isRed = isRedPixels || isRedMobile;
   document.documentElement.classList.toggle('red-viewport', isRed);
+  // Keep --actual-vh in sync with the real visible viewport height
+  document.documentElement.style.setProperty('--actual-vh', h + 'px');
   // Keep matchMedia-based logic in sync when it differs (e.g. Safari)
   if (typeof alignMetadataToImage === 'function') {
     alignMetadataToImage();

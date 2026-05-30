@@ -9,18 +9,24 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=16" id="custom-css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=17" id="custom-css">
   
   <!-- Base URL Script -->
   <script>
     // Define base URL based on hostname
-    window.baseUrl = window.location.hostname === 'biagioamodio.github.io' ? 
+    window.baseUrl = window.location.hostname === 'biagioamodio.github.io' ?
       '/photography/' : '/';
-      
+
     // Update CSS path if needed
     if (window.baseUrl !== '/') {
-      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=16';
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=17';
     }
+
+    // Set --actual-vh NOW, before CSS layout runs.
+    // Safari evaluates 100dvh during the first layout pass using the large-viewport
+    // value (chrome not yet settled). window.innerHeight here — in the <head>, before
+    // any rendering — already reflects the real visible height with chrome present.
+    document.documentElement.style.setProperty('--actual-vh', window.innerHeight + 'px');
   </script>
 </head>
 <body class="serie-page">
@@ -110,7 +116,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
   
   <!-- Custom JS -->
-  <script src="assets/js/main.js?v=16"></script>
+  <script src="assets/js/main.js?v=17"></script>
   
   <script>
     // Load navbar
