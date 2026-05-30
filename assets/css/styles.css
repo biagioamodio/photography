@@ -1238,7 +1238,8 @@ body.home-page > .container-fluid > .page-content {
 .lightbox-inner img {
   display: block;
   max-width: 90vw;
-  max-height: 90vh;
+  max-height: 90vh;   /* fallback for old Safari */
+  max-height: 90dvh;  /* dynamic viewport height — excludes browser chrome on Safari iOS */
   width: auto;
   height: auto;
   border: 10px solid #ffffff;
