@@ -851,3 +851,10 @@ window.addEventListener('orientationchange', function () {
   // Brief delay lets the browser finish rotating before we sample dimensions
   setTimeout(applyRedViewportClass, 150);
 });
+// Safari iOS reports the wrong innerHeight on first load (large-viewport value
+// before browser chrome appears). Re-run once the page is fully loaded and
+// once more after a short delay so the chrome has settled.
+window.addEventListener('load', function () {
+  applyRedViewportClass();
+  setTimeout(applyRedViewportClass, 300);
+});
