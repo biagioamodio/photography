@@ -377,7 +377,7 @@ html, body {
   
   .navbar-nav .theme-toggle-container {
     position: absolute;
-    top: 5.5px;
+    top: 7.5px;
     right: 0;
     transform: none;
     margin: 0;
@@ -1615,7 +1615,7 @@ html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0)
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    padding: 12px 15px 8px 15px !important;
+    padding: 14px 15px 6px 15px !important;
     flex-wrap: nowrap !important;
   }
   /* Bootstrap default: margin-left:-15px on brand — undo it */
