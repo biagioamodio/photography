@@ -1577,6 +1577,7 @@ body.home-page > .container-fluid > .page-content {
    window.innerWidth/innerHeight which Safari reports correctly even when
    max-height in @media queries is mis-evaluated.
    ─────────────────────────────────────────────────────────────────────────── */
+html.red-viewport #navbar-container { min-height: 50px; }
 html.red-viewport .navbar .container-fluid { padding-bottom: 0px !important; }
 html.red-viewport .navbar { margin-top: -20px !important; margin-bottom: 0 !important; }
 html.red-viewport .serie-nav-row { bottom: -5px !important; }
@@ -1606,6 +1607,8 @@ html.red-viewport .serie-nav-row .col-xs-2:last-child { transform: translateX(0)
    No hover/pointer checks — Safari iOS has historically been buggy with those.
    ─────────────────────────────────────────────────────────────────────────── */
 @media (orientation: landscape) and (max-width: 932px) {
+  /* Reserve navbar height before async .load() fills it — prevents layout shift on first load */
+  #navbar-container { min-height: 50px; }
   /* Navbar: brand left, toggle+nav right — mirrors the red desktop condition */
   .navbar { margin-top: 0 !important; margin-bottom: 0 !important; }
   .navbar .container-fluid {
