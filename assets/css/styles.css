@@ -407,6 +407,11 @@ html, body {
     transform: none;
     margin: 0;
   }
+
+  /* Crop 5px from top of magenta area to extend blue container down */
+  .serie-nav-row {
+    margin-top: -5px;
+  }
 }
 
 /* Typography */
