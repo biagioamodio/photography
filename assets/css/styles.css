@@ -156,6 +156,9 @@
 
 /* Portrait: normal height phones — apply the downward adjustment */
 @media (max-width: 840px) and (orientation: portrait) {
+  .navbar .container-fluid {
+    padding-top: 10px !important;
+  }
   .serie-nav-row {
     bottom: 15px !important;
   }
