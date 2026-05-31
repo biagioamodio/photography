@@ -286,6 +286,30 @@ html, body {
   outline: none;
 }
 
+/* New brand: negative.ph */
+.new-brand {
+  display: inline-flex;
+  align-items: baseline;
+  position: relative;
+  background: var(--color-primary);
+  color: var(--color-background);
+  font-family: 'Young Serif', serif;
+  font-size: 21px;
+  line-height: 1;
+  padding: 3px 3.5px 5.7px 6px;
+  box-sizing: border-box;
+  text-transform: none;
+}
+
+.new-brand .ph {
+  font-family: 'Young Serif', serif;
+  font-size: 8px;
+  line-height: 1;
+  position: relative;
+  top: 5px;
+  margin-left: 2px;
+}
+
 .navbar-nav li {
   display: inline-flex;
   align-items: center;

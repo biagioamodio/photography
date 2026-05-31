@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Serie - Biagio Amodio Photography</title>
+  <title>Serie - negative.ph Photography</title>
   
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
@@ -23,7 +23,7 @@
   </style>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=23" id="custom-css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=24" id="custom-css">
   
   <!-- Base URL Script -->
   <script>
@@ -33,7 +33,7 @@
 
     // Update CSS path if needed
     if (window.baseUrl !== '/') {
-      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=23';
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=24';
     }
 
     // Set --actual-vh NOW, before CSS layout runs.
@@ -136,7 +136,7 @@
     // Load navbar
     $(document).ready(function() {
       // Use baseUrl for loading navbar
-      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html", function() {
+      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=24", function() {
         // Set active nav item
         $("#nav-series").addClass("active");
         // Navbar just rendered — recompute viewport class so layout reflects
@@ -157,7 +157,7 @@
       
       // Set page title when serie is loaded
       $(document).on('serieLoaded', function(e, serie) {
-        document.title = `${serie.title} - Biagio Amodio Photography`;
+        document.title = `${serie.title} - negative.ph Photography`;
       });
       
       // Ensure content is visible when page loads (counteract any fade-out from previous page)
