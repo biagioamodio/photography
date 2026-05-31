@@ -299,7 +299,6 @@ html, body {
   padding: 3px 3.5px 5.7px 6px;
   box-sizing: border-box;
   text-transform: none;
-  margin-top: -5px;
 }
 
 .new-brand .ph {
@@ -378,6 +377,7 @@ html, body {
     text-align: center;
     float: none;
     margin: 0 auto;
+    padding-top: 10px !important;
   }
   
   .navbar-nav {
