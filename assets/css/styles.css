@@ -150,6 +150,13 @@
     max-height: 100% !important;
   }
   .serie-nav-row {
+    bottom: 25px !important; /* Portrait short viewport: moved down 5px from original 30px */
+  }
+}
+
+/* Portrait: normal height phones — apply the 5px downward adjustment */
+@media (max-width: 840px) and (orientation: portrait) {
+  .serie-nav-row {
     bottom: 25px !important;
   }
 }
