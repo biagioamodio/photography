@@ -150,7 +150,7 @@
     max-height: 100% !important;
   }
   .serie-nav-row {
-    bottom: 30px !important;
+    bottom: 15px !important;
   }
 }
 /* ── END VIEWPORT CONDITIONS ────────────────────────────────────────────── */
@@ -852,7 +852,7 @@ body.home-page > .container-fluid > .page-content {
 
 .serie-nav-row {
   position: fixed;
-  bottom: 25px;
+  bottom: 15px;
   left: 0;
   right: 0;
   width: 100%;
