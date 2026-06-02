@@ -23,7 +23,7 @@
   </style>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=25" id="custom-css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=26" id="custom-css">
   
   <!-- Base URL Script -->
   <script>
@@ -33,7 +33,7 @@
 
     // Update CSS path if needed
     if (window.baseUrl !== '/') {
-      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=25';
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=26';
     }
 
     // Set --actual-vh NOW, before CSS layout runs.
@@ -136,7 +136,7 @@
     // Load navbar
     $(document).ready(function() {
       // Use baseUrl for loading navbar
-      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=25", function() {
+      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=26", function() {
         // Set active nav item
         $("#nav-series").addClass("active");
         // Navbar just rendered — recompute viewport class so layout reflects

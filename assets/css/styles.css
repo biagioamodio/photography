@@ -280,6 +280,7 @@ html, body {
   font-size: 24px;
   color: var(--color-primary);
   text-transform: uppercase;
+  padding-top: 10px;
 }
 
 .navbar-brand:hover,
