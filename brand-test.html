@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: sans-serif; padding: 40px; background: #f5f5f5; }
+    h3 { font-family: monospace; color: #555; margin: 30px 0 10px; }
+
+    /* ── Current brand (reference) ── */
+    .current-brand {
+      font-family: 'Oswald', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      text-transform: uppercase;
+      color: #000;
+      display: inline-block;
+      border: 1px dashed #ccc;
+    }
+
+    /* ── New brand ── */
+    .new-brand {
+      display: inline-flex;
+      align-items: baseline;
+      position: relative;
+      background: #000;
+      color: #fff;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      line-height: 1;
+      padding: 3.5px 4px 6.5px 7px;  /* moved text down 0.5px more */
+      box-sizing: border-box;
+    }
+    .new-brand .ph {
+      font-family: 'Young Serif', serif;
+      font-size: 10px;
+      line-height: 1;
+      position: relative;
+      top: 5px;                  /* pulled up from 8px — was cropping */
+      margin-left: 2px;
+    }
+
+    /* Dark mode demo */
+    .dark-bg {
+      background: #111;
+      padding: 20px 30px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+    .new-brand-dark {
+      display: inline-flex;
+      align-items: baseline;
+      background: #fff;
+      color: #000;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      line-height: 1;
+      padding: 3.5px 4px 6.5px 7px;  /* moved text down 0.5px more */
+      box-sizing: border-box;
+    }
+    .new-brand-dark .ph {
+      font-family: 'Young Serif', serif;
+      font-size: 10px;
+      line-height: 1;
+      position: relative;
+      top: 5px;                  /* pulled up from 8px — was cropping */
+      margin-left: 2px;
+    }
+
+    .row { display: flex; align-items: flex-start; gap: 40px; flex-wrap: wrap; margin-bottom: 8px; }
+    .label { font-size: 11px; color: #888; margin-top: 6px; font-family: monospace; }
+
+    /* Variant B — no background, just coloured text */
+    .new-brand-nobox {
+      display: inline-flex;
+      align-items: baseline;
+      color: #000;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      line-height: 1;
+    }
+    .new-brand-nobox .ph {
+      font-family: 'Young Serif', serif;
+      font-size: 10px;
+      position: relative;
+      top: 8px;
+      margin-left: 2px;
+    }
+
+    /* Variant C — SVG logo */
+    .new-brand-c {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      vertical-align: middle;
+      transform: scale(1.10);
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Reference — current "BIAGIO AMODIO" (Oswald 24px)</h3>
+  <div class="row">
+    <div>
+      <span class="current-brand">BIAGIO AMODIO</span>
+      <div class="label">current (dashed = bounding box)</div>
+    </div>
+  </div>
+
+  <h3>Option A — black box, white text (light mode)</h3>
+  <div class="row">
+    <div>
+      <span class="new-brand">negative<span class="ph">ph</span></span>
+      <div class="label">Young Serif 24px / ph 10px, top:8px</div>
+    </div>
+  </div>
+
+  <h3>Option A — white box, black text (dark mode)</h3>
+  <div class="row">
+    <div class="dark-bg">
+      <span class="new-brand-dark">negative<span class="ph">ph</span></span>
+    </div>
+    <div class="label" style="align-self:center">inverted on dark background</div>
+  </div>
+
+  <h3>Option B — no box, just text (uses page colour, auto dark/light)</h3>
+  <div class="row">
+    <div>
+      <span class="new-brand-nobox">negative<span class="ph">ph</span></span>
+      <div class="label">no background — adapts automatically</div>
+    </div>
+  </div>
+
+  <h3>Option C — n + ph with 3D frame (SVG)</h3>
+  <div class="row">
+    <div>
+      <svg class="new-brand-c" viewBox="0 0 32.05 32.62" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .c-st0 { font-size: 6px; }
+            .c-st0, .c-st1 { font-family: 'Young Serif', YoungSerif-Regular; }
+            .c-st0, .c-st1, .c-st2 { fill: #fff; }
+            .c-st1 { font-size: 24px; }
+            .c-st2 { stroke: #000; stroke-miterlimit: 10; stroke-width: 1.5; }
+          </style>
+        </defs>
+        <g>
+          <polygon class="c-st2" points="31.55 29.26 28.69 32.12 .5 32.12 .5 4.47 3.63 1.35 31.55 1.35 31.55 29.26"/>
+          <rect x="3.63" y="1.35" width="27.92" height="27.92"/>
+        </g>
+        <text class="c-st1" transform="translate(8.61 21)"><tspan x="0" y="0">n</tspan></text>
+        <text class="c-st0" transform="translate(22.54 26.35)"><tspan x="0" y="0">ph</tspan></text>
+      </svg>
+      <div class="label">SVG with exact design</div>
+    </div>
+  </div>
+
+  <hr style="margin:40px 0; border-color:#ddd">
+
+  <h3>Side-by-side comparison</h3>
+  <div class="row" style="align-items:center; gap: 60px;">
+    <div>
+      <span class="current-brand">BIAGIO AMODIO</span>
+      <div class="label">current</div>
+    </div>
+    <div>
+      <span class="new-brand">negative<span class="ph">ph</span></span>
+      <div class="label">Option A</div>
+    </div>
+    <div>
+      <span class="new-brand-nobox">negative<span class="ph">ph</span></span>
+      <div class="label">Option B</div>
+    </div>
+    <div>
+      <svg class="new-brand-c" viewBox="0 0 32.05 32.62" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .c-st0 { font-size: 6px; }
+            .c-st0, .c-st1 { font-family: 'Young Serif', YoungSerif-Regular; }
+            .c-st0, .c-st1, .c-st2 { fill: #fff; }
+            .c-st1 { font-size: 24px; }
+            .c-st2 { stroke: #000; stroke-miterlimit: 10; stroke-width: 1.5; }
+          </style>
+        </defs>
+        <g>
+          <polygon class="c-st2" points="31.55 29.26 28.69 32.12 .5 32.12 .5 4.47 3.63 1.35 31.55 1.35 31.55 29.26"/>
+          <rect x="3.63" y="1.35" width="27.92" height="27.92"/>
+        </g>
+        <text class="c-st1" transform="translate(8.61 21)"><tspan x="0" y="0">n</tspan></text>
+        <text class="c-st0" transform="translate(22.54 26.35)"><tspan x="0" y="0">ph</tspan></text>
+      </svg>
+      <div class="label">Option C</div>
+    </div>
+  </div>
+
+</body>
+</html>

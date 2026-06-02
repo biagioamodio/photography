@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Padding Comparison</title>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: sans-serif; padding: 40px; background: #f5f5f5; }
+    .comparison { display: flex; gap: 60px; align-items: flex-start; }
+    .version { display: flex; flex-direction: column; align-items: center; }
+    h3 { margin: 0 0 20px 0; font-size: 14px; color: #555; }
+
+    .brand-before {
+      display: inline-flex;
+      align-items: baseline;
+      background: #000;
+      color: #fff;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      line-height: 1;
+      padding: 5px 6px 5px 7px;  /* BEFORE: equal spacing */
+      box-sizing: border-box;
+    }
+    .brand-before .ph {
+      font-family: 'Young Serif', serif;
+      font-size: 10px;
+      line-height: 1;
+      position: relative;
+      top: 5px;
+      margin-left: 2px;
+    }
+
+    .brand-after {
+      display: inline-flex;
+      align-items: baseline;
+      background: #000;
+      color: #fff;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      line-height: 1;
+      padding: 3px 6px 7px 7px;  /* AFTER: text pulled up 2px */
+      box-sizing: border-box;
+    }
+    .brand-after .ph {
+      font-family: 'Young Serif', serif;
+      font-size: 10px;
+      line-height: 1;
+      position: relative;
+      top: 5px;
+      margin-left: 2px;
+    }
+
+    .label { font-size: 12px; color: #888; margin-top: 10px; font-family: monospace; }
+  </style>
+</head>
+<body>
+
+  <h1>Padding Comparison (2px upward pull)</h1>
+
+  <div class="comparison">
+    <div class="version">
+      <h3>BEFORE</h3>
+      <span class="brand-before">negative<span class="ph">ph</span></span>
+      <div class="label">padding: 5px 6px 5px 7px</div>
+    </div>
+
+    <div class="version">
+      <h3>AFTER (2px pulled up)</h3>
+      <span class="brand-after">negative<span class="ph">ph</span></span>
+      <div class="label">padding: 3px 6px 7px 7px</div>
+    </div>
+  </div>
+
+</body>
+</html>

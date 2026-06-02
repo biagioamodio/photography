@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nakdgrain Logo Test</title>
+  <link href="https://fonts.googleapis.com/css2?family=Young+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: sans-serif; padding: 40px; background: #f5f5f5; }
+    h2 { font-family: monospace; color: #555; margin: 30px 0 10px; font-size: 14px; }
+
+    /* Current design reference */
+    .current-brand {
+      display: inline-flex;
+      align-items: baseline;
+      position: relative;
+      background: #000;
+      color: #fff;
+      font-family: 'Young Serif', serif;
+      font-size: 21px;
+      line-height: 1;
+      padding: 3px 3.5px 5.7px 6px;
+      box-sizing: border-box;
+    }
+
+    /* Option A: nakdgrain with Mynerve, no box */
+    .nakdgrain-mynerve {
+      display: inline-block;
+      font-family: 'Mynerve', cursive;
+      font-size: 24px;
+      color: #000;
+      line-height: 1;
+    }
+
+    /* Option B: nakdgrain with Young Serif, no box */
+    .nakdgrain-youngserif {
+      display: inline-block;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      color: #000;
+      line-height: 1;
+    }
+
+    /* Dark mode demo */
+    .dark-bg {
+      background: #111;
+      padding: 20px 30px;
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    .nakdgrain-mynerve-dark {
+      display: inline-block;
+      font-family: 'Mynerve', cursive;
+      font-size: 24px;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .nakdgrain-youngserif-dark {
+      display: inline-block;
+      font-family: 'Young Serif', serif;
+      font-size: 24px;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .row { display: flex; align-items: flex-start; gap: 40px; flex-wrap: wrap; margin-bottom: 8px; }
+    .label { font-size: 11px; color: #888; margin-top: 6px; font-family: monospace; }
+
+    hr { margin: 40px 0; border-color: #ddd; }
+  </style>
+</head>
+<body>
+
+  <h1>nakdgrain Logo Comparison</h1>
+
+  <h2>Current Design (reference)</h2>
+  <div class="row">
+    <div>
+      <span class="current-brand">negative<span style="font-size: 10px; position: relative; top: 5px; margin-left: 2px;">ph</span></span>
+      <div class="label">Young Serif 21px, black box, white text</div>
+    </div>
+  </div>
+
+  <h2>Option A: nakdgrain with Mynerve (light mode)</h2>
+  <div class="row">
+    <div>
+      <span class="nakdgrain-mynerve">nakdgrain</span>
+      <div class="label">Mynerve 24px, no box, black text</div>
+    </div>
+  </div>
+
+  <h2>Option A: nakdgrain with Mynerve (dark mode)</h2>
+  <div class="row">
+    <div class="dark-bg">
+      <span class="nakdgrain-mynerve-dark">nakdgrain</span>
+    </div>
+    <div class="label" style="align-self:center">Mynerve 24px on dark background</div>
+  </div>
+
+  <h2>Option B: nakdgrain with Young Serif (light mode)</h2>
+  <div class="row">
+    <div>
+      <span class="nakdgrain-youngserif">nakdgrain</span>
+      <div class="label">Young Serif 24px, no box, black text</div>
+    </div>
+  </div>
+
+  <h2>Option B: nakdgrain with Young Serif (dark mode)</h2>
+  <div class="row">
+    <div class="dark-bg">
+      <span class="nakdgrain-youngserif-dark">nakdgrain</span>
+    </div>
+    <div class="label" style="align-self:center">Young Serif 24px on dark background</div>
+  </div>
+
+  <hr>
+
+  <h2>Side-by-side comparison (light mode)</h2>
+  <div class="row" style="align-items:center; gap: 60px;">
+    <div>
+      <span class="current-brand">negative<span style="font-size: 10px; position: relative; top: 5px; margin-left: 2px;">ph</span></span>
+      <div class="label">Current</div>
+    </div>
+    <div>
+      <span class="nakdgrain-mynerve">nakdgrain</span>
+      <div class="label">Mynerve</div>
+    </div>
+    <div>
+      <span class="nakdgrain-youngserif">nakdgrain</span>
+      <div class="label">Young Serif</div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2>Side-by-side comparison (dark mode)</h2>
+  <div class="row" style="align-items:center; gap: 60px;">
+    <div class="dark-bg">
+      <span class="current-brand">negative<span style="font-size: 10px; position: relative; top: 5px; margin-left: 2px;">ph</span></span>
+    </div>
+    <div class="label" style="align-self:center">Current</div>
+    <div class="dark-bg">
+      <span class="nakdgrain-mynerve-dark">nakdgrain</span>
+    </div>
+    <div class="label" style="align-self:center">Mynerve</div>
+    <div class="dark-bg">
+      <span class="nakdgrain-youngserif-dark">nakdgrain</span>
+    </div>
+    <div class="label" style="align-self:center">Young Serif</div>
+  </div>
+
+</body>
+</html>
