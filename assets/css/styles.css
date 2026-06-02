@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mynerve&display=swap');
+
 /* ── VIEWPORT CONDITIONS ────────────────────────────────────────────────────
    Green  : default — large viewport, no override
    Red    : compact landscape  (max-width:1435px  AND max-height:665px AND landscape)
@@ -286,28 +288,19 @@ html, body {
   outline: none;
 }
 
-/* New brand: negative.ph */
+/* New brand: nakdgrain */
 .new-brand {
-  display: inline-flex;
-  align-items: baseline;
+  display: inline-block;
   position: relative;
-  background: var(--color-primary);
-  color: var(--color-background);
-  font-family: 'Young Serif', serif;
-  font-size: 21px;
+  color: var(--color-primary);
+  font-family: 'Mynerve', cursive;
+  font-size: 24px;
   line-height: 1;
-  padding: 3px 3.5px 5.7px 6px;
-  box-sizing: border-box;
   text-transform: none;
 }
 
 .new-brand .ph {
-  font-family: 'Young Serif', serif;
-  font-size: 8px;
-  line-height: 1;
-  position: relative;
-  top: 5px;
-  margin-left: 2px;
+  display: none;
 }
 
 .navbar-nav li {
