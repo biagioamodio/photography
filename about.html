@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=26" id="custom-css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=27" id="custom-css">
   
   <!-- Base URL Script -->
   <script>
@@ -22,7 +22,7 @@
       
     // Update CSS path if needed
     if (window.baseUrl !== '/') {
-      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=26';
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=27';
     }
   </script>
 </head>
@@ -75,7 +75,7 @@
     // Load navbar
     $(document).ready(function() {
       // Use baseUrl for loading navbar
-      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=26", function() {
+      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=27", function() {
         // Set active nav item
         $("#nav-about").addClass("active");
       });
