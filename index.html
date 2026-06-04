@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css">
   
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=28" id="custom-css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=29" id="custom-css">
   
   <!-- Base URL Script -->
   <script>
@@ -19,7 +19,7 @@
       
     // Update CSS path if needed
     if (window.baseUrl !== '/') {
-      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=28';
+      document.getElementById('custom-css').href = window.baseUrl + 'assets/css/styles.css?v=29';
     }
   </script>
 </head>
@@ -76,7 +76,7 @@
     // Load navbar
     $(document).ready(function() {
       // Use baseUrl for loading navbar
-      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=28", function() {
+      $("#navbar-container").load(window.baseUrl + "_includes/navbar.html?v=29", function() {
         // Set active nav item
         $("#nav-home").addClass("active");
       });
