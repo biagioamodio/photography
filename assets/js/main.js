@@ -1,7 +1,13 @@
 $(document).ready(function() {
   // Initialize theme from localStorage or default to light
   initializeTheme();
-  
+
+  // Disable right-click on images (copyright protection)
+  $(document).on('contextmenu', 'img', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
   // Wrap main content in page-content div for transitions
   $('.container-fluid > .row').wrapAll('<div class="page-content fade-transition"></div>');
   

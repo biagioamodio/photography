@@ -85,6 +85,38 @@ function generateId(title) {
     .replace(/^-|-$/g, '');
 }
 
+async function addWatermark(imagePath) {
+  // Create SVG watermark with text
+  const watermarkSvg = Buffer.from(`
+    <svg width="600" height="100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          text { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; }
+        </style>
+      </defs>
+      <text x="0" y="70" fill="white" opacity="0.6" style="text-shadow: 0 0 2px rgba(0,0,0,0.8);">© NAKDGRAIN</text>
+    </svg>
+  `);
+
+  // Get image metadata to position watermark
+  const metadata = await sharp(imagePath).metadata();
+  const watermarkWidth = Math.min(300, metadata.width * 0.5);
+
+  // Resize watermark SVG proportionally
+  const resizedWatermark = await sharp(watermarkSvg)
+    .resize(Math.floor(watermarkWidth), Math.floor(watermarkWidth / 6), { fit: 'fill' })
+    .toBuffer();
+
+  // Composite watermark onto image (bottom-right corner)
+  await sharp(imagePath)
+    .composite([{
+      input: resizedWatermark,
+      gravity: 'southeast',
+      offset: { left: 20, top: 20 }
+    }])
+    .toFile(imagePath);
+}
+
 async function processImage(buffer, filename, optimize = true) {
   const ext = path.extname(filename).toLowerCase();
   const baseName = path.basename(filename, ext);
@@ -93,9 +125,9 @@ async function processImage(buffer, filename, optimize = true) {
 
   if (optimize) {
     await sharp(buffer)
-      .resize(2000, 2000, { 
-        fit: 'inside', 
-        withoutEnlargement: true 
+      .resize(2000, 2000, {
+        fit: 'inside',
+        withoutEnlargement: true
       })
       .jpeg({ quality: 85 })
       .toFile(outputPath);
@@ -111,6 +143,13 @@ async function processImage(buffer, filename, optimize = true) {
     }
   }
 
+  // Add watermark to the processed image
+  try {
+    await addWatermark(outputPath);
+  } catch (err) {
+    console.warn('Watermark failed:', err.message);
+  }
+
   return `assets/uploads/${outputFilename}`;
 }
 
@@ -120,7 +159,7 @@ async function processImageToDir(buffer, baseName, outputDir, relPath, optimize 
   const outputPath = path.join(outputDir, outputFilename);
 
   if (keepAlpha) {
-    // Save as PNG to preserve transparency (foreground cutouts)
+    // Save as PNG to preserve transparency (foreground cutouts) - no watermark for transparent images
     await sharp(buffer)
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .png({ compressionLevel: 8 })
@@ -130,8 +169,22 @@ async function processImageToDir(buffer, baseName, outputDir, relPath, optimize 
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 85 })
       .toFile(outputPath);
+
+    // Add watermark to JPEG images
+    try {
+      await addWatermark(outputPath);
+    } catch (err) {
+      console.warn('Watermark failed:', err.message);
+    }
   } else {
     await sharp(buffer).jpeg({ quality: 95 }).toFile(outputPath);
+
+    // Add watermark
+    try {
+      await addWatermark(outputPath);
+    } catch (err) {
+      console.warn('Watermark failed:', err.message);
+    }
   }
 
   return `${relPath}/${outputFilename}`;
@@ -526,6 +579,64 @@ app.post('/api/home/slides/:id/foreground', upload.single('image'), async (req, 
   } catch (err) {
     console.error('Home FG upload error:', err);
     res.status(500).json({ error: 'Failed to upload foreground image' });
+  }
+});
+
+// Delete home slide background image
+app.delete('/api/home/slides/:id/background', async (req, res) => {
+  try {
+    const home = readJSON(HOME_FILE) || { slides: [] };
+    const slide = home.slides.find(s => s.id === req.params.id);
+    if (!slide) return res.status(404).json({ error: 'Slide not found' });
+
+    // Delete the image file if it exists
+    if (slide.background) {
+      const filePath = path.join(__dirname, 'public', slide.background);
+      try {
+        fs.unlinkSync(filePath);
+      } catch (err) {
+        console.warn(`Could not delete file ${filePath}:`, err.message);
+      }
+    }
+
+    slide.background = null;
+
+    if (!writeJSON(HOME_FILE, home)) {
+      return res.status(500).json({ error: 'Failed to save home data' });
+    }
+    res.json({ success: true, message: 'Background image removed' });
+  } catch (err) {
+    console.error('Home BG delete error:', err);
+    res.status(500).json({ error: 'Failed to delete background image' });
+  }
+});
+
+// Delete home slide foreground image
+app.delete('/api/home/slides/:id/foreground', async (req, res) => {
+  try {
+    const home = readJSON(HOME_FILE) || { slides: [] };
+    const slide = home.slides.find(s => s.id === req.params.id);
+    if (!slide) return res.status(404).json({ error: 'Slide not found' });
+
+    // Delete the image file if it exists
+    if (slide.foreground) {
+      const filePath = path.join(__dirname, 'public', slide.foreground);
+      try {
+        fs.unlinkSync(filePath);
+      } catch (err) {
+        console.warn(`Could not delete file ${filePath}:`, err.message);
+      }
+    }
+
+    slide.foreground = null;
+
+    if (!writeJSON(HOME_FILE, home)) {
+      return res.status(500).json({ error: 'Failed to save home data' });
+    }
+    res.json({ success: true, message: 'Foreground image removed' });
+  } catch (err) {
+    console.error('Home FG delete error:', err);
+    res.status(500).json({ error: 'Failed to delete foreground image' });
   }
 });
 

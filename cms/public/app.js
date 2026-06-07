@@ -950,6 +950,7 @@ function editHomeSlide(id) {
     resetPreviewSize();
     applyCompositeLayout();
     loadHomeImages(slide);
+    updateImageStatus();
     updateHomePreview();
     updateRatioLabel();
   });
@@ -1924,6 +1925,7 @@ async function uploadHomeImage(type, event) {
       loadHomeImages(slide);
     }
 
+    updateImageStatus();
     updateHomePreview();
     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} uploaded!`, 'success');
     checkGitStatus();
@@ -1932,6 +1934,49 @@ async function uploadHomeImage(type, event) {
   }
   hideLoading();
   event.target.value = '';
+}
+
+async function removeHomeImage(type) {
+  const slide = homeData.slides.find(s => s.id === currentSlideId);
+  if (!slide) return;
+
+  // Show confirmation
+  if (!confirm(`Remove ${type} image?`)) return;
+
+  showLoading(`Removing ${type} image...`);
+  try {
+    const res = await fetch(`/api/home/slides/${currentSlideId}/${type}`, {
+      method: 'DELETE'
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Delete failed');
+    }
+
+    // Update local slide data
+    slide[type] = null;
+    loadHomeImages(slide);
+    updateImageStatus();
+    updateHomePreview();
+    showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} removed!`, 'success');
+    checkGitStatus();
+  } catch (err) {
+    showToast(err.message || `Failed to remove ${type} image`, 'error');
+  }
+  hideLoading();
+}
+
+function updateImageStatus() {
+  const slide = homeData.slides.find(s => s.id === currentSlideId);
+  if (!slide) return;
+
+  // Show/hide FG remove button based on whether foreground exists
+  const fgRemoveBtn = document.getElementById('home-fg-remove-btn');
+  if (slide.foreground) {
+    fgRemoveBtn.classList.remove('hidden');
+  } else {
+    fgRemoveBtn.classList.add('hidden');
+  }
 }
 
 async function saveHomeSlide() {
