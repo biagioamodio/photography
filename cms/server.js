@@ -86,33 +86,43 @@ function generateId(title) {
 }
 
 async function addWatermark(imagePath) {
-  // Create SVG watermark with text (with stroke for shadow effect)
-  const watermarkSvg = Buffer.from(`
-    <svg width="600" height="100" xmlns="http://www.w3.org/2000/svg">
-      <!-- Shadow text -->
-      <text x="2" y="72" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="black" opacity="0.4">© NAKDGRAIN</text>
-      <!-- Main text -->
-      <text x="0" y="70" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.7">© NAKDGRAIN</text>
-    </svg>
-  `);
+  try {
+    // Create SVG watermark with text - using proper SVG namespace and attributes
+    const watermarkSvg = Buffer.from(`
+      <svg width="400" height="80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.5"/>
+          </filter>
+        </defs>
+        <text x="10" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" opacity="0.65" filter="url(#shadow)">©nakdgrain</text>
+      </svg>
+    `);
 
-  // Get image metadata to position watermark
-  const metadata = await sharp(imagePath).metadata();
-  const watermarkWidth = Math.min(300, metadata.width * 0.5);
+    // Get image metadata
+    const metadata = await sharp(imagePath).metadata();
+    const watermarkWidth = Math.min(250, Math.floor(metadata.width * 0.4));
+    const watermarkHeight = Math.floor(watermarkWidth * 0.2);
 
-  // Resize watermark SVG proportionally
-  const resizedWatermark = await sharp(watermarkSvg)
-    .resize(Math.floor(watermarkWidth), Math.floor(watermarkWidth / 6), { fit: 'fill' })
-    .toBuffer();
+    // Convert SVG to PNG buffer
+    const watermarkPng = await sharp(watermarkSvg)
+      .resize(watermarkWidth, watermarkHeight, { fit: 'inside', withoutEnlargement: true })
+      .png()
+      .toBuffer();
 
-  // Composite watermark onto image (bottom-right corner)
-  await sharp(imagePath)
-    .composite([{
-      input: resizedWatermark,
-      gravity: 'southeast',
-      offset: { left: 20, top: 20 }
-    }])
-    .toFile(imagePath);
+    // Composite watermark onto image (bottom-right corner)
+    await sharp(imagePath)
+      .composite([{
+        input: watermarkPng,
+        gravity: 'southeast',
+        offset: { left: 20, top: 20 }
+      }])
+      .toFile(imagePath);
+
+    console.log('✓ Watermark applied successfully');
+  } catch (err) {
+    console.error('✗ Watermark error:', err.message);
+  }
 }
 
 async function processImage(buffer, filename, optimize = true) {
