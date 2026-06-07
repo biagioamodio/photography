@@ -634,12 +634,28 @@ function loadHomeSlides() {
       // Measure actual navbar height so this works in both red and blue conditions.
       var navH = $('#navbar-container')[0] ? $('#navbar-container')[0].offsetHeight : 80;
       var maxH = window.innerHeight - navH - 30;
-      var maxW = Math.round(maxH * 1.5);
-      $show.find('.home-slide').css('max-width', maxW + 'px');
 
       $show.find('.home-slide').each(function(i) {
         var slide = displaySlides[i];
         var $bg   = $(this).find('.home-bg-img');
+
+        // Calculate max-width based on actual image aspect ratio
+        var maxW;
+        if ($bg[0] && $bg[0].naturalWidth > 0) {
+          var imgAR = $bg[0].naturalWidth / $bg[0].naturalHeight;
+          maxW = Math.round(maxH * imgAR);
+        } else {
+          // Fallback to 1.5 if image hasn't loaded yet
+          maxW = Math.round(maxH * 1.5);
+        }
+
+        // Set both max-width and max-height, plus actual height for portrait images
+        $(this).css({
+          'max-width': maxW + 'px',
+          'max-height': maxH + 'px',
+          'height': maxH + 'px'
+        });
+
         if ($bg[0] && $bg[0].naturalWidth > 0) {
           homeCompositeLayout(
             this, $bg[0], $(this).find('.home-composite-wrap')[0],
