@@ -1372,9 +1372,9 @@ footer {
     flex: 0 0 auto !important;
     font-size: 12px !important;
     padding: 6px 10px !important;
-    margin: 0 10px 10px 10px !important;
-    display: block !important;
-    width: calc(100% - 20px) !important;
+    margin: 0 auto 10px auto !important;
+    display: inline-block !important;
+    width: auto !important;
     text-align: center !important;
     line-height: 1 !important;
   }
