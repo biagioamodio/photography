@@ -87,41 +87,40 @@ function generateId(title) {
 
 async function addWatermark(imagePath) {
   try {
-    // Create SVG watermark with text - using proper SVG namespace and attributes
-    const watermarkSvg = Buffer.from(`
-      <svg width="400" height="80" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.5"/>
-          </filter>
-        </defs>
-        <text x="10" y="60" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="white" opacity="0.65" filter="url(#shadow)">©nakdgrain</text>
+    // Create a simple semi-transparent watermark overlay with text using SVG
+    const watermarkText = '©nakdgrain';
+    const watermarkSvg = `
+      <svg width="500" height="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <text x="0" y="80" font-size="40" font-family="Arial, Helvetica, sans-serif" font-weight="bold" fill="white" opacity="0.6">${watermarkText}</text>
       </svg>
-    `);
+    `;
 
-    // Get image metadata
+    const svgBuffer = Buffer.from(watermarkSvg);
+
+    // Get image dimensions
     const metadata = await sharp(imagePath).metadata();
-    const watermarkWidth = Math.min(250, Math.floor(metadata.width * 0.4));
-    const watermarkHeight = Math.floor(watermarkWidth * 0.2);
+    const watermarkSize = Math.min(200, Math.floor(metadata.width * 0.3));
 
-    // Convert SVG to PNG buffer
-    const watermarkPng = await sharp(watermarkSvg)
-      .resize(watermarkWidth, watermarkHeight, { fit: 'inside', withoutEnlargement: true })
+    // Convert SVG to image
+    const watermarkImage = await sharp(svgBuffer)
+      .resize(watermarkSize, Math.floor(watermarkSize * 0.2), { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
       .png()
       .toBuffer();
 
-    // Composite watermark onto image (bottom-right corner)
-    await sharp(imagePath)
+    // Overlay watermark on original image
+    const result = await sharp(imagePath)
       .composite([{
-        input: watermarkPng,
+        input: watermarkImage,
         gravity: 'southeast',
-        offset: { left: 20, top: 20 }
+        offset: { left: 15, top: 15 }
       }])
       .toFile(imagePath);
 
-    console.log('✓ Watermark applied successfully');
+    console.log('✓ Watermark successfully applied to:', imagePath);
+    return true;
   } catch (err) {
-    console.error('✗ Watermark error:', err.message);
+    console.warn('⚠ Could not apply watermark:', err.message);
+    return false;
   }
 }
 
