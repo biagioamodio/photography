@@ -1288,6 +1288,21 @@ footer {
   color: #a0a0a0;
 }
 
+/* Mobile portrait (≤840px): hide footer on about and series pages */
+@media (max-width: 840px) and (orientation: portrait) {
+  body.about-page footer,
+  body.series-page footer {
+    display: none;
+  }
+}
+
+/* Mobile landscape (≤840px): hide footer on all pages */
+@media (max-width: 840px) and (orientation: landscape) {
+  footer {
+    display: none;
+  }
+}
+
 .modal-image-container {
   display: flex;
   align-items: center;
