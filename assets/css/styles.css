@@ -1328,7 +1328,7 @@ footer {
     max-height: 60vh !important;
     overflow: hidden !important;
     border: none !important;
-    margin: 7px !important;
+    margin: 10px !important;
     padding: 0 !important;
   }
 
@@ -1352,8 +1352,8 @@ footer {
 
   .modal-series-text {
     font-size: 11px !important;
-    margin: 0 7px !important;
-    padding: 0 7px 7px 7px !important;
+    margin: 0 10px !important;
+    padding: 0 10px 10px 10px !important;
     flex-shrink: 0 !important;
     line-height: 1 !important;
   }
@@ -1361,7 +1361,7 @@ footer {
   .modal-series-title {
     font-size: 16px !important;
     font-weight: bold !important;
-    margin: 0 7px !important;
+    margin: 0 10px !important;
     padding: 0 0 5px 0 !important;
     flex-shrink: 0 !important;
     line-height: 1.1 !important;
@@ -1372,9 +1372,9 @@ footer {
     flex: 0 0 auto !important;
     font-size: 12px !important;
     padding: 6px 10px !important;
-    margin: 0 7px 7px 7px !important;
+    margin: 0 10px 10px 10px !important;
     display: block !important;
-    width: calc(100% - 14px) !important;
+    width: calc(100% - 20px) !important;
     text-align: center !important;
     line-height: 1 !important;
   }
