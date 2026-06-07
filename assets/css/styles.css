@@ -1323,58 +1323,58 @@ footer {
 
   /* Image at top - fixed height, no flex */
   .modal-image-container {
-    flex: 0 0 auto;
-    max-height: 28vh;
-    overflow: hidden;
-    border: none;
-    margin: 6px;
-    padding: 0;
+    flex: 0 0 auto !important;
+    max-height: 28vh !important;
+    overflow: hidden !important;
+    border: none !important;
+    margin: 6px !important;
+    padding: 0 !important;
   }
 
   .modal-image-container img {
-    max-height: 28vh;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
+    max-height: 28vh !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
   }
 
   /* Info section with text and button - flex container */
   .modal-info {
-    flex: 1 1 auto;
-    overflow: hidden;
-    padding: 6px 12px;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 auto !important;
+    overflow: hidden !important;
+    padding: 6px 12px !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .modal-series-text {
-    font-size: 11px;
-    margin: 0;
-    padding: 0;
-    flex-shrink: 0;
-    line-height: 1;
+    font-size: 11px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
   }
 
   .modal-series-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin: 2px 0 0 0;
-    padding: 0;
-    flex-shrink: 0;
-    line-height: 1.2;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin: 2px 0 0 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+    line-height: 1.2 !important;
   }
 
   /* Button at bottom - fixed height, no flex */
   .modal-series-link {
-    flex: 0 0 auto;
-    font-size: 12px;
-    padding: 6px 10px;
-    margin: 4px 0 0 0;
-    display: block;
-    width: 100%;
-    text-align: center;
-    line-height: 1;
+    flex: 0 0 auto !important;
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+    margin: 4px 0 0 0 !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    line-height: 1 !important;
   }
 }
 
