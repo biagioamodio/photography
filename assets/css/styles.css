@@ -1307,12 +1307,15 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
   }
 
   /* Modal card constrained to viewport */
   .modal-content {
     max-height: 95vh;
-    max-width: 95vw;
+    max-width: 100%;
+    width: 100%;
+    height: 95vh;
     padding: 0;
     overflow: hidden;
     display: flex;
@@ -1324,7 +1327,7 @@ footer {
   /* Image at top - fixed height, no flex */
   .modal-image-container {
     flex: 0 0 auto !important;
-    max-height: 28vh !important;
+    max-height: 50vh !important;
     overflow: hidden !important;
     border: none !important;
     margin: 7px !important;
@@ -1332,7 +1335,7 @@ footer {
   }
 
   .modal-image-container img {
-    max-height: 28vh !important;
+    max-height: 50vh !important;
     width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
