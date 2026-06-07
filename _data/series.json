@@ -99,8 +99,7 @@
           "developing": "",
           "scanning": "",
           "printing": ""
-        },
-        "homepage": true
+        }
       },
       {
         "image": "assets/uploads/03_02.jpg",
@@ -108,7 +107,8 @@
           "camera": "Leica M6",
           "lens": "50mm",
           "filmRoll": "Portra 400"
-        }
+        },
+        "homepage": true
       },
       {
         "image": "assets/uploads/03_03.jpg",
