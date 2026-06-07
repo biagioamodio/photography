@@ -85,38 +85,6 @@ function generateId(title) {
     .replace(/^-|-$/g, '');
 }
 
-async function addWatermark(imagePath) {
-  try {
-    // Create a simple test watermark - white rectangle
-    const watermarkBuffer = await sharp({
-      create: {
-        width: 250,
-        height: 50,
-        channels: 4,
-        background: { r: 0, g: 0, b: 0, alpha: 0.4 }
-      }
-    })
-    .png()
-    .toBuffer();
-
-    // Get image metadata
-    const metadata = await sharp(imagePath).metadata();
-
-    // Overlay watermark on image (bottom-right)
-    await sharp(imagePath)
-      .composite([{
-        input: watermarkBuffer,
-        gravity: 'southeast',
-        offset: { left: 10, top: 10 }
-      }])
-      .toFile(imagePath);
-
-    console.log('[WATERMARK] Applied to image');
-  } catch (err) {
-    console.error('[WATERMARK ERROR]', err.message);
-  }
-}
-
 async function processImage(buffer, filename, optimize = true) {
   const ext = path.extname(filename).toLowerCase();
   const baseName = path.basename(filename, ext);
@@ -143,13 +111,6 @@ async function processImage(buffer, filename, optimize = true) {
     }
   }
 
-  // Add watermark to the processed image
-  try {
-    await addWatermark(outputPath);
-  } catch (err) {
-    console.warn('Watermark failed:', err.message);
-  }
-
   return `assets/uploads/${outputFilename}`;
 }
 
@@ -169,22 +130,8 @@ async function processImageToDir(buffer, baseName, outputDir, relPath, optimize 
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 85 })
       .toFile(outputPath);
-
-    // Add watermark to JPEG images
-    try {
-      await addWatermark(outputPath);
-    } catch (err) {
-      console.warn('Watermark failed:', err.message);
-    }
   } else {
     await sharp(buffer).jpeg({ quality: 95 }).toFile(outputPath);
-
-    // Add watermark
-    try {
-      await addWatermark(outputPath);
-    } catch (err) {
-      console.warn('Watermark failed:', err.message);
-    }
   }
 
   return `${relPath}/${outputFilename}`;

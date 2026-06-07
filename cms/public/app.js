@@ -450,6 +450,12 @@ function openPhotoEdit(index) {
     if (el) { el.value = value; updateCount(inputId, countId); }
   });
 
+  // Load homepage flag
+  const homepageCheckbox = document.getElementById('photo-homepage-checkbox');
+  if (homepageCheckbox) {
+    homepageCheckbox.checked = photo.homepage === true;
+  }
+
   document.getElementById('photo-edit-modal').classList.remove('hidden');
 }
 
@@ -460,10 +466,10 @@ function hidePhotoEditModal() {
 
 async function savePhotoMetadata() {
   if (currentPhotoIndex === null) return;
-  
+
   const series = seriesData.find(s => s.id === currentSeriesId);
   if (!series) return;
-  
+
   const metadata = {
     camera:     document.getElementById('photo-camera-input').value.trim(),
     lens:       document.getElementById('photo-lens-input').value.trim(),
@@ -474,7 +480,8 @@ async function savePhotoMetadata() {
   };
 
   series.photos[currentPhotoIndex].metadata = metadata;
-  
+  series.photos[currentPhotoIndex].homepage = document.getElementById('photo-homepage-checkbox').checked;
+
   showLoading('Saving...');
   try {
     await fetch(`/api/series/${currentSeriesId}`, {
@@ -482,7 +489,7 @@ async function savePhotoMetadata() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ photos: series.photos })
     });
-    
+
     renderPhotosGrid(series.photos);
     showToast('Metadata saved!', 'success');
     hidePhotoEditModal();

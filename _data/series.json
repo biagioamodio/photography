@@ -16,20 +16,16 @@
         }
       },
       {
-        "image": "assets/uploads/000061800017.jpg",
-        "metadata": {
-          "camera": "",
-          "lens": "",
-          "filmRoll": ""
-        }
-      },
-      {
         "image": "assets/uploads/02_02b.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": true
       },
       {
         "image": "assets/uploads/02_05.jpg",
@@ -99,8 +95,12 @@
         "metadata": {
           "camera": "Leica M6",
           "lens": "35mm",
-          "filmRoll": "Portra 400"
-        }
+          "filmRoll": "Portra 400",
+          "developing": "",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": true
       },
       {
         "image": "assets/uploads/03_02.jpg",

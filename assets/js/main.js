@@ -10,7 +10,10 @@ $(document).ready(function() {
 
   // Wrap main content in page-content div for transitions
   $('.container-fluid > .row').wrapAll('<div class="page-content fade-transition"></div>');
-  
+
+  // Initialize modal handlers globally (for both homepage and series pages)
+  initializeImageModal();
+
   // Set active navigation item based on current page
   const currentPage = window.location.pathname.split('/').pop();
   
@@ -149,6 +152,48 @@ function populateSeriesGrid(series) {
   });
 }
 
+// Function to initialize metadata fade behavior
+function initializeMetadataFade() {
+  const $metadata = $('#photo-metadata');
+  const $darkroom = $('#photo-darkroom');
+  let fadeTimeout;
+
+  // Function to fade out metadata after 2 seconds
+  function startAutoFade() {
+    // Clear any existing timeout
+    clearTimeout(fadeTimeout);
+
+    // Remove fade-hidden class to show metadata initially
+    $metadata.removeClass('fade-hidden');
+    $darkroom.removeClass('fade-hidden');
+
+    // Set timeout to fade out after 2 seconds
+    fadeTimeout = setTimeout(function() {
+      $metadata.addClass('fade-hidden');
+      $darkroom.addClass('fade-hidden');
+    }, 2000);
+  }
+
+  // Start initial fade out
+  startAutoFade();
+
+  // Remove hover handlers if they exist (to prevent duplicates)
+  const $contentContainer = $('.content-container');
+  $contentContainer.off('mouseenter.metadata mouseleave.metadata');
+
+  // Add hover handlers to show metadata on mouse enter
+  $contentContainer.on('mouseenter.metadata', function() {
+    clearTimeout(fadeTimeout);
+    $metadata.removeClass('fade-hidden');
+    $darkroom.removeClass('fade-hidden');
+  });
+
+  // Hide metadata on mouse leave
+  $contentContainer.on('mouseleave.metadata', function() {
+    startAutoFade();
+  });
+}
+
 // Function to load serie content
 function loadSerieContent(serie) {
   // Set serie title
@@ -184,10 +229,13 @@ function loadSerieContent(serie) {
         const descriptionElement = $('<div class="serie-description fade-transition"></div>');
         descriptionElement.html(slide.content.replace(/\n\n/g, '<br><br>'));
         contentDisplay.append(descriptionElement);
-        
+
         // Hide metadata for description
-        $('#photo-metadata').text('');
-        $('#photo-darkroom').text('');
+        $('#photo-metadata').text('').addClass('fade-hidden');
+        $('#photo-darkroom').text('').addClass('fade-hidden');
+
+        // Remove metadata hover handlers for description slides
+        $('.serie-container').off('mouseenter.metadata mouseleave.metadata');
       } else {
         // Load photo with proper path
         let imgSrc = slide.content.image;
@@ -227,6 +275,9 @@ function loadSerieContent(serie) {
           $('#photo-metadata').html($('<span>').text(typeof meta === 'string' ? meta : '').prop('outerHTML'));
           $('#photo-darkroom').html('');
         }
+
+        // Initialize metadata fade behavior
+        initializeMetadataFade();
       }
       
       // Handle navigation arrows visibility
@@ -451,19 +502,58 @@ $(document).ready(function() {
 // ── Home Slideshow ────────────────────────────────────────────────────────────
 
 function loadHomeSlides() {
-  const jsonPath = (window.baseUrl || '/') + '_data/home.json';
+  const jsonPath = (window.baseUrl || '/') + '_data/series.json';
 
   $.getJSON(jsonPath, function(data) {
-    const slides = (data.slides || []).filter(function(s) { return s.background; });
+    // Collect all photos marked for homepage from all series
+    const homepagePhotos = [];
+    const seriesArray = Array.isArray(data) ? data : (data.series || []);
+
+    seriesArray.forEach(function(serie) {
+      if (serie.photos && Array.isArray(serie.photos)) {
+        serie.photos.forEach(function(photo) {
+          if (photo.homepage === true) {
+            // Create a slide object with the photo
+            homepagePhotos.push({
+              background: photo.image,
+              foreground: null,
+              text: '',
+              textSize: 0,
+              textX: 50,
+              textY: 50,
+              textColor: '#ffffff',
+              textBold: false,
+              textItalic: false,
+              textAlign: 'center',
+              textLineHeight: 1.2,
+              shadowEnabled: false,
+              shadowIntensity: 0,
+              shadowDistance: 0,
+              imagePosX: 50,
+              imagePosY: 50,
+              serieId: serie.id,
+              photoId: photo.id
+            });
+          }
+        });
+      }
+    });
+
+    const slides = homepagePhotos;
     if (slides.length === 0) { loadRandomImagesForHomepage(); return; }
+
+    // Pick a random slide on each load
+    const randomIndex = Math.floor(Math.random() * slides.length);
+    const selectedSlide = slides[randomIndex];
+    const displaySlides = [selectedSlide];
 
     const $wrap = $('.home-slideshow-wrap');
     $wrap.empty();
 
     const $show = $('<div class="home-slideshow"></div>');
 
-    // Build each slide
-    slides.forEach(function(slide, index) {
+    // Build each slide (use displaySlides which contains only the randomly selected one)
+    displaySlides.forEach(function(slide, index) {
       const $slide = $('<div class="home-slide' + (index === 0 ? ' active' : '') + '"></div>');
 
       // Composite wrap: BG behind, FG in front at bottom
@@ -515,38 +605,27 @@ function loadHomeSlides() {
       $bg[0].onload = layout;
       // Don't call layout() here — slide is not in the DOM yet so offsetWidth = 0.
       // The initial pass runs via requestAnimationFrame below after $wrap.append($show).
+
+      // Add click handler to open modal with series info
+      $slide.css('cursor', 'pointer');
+      $slide.on('click', function() {
+        // Set image
+        $('#modal-image').attr('src', resolveUrl(slide.background));
+
+        // Set series title and link
+        if (slide.serieId) {
+          const seriesTitle = slide.serieId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          $('.modal-series-title').text(seriesTitle);
+          $('.modal-series-link').attr('href', (window.baseUrl || '/') + 'serie.html?id=' + slide.serieId);
+        }
+
+        // Show modal using the proper function
+        openImageModal();
+      });
     });
 
-    // Navigation (only when multiple slides)
-    if (slides.length > 1) {
-      var current = 0;
-
-      var $prev = $('<button class="slide-nav slide-prev" aria-label="Previous">&#8249;</button>');
-      var $next = $('<button class="slide-nav slide-next" aria-label="Next">&#8250;</button>');
-      var $dots = $('<div class="slide-dots"></div>');
-
-      slides.forEach(function(_, i) {
-        $dots.append($('<span class="slide-dot' + (i === 0 ? ' active' : '') + '" data-index="' + i + '"></span>'));
-      });
-
-      function goTo(n) {
-        current = ((n % slides.length) + slides.length) % slides.length;
-        $show.find('.home-slide').removeClass('active').eq(current).addClass('active');
-        $dots.find('.slide-dot').removeClass('active').eq(current).addClass('active');
-      }
-
-      $prev.on('click', function() { goTo(current - 1); });
-      $next.on('click', function() { goTo(current + 1); });
-      $dots.on('click', '.slide-dot', function() { goTo(+$(this).data('index')); });
-
-      // Keyboard navigation
-      $(document).on('keydown.homeSlides', function(e) {
-        if (e.key === 'ArrowLeft')  goTo(current - 1);
-        if (e.key === 'ArrowRight') goTo(current + 1);
-      });
-
-      $show.append($prev, $next, $dots);
-    }
+    // Navigation disabled - only one random slide is displayed per page load
+    // If you reload the page, a different random photo may be selected
 
     $wrap.append($show);
 
@@ -559,7 +638,7 @@ function loadHomeSlides() {
       $show.find('.home-slide').css('max-width', maxW + 'px');
 
       $show.find('.home-slide').each(function(i) {
-        var slide = slides[i];
+        var slide = displaySlides[i];
         var $bg   = $(this).find('.home-bg-img');
         if ($bg[0] && $bg[0].naturalWidth > 0) {
           homeCompositeLayout(
@@ -762,15 +841,15 @@ function initializeImageModal() {
 function openImageModal() {
   const modal = $('#image-modal');
   modal.addClass('active');
-  // Prevent body scroll when modal is open
-  $('body').css('overflow', 'hidden');
+  // Prevent body scroll when modal is open and add class to hide slideshow
+  $('body').css('overflow', 'hidden').addClass('modal-open');
 }
 
 function closeImageModal() {
   const modal = $('#image-modal');
   modal.removeClass('active');
-  // Re-enable body scroll
-  $('body').css('overflow', '');
+  // Re-enable body scroll and remove class to show slideshow
+  $('body').css('overflow', '').removeClass('modal-open');
 }
 
 // ===== Theme Toggle Functions =====
