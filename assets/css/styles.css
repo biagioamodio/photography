@@ -1327,7 +1327,7 @@ footer {
     max-height: 28vh !important;
     overflow: hidden !important;
     border: none !important;
-    margin: 6px 6px 2px 6px !important;
+    margin: 6px !important;
     padding: 0 !important;
   }
 
@@ -1342,7 +1342,7 @@ footer {
   .modal-info {
     flex: 1 1 auto !important;
     overflow: hidden !important;
-    padding: 3px 8px !important;
+    padding: 6px 12px !important;
     min-height: 0 !important;
     display: flex !important;
     flex-direction: column !important;
@@ -1359,7 +1359,7 @@ footer {
   .modal-series-title {
     font-size: 16px !important;
     font-weight: bold !important;
-    margin: 1px 0 0 0 !important;
+    margin: 2px 0 0 0 !important;
     padding: 0 !important;
     flex-shrink: 0 !important;
     line-height: 1.2 !important;
@@ -1369,8 +1369,8 @@ footer {
   .modal-series-link {
     flex: 0 0 auto !important;
     font-size: 12px !important;
-    padding: 6px 4px !important;
-    margin: 2px 0 0 0 !important;
+    padding: 6px 10px !important;
+    margin: 4px 0 0 0 !important;
     display: block !important;
     width: 100% !important;
     text-align: center !important;
