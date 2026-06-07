@@ -1296,41 +1296,50 @@ footer {
   }
 }
 
-/* Mobile landscape (≤840px): hide footer on all pages */
-@media (max-width: 840px) and (orientation: landscape) {
+/* Mobile landscape: hide footer and adjust modal */
+@media (max-height: 665px) and (orientation: landscape) {
   footer {
     display: none;
   }
 
   /* Adjust modal for mobile landscape */
   .modal-content {
-    max-height: 95vh;
+    max-height: 90vh;
     max-width: 95vw;
-    padding: 15px;
+    padding: 12px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   .modal-image-container {
-    max-height: 50vh;
+    max-height: 45vh;
+    flex-shrink: 1;
   }
 
   .modal-image-container img {
-    max-height: 50vh;
+    max-height: 45vh;
+    width: auto;
   }
 
   .modal-series-title {
-    font-size: 20px;
-    margin: 10px 0;
+    font-size: 18px;
+    margin: 8px 0 4px 0;
+    flex-shrink: 0;
   }
 
   .modal-series-text {
-    font-size: 14px;
-    margin: 5px 0;
+    font-size: 13px;
+    margin: 4px 0;
+    flex-shrink: 0;
+    overflow-y: auto;
+    max-height: 15vh;
   }
 
   .modal-series-link {
-    font-size: 14px;
-    padding: 8px 20px;
+    font-size: 13px;
+    padding: 6px 16px;
+    flex-shrink: 0;
   }
 }
 
