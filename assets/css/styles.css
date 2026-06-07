@@ -1325,7 +1325,7 @@ footer {
   /* Image at top - fixed height, no flex */
   .modal-image-container {
     flex: 0 0 auto !important;
-    max-height: 65vh !important;
+    max-height: 68vh !important;
     overflow: hidden !important;
     border: none !important;
     margin: 10px !important;
@@ -1333,7 +1333,7 @@ footer {
   }
 
   .modal-image-container img {
-    max-height: 65vh !important;
+    max-height: 68vh !important;
     width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
