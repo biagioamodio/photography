@@ -87,40 +87,33 @@ function generateId(title) {
 
 async function addWatermark(imagePath) {
   try {
-    // Create a simple semi-transparent watermark overlay with text using SVG
-    const watermarkText = '©nakdgrain';
-    const watermarkSvg = `
-      <svg width="500" height="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <text x="0" y="80" font-size="40" font-family="Arial, Helvetica, sans-serif" font-weight="bold" fill="white" opacity="0.6">${watermarkText}</text>
-      </svg>
-    `;
+    // Create a simple test watermark - white rectangle
+    const watermarkBuffer = await sharp({
+      create: {
+        width: 250,
+        height: 50,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0.4 }
+      }
+    })
+    .png()
+    .toBuffer();
 
-    const svgBuffer = Buffer.from(watermarkSvg);
-
-    // Get image dimensions
+    // Get image metadata
     const metadata = await sharp(imagePath).metadata();
-    const watermarkSize = Math.min(200, Math.floor(metadata.width * 0.3));
 
-    // Convert SVG to image
-    const watermarkImage = await sharp(svgBuffer)
-      .resize(watermarkSize, Math.floor(watermarkSize * 0.2), { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } })
-      .png()
-      .toBuffer();
-
-    // Overlay watermark on original image
-    const result = await sharp(imagePath)
+    // Overlay watermark on image (bottom-right)
+    await sharp(imagePath)
       .composite([{
-        input: watermarkImage,
+        input: watermarkBuffer,
         gravity: 'southeast',
-        offset: { left: 15, top: 15 }
+        offset: { left: 10, top: 10 }
       }])
       .toFile(imagePath);
 
-    console.log('✓ Watermark successfully applied to:', imagePath);
-    return true;
+    console.log('[WATERMARK] Applied to image');
   } catch (err) {
-    console.warn('⚠ Could not apply watermark:', err.message);
-    return false;
+    console.error('[WATERMARK ERROR]', err.message);
   }
 }
 
