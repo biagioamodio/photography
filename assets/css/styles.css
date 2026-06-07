@@ -1301,6 +1301,37 @@ footer {
   footer {
     display: none;
   }
+
+  /* Adjust modal for mobile landscape */
+  .modal-content {
+    max-height: 95vh;
+    max-width: 95vw;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  .modal-image-container {
+    max-height: 50vh;
+  }
+
+  .modal-image-container img {
+    max-height: 50vh;
+  }
+
+  .modal-series-title {
+    font-size: 20px;
+    margin: 10px 0;
+  }
+
+  .modal-series-text {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+
+  .modal-series-link {
+    font-size: 14px;
+    padding: 8px 20px;
+  }
 }
 
 .modal-image-container {
