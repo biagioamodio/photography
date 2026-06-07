@@ -1342,7 +1342,7 @@ footer {
   .modal-info {
     flex: 1 1 auto !important;
     overflow: hidden !important;
-    padding: 0 7px !important;
+    padding: 0 !important;
     margin-top: 0 !important;
     min-height: 0 !important;
     display: flex !important;
@@ -1351,7 +1351,7 @@ footer {
 
   .modal-series-text {
     font-size: 11px !important;
-    margin: 0 !important;
+    margin: 0 7px !important;
     padding: 7px !important;
     flex-shrink: 0 !important;
     line-height: 1 !important;
@@ -1360,8 +1360,8 @@ footer {
   .modal-series-title {
     font-size: 16px !important;
     font-weight: bold !important;
-    margin: 0 !important;
-    padding: 0 7px !important;
+    margin: 0 7px !important;
+    padding: 0 !important;
     flex-shrink: 0 !important;
     line-height: 1.1 !important;
   }
