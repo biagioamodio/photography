@@ -1312,7 +1312,7 @@ footer {
 
   /* Modal card constrained to viewport */
   .modal-content {
-    max-height: 98vh;
+    max-height: 99vh;
     max-width: 93vw;
     padding: 0;
     overflow: hidden;
@@ -1325,7 +1325,7 @@ footer {
   /* Image at top - fixed height, no flex */
   .modal-image-container {
     flex: 0 0 auto !important;
-    max-height: 55vh !important;
+    max-height: 60vh !important;
     overflow: hidden !important;
     border: none !important;
     margin: 7px !important;
@@ -1333,7 +1333,7 @@ footer {
   }
 
   .modal-image-container img {
-    max-height: 55vh !important;
+    max-height: 60vh !important;
     width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
