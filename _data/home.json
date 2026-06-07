@@ -20,27 +20,6 @@
       "textLineHeight": 0.9,
       "shadowEnabled": false,
       "textColor": "#1e586c"
-    },
-    {
-      "id": "slide-1780819747305",
-      "title": "Slide 1",
-      "background": "assets/uploads/home/slide-1780819747305-bg.jpg",
-      "foreground": "",
-      "text": "",
-      "textX": 50,
-      "textY": 50,
-      "textSize": 5,
-      "textAlign": "center",
-      "textBold": false,
-      "textItalic": false,
-      "shadowIntensity": 60,
-      "shadowDistance": 4,
-      "centerLine": 50,
-      "textLineHeight": 1.2,
-      "shadowEnabled": true,
-      "textColor": "#ffffff",
-      "imagePosX": 50,
-      "imagePosY": 50
     }
   ]
 }

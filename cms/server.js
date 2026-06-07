@@ -86,15 +86,13 @@ function generateId(title) {
 }
 
 async function addWatermark(imagePath) {
-  // Create SVG watermark with text
+  // Create SVG watermark with text (with stroke for shadow effect)
   const watermarkSvg = Buffer.from(`
     <svg width="600" height="100" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <style>
-          text { font-family: Arial, sans-serif; font-size: 28px; font-weight: bold; }
-        </style>
-      </defs>
-      <text x="0" y="70" fill="white" opacity="0.6" style="text-shadow: 0 0 2px rgba(0,0,0,0.8);">© NAKDGRAIN</text>
+      <!-- Shadow text -->
+      <text x="2" y="72" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="black" opacity="0.4">© NAKDGRAIN</text>
+      <!-- Main text -->
+      <text x="0" y="70" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" opacity="0.7">© NAKDGRAIN</text>
     </svg>
   `);
 
