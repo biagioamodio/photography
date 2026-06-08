@@ -1306,8 +1306,12 @@ footer {
 
 /* Desktop small height: scale down modal to fit viewport */
 @media (max-height: 665px) and (min-width: 841px) {
+  body {
+    overflow: hidden;
+  }
+
   .modal-content {
-    max-height: 75vh;
+    max-height: calc(100vh - 40px);
   }
 }
 
