@@ -1304,6 +1304,13 @@ footer {
   }
 }
 
+/* Desktop small height: scale down modal to fit viewport */
+@media (max-height: 665px) and (min-width: 841px) {
+  .modal-content {
+    max-height: 85vh;
+  }
+}
+
 /* Mobile landscape: hide footer and adjust modal */
 @media (max-height: 665px) and (orientation: landscape) {
   footer {
