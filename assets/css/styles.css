@@ -1348,6 +1348,7 @@ footer {
     max-height: 99vh;
     max-width: 93vw;
     padding: 0;
+    padding-bottom: 30px !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
