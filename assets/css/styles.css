@@ -1317,6 +1317,7 @@ footer {
 
   .modal-content {
     max-height: 70vh;
+    padding-bottom: 30px !important;
   }
 
   .modal-image-container {
