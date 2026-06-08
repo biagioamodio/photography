@@ -433,6 +433,13 @@ body.home-page > .container-fluid > .page-content {
   }
 }
 
+/* Mobile landscape: remove bottom padding from home slide */
+@media (max-width: 840px) and (orientation: landscape) {
+  .home-slide {
+    padding-bottom: 0 !important;
+  }
+}
+
 /* BG + FG composite — same layout as series page */
 .home-composite-wrap {
   width: 100%;
