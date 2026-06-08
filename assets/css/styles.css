@@ -1413,6 +1413,7 @@ footer {
 .modal-info {
   text-align: center;
   margin-top: 25px;
+  margin-bottom: 0;
 }
 
 .modal-series-text {
