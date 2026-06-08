@@ -425,6 +425,13 @@ body.home-page > .container-fluid > .page-content {
   display: block;
 }
 
+/* Mobile landscape: extend container to fill more space */
+@media (max-height: 665px) and (orientation: landscape) {
+  .home-slide {
+    height: 100vh;
+  }
+}
+
 /* BG + FG composite — same layout as series page */
 .home-composite-wrap {
   width: 100%;
