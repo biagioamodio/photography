@@ -1318,6 +1318,14 @@ footer {
   .modal-content {
     max-height: 70vh;
   }
+
+  .modal-image-container {
+    max-height: 50vh !important;
+  }
+
+  .modal-image-container img {
+    max-height: 50vh !important;
+  }
 }
 
 /* Mobile landscape: hide footer and adjust modal */
