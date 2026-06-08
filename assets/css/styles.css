@@ -1310,8 +1310,13 @@ footer {
     overflow: hidden;
   }
 
+  .modal-overlay {
+    align-items: flex-start;
+    padding-top: 10px;
+  }
+
   .modal-content {
-    max-height: calc(100vh - 40px);
+    max-height: 70vh;
   }
 }
 
