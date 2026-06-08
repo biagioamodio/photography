@@ -596,7 +596,6 @@ function loadHomeSlides() {
       var tSize = slide.textSize || 5;
 
       function layout() {
-        homeCompositeLayout($slide[0], $bg[0], $cwrap[0], posX, posY);
         // Font size: textSize % of container height
         var fsPx = $slide[0].offsetHeight * (tSize / 100);
         $slide.find('.home-slide-text').css('font-size', fsPx + 'px');
@@ -630,41 +629,11 @@ function loadHomeSlides() {
     $wrap.append($show);
 
     function applyAllLayouts() {
-      // Constrain slide so its bottom edge stays 30px above viewport bottom.
-      // Measure actual navbar height so this works in both red and blue conditions.
-      var navH = $('#navbar-container')[0] ? $('#navbar-container')[0].offsetHeight : 80;
-      var maxH = window.innerHeight - navH - 30;
-
+      // CSS handles all layout - just update text sizes
       $show.find('.home-slide').each(function(i) {
         var slide = displaySlides[i];
-        var $bg   = $(this).find('.home-bg-img');
-
-        // Calculate max-width based on actual image aspect ratio
-        var maxW;
-        if ($bg[0] && $bg[0].naturalWidth > 0) {
-          var imgAR = $bg[0].naturalWidth / $bg[0].naturalHeight;
-          maxW = Math.round(maxH * imgAR);
-        } else {
-          // Fallback to 1.5 if image hasn't loaded yet
-          maxW = Math.round(maxH * 1.5);
-        }
-
-        // Set both max-width and max-height, plus actual height for portrait images
-        $(this).css({
-          'max-width': maxW + 'px',
-          'max-height': maxH + 'px',
-          'height': maxH + 'px'
-        });
-
-        if ($bg[0] && $bg[0].naturalWidth > 0) {
-          homeCompositeLayout(
-            this, $bg[0], $(this).find('.home-composite-wrap')[0],
-            (slide.imagePosX != null ? slide.imagePosX : 50) / 100,
-            (slide.imagePosY != null ? slide.imagePosY : 50) / 100
-          );
-          var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
-          $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
-        }
+        var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
+        $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
       });
     }
 
