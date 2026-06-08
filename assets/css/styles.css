@@ -428,7 +428,7 @@ body.home-page > .container-fluid > .page-content {
 /* Mobile landscape: extend container to fill more space */
 @media (max-height: 665px) and (orientation: landscape) {
   .home-slide {
-    height: calc(100vh - 55px);
+    height: calc(100vh - 100px);
   }
 }
 
