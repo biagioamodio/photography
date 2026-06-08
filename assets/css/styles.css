@@ -1254,7 +1254,7 @@ body.modal-open .home-slideshow-wrap {
   align-items: center;
   justify-content: center;
   max-width: 85vw;
-  max-height: 85vh;
+  max-height: 95vh;
   padding: 20px;
   box-shadow: none;
   background: var(--color-background);
