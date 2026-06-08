@@ -1254,7 +1254,7 @@ body.modal-open .home-slideshow-wrap {
   justify-content: center;
   max-width: 85vw;
   max-height: 85vh;
-  padding: 30px;
+  padding: 20px;
   box-shadow: none;
   background: var(--color-background);
   border: none;
@@ -1336,6 +1336,7 @@ footer {
     overflow: hidden !important;
     border: none !important;
     margin: 10px !important;
+    margin-bottom: 7px !important;
     padding: 0 !important;
   }
 
@@ -1394,7 +1395,6 @@ footer {
   max-height: 65vh;
   border: none;
   outline: none;
-  margin-bottom: 7px;
 }
 
 .modal-image-container img {
