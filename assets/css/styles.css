@@ -429,6 +429,7 @@ body.home-page > .container-fluid > .page-content {
 @media (max-height: 665px) and (orientation: landscape) {
   .home-slide {
     height: calc(100vh - 80px);
+    padding-bottom: 30px;
   }
 }
 
@@ -1317,7 +1318,6 @@ footer {
 
   .modal-content {
     max-height: 70vh;
-    padding-bottom: 30px !important;
   }
 
   .modal-image-container {
@@ -1348,7 +1348,6 @@ footer {
     max-height: 99vh;
     max-width: 93vw;
     padding: 0;
-    padding-bottom: 30px !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
