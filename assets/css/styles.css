@@ -426,17 +426,18 @@ body.home-page > .container-fluid > .page-content {
 }
 
 /* Mobile landscape: extend container to fill more space */
-@media (max-height: 665px) and (orientation: landscape) {
+/* Desktop landscape (width > 840px) with short height: add bottom padding to image */
+@media (min-width: 841px) and (max-height: 665px) and (orientation: landscape) {
   .home-slide {
     height: calc(100vh - 80px);
     padding-bottom: 30px;
   }
 }
 
-/* Mobile landscape: remove bottom padding from home slide */
+/* Mobile landscape: just adjust height, no bottom padding */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
   .home-slide {
-    padding-bottom: 0 !important;
+    height: calc(100vh - 80px);
   }
 }
 
