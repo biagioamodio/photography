@@ -1489,7 +1489,7 @@ footer {
 /* Responsive modal styles — portrait only */
 @media (max-width: 840px) and (orientation: portrait) {
   .modal-content {
-    max-width: 95vw;
+    max-width: 90.25vw;
     padding: 15px;
   }
   
