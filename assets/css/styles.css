@@ -1396,7 +1396,6 @@ footer {
   max-height: 65vh;
   border: none;
   outline: none;
-  margin: 20px;
 }
 
 .modal-image-container img {
@@ -1413,8 +1412,7 @@ footer {
 
 .modal-info {
   text-align: center;
-  margin: 20px;
-  margin-top: 7px;
+  margin-top: 25px;
 }
 
 .modal-series-text {
@@ -1439,7 +1437,6 @@ footer {
   text-decoration: none;
   display: inline-block;
   padding: 10px 25px;
-  margin: 20px;
   background-color: var(--color-primary);
   color: white;
   border: none;
