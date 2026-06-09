@@ -430,10 +430,15 @@ body.home-page > .container-fluid > .page-content {
 @media (min-width: 841px) and (max-height: 665px) and (orientation: landscape) {
   body.home-page {
     padding-bottom: 30px;
+    overflow: hidden;
+  }
+
+  .home-slideshow-wrap {
+    margin-bottom: 0 !important;
   }
 
   .home-slide {
-    height: calc(100vh - 80px - 30px);
+    height: calc(100vh - 80px);
   }
 }
 
