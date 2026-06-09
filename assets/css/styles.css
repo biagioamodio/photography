@@ -426,11 +426,14 @@ body.home-page > .container-fluid > .page-content {
 }
 
 /* Mobile landscape: extend container to fill more space */
-/* Desktop landscape (width > 840px) with short height: add bottom padding to image */
+/* Desktop landscape (width > 840px) with short height: add bottom padding to page */
 @media (min-width: 841px) and (max-height: 665px) and (orientation: landscape) {
+  body.home-page {
+    padding-bottom: 30px;
+  }
+
   .home-slide {
     height: calc(100vh - 80px);
-    padding-bottom: 30px;
   }
 }
 
