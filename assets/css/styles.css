@@ -1277,9 +1277,9 @@ body.modal-open .home-slideshow-wrap {
   z-index: 0;
 }
 
-/* Dark mode: change overlay from black to very dark grey */
+/* Dark mode: keep overlay as pure black */
 [data-theme="dark"] .modal-overlay {
-  background-color: rgba(30, 30, 35, 0.8);
+  background-color: rgba(0, 0, 0, 1);
 }
 
 .modal-content {
@@ -1293,7 +1293,7 @@ body.modal-open .home-slideshow-wrap {
   max-height: 95vh;
   padding: 20px;
   box-shadow: none;
-  background: var(--color-background);
+  background: #ffffff;
   border: none;
   border-radius: 0;
   outline: none;
