@@ -1683,8 +1683,22 @@ footer {
 }
 
 /* Dark mode specific styles for modal link text */
+/* Dark mode: force modal text to be visible on white card */
+[data-theme="dark"] .modal-series-text {
+  color: #333333;
+}
+
+[data-theme="dark"] .modal-series-title {
+  color: #000000;
+}
+
 [data-theme="dark"] .modal-series-link {
-  color: black;
+  background-color: #000000;
+  color: white;
+}
+
+[data-theme="dark"] .modal-series-link:hover {
+  color: white;
 }
 
 /* Responsive theme toggle — portrait only */
