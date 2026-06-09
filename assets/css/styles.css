@@ -1553,6 +1553,53 @@ footer {
   }
 }
 
+/* Mobile landscape: apply series page layout to modal */
+@media (max-width: 840px) and (orientation: landscape) {
+  .modal-content {
+    width: 95vw;
+    max-width: 95vw;
+    max-height: calc(100dvh - 80px);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-image-container {
+    flex: 1 1 auto;
+    width: 100%;
+    max-height: none;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .modal-image-container img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .modal-series-text {
+    font-size: 14px;
+  }
+
+  .modal-series-title {
+    font-size: 18px;
+    margin-bottom: 7px;
+  }
+
+  .modal-series-link {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+}
+
 @media (max-width: 480px) {
   .modal-content {
     padding: 15px;
