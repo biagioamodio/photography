@@ -1110,7 +1110,7 @@ body.home-page > .container-fluid > .page-content {
   .about-image img {
     width: auto;
     max-width: 100%;
-    max-height: 50vh;
+    max-height: 50dvh;
     object-fit: fill;
   }
 }
@@ -1221,7 +1221,7 @@ body.home-page > .container-fluid > .page-content {
 .lightbox-inner img {
   display: block;
   max-width: 90vw;
-  max-height: 90vh;   /* fallback for old Safari */
+  max-height: 90dvh;   /* fallback for old Safari */
   max-height: 90dvh;  /* dynamic viewport height — excludes browser chrome on Safari iOS */
   width: auto;
   height: auto;
@@ -1453,14 +1453,14 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-height: 65vh;
+  max-height: 65dvh;
   border: none;
   outline: none;
 }
 
 .modal-image-container img {
   max-width: 100%;
-  max-height: 65vh;
+  max-height: 65dvh;
   width: auto;
   height: auto;
   object-fit: contain;
@@ -1535,11 +1535,11 @@ footer {
   }
   
   .modal-image-container {
-    max-height: 50vh;
+    max-height: 50dvh;
   }
   
   .modal-image-container img {
-    max-height: 50vh;
+    max-height: 50dvh;
   }
   
   .modal-series-title {
@@ -1565,11 +1565,11 @@ footer {
   }
   
   .modal-image-container {
-    max-height: 45vh;
+    max-height: 45dvh;
   }
   
   .modal-image-container img {
-    max-height: 45vh;
+    max-height: 45dvh;
   }
   
   .modal-series-text {
