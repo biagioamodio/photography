@@ -476,15 +476,15 @@ body.home-page > .container-fluid > .page-content {
 
 /* Mobile landscape (any height): allow scrolling for series and about pages */
 @media (max-width: 840px) and (orientation: landscape) {
-  html.series-page,
-  html.about-page {
+  html {
     height: auto;
   }
 
   body.series-page,
   body.about-page {
-    height: auto;
-    overflow-y: auto;
+    height: auto !important;
+    overflow-y: auto !important;
+    min-height: 100vh;
   }
 }
 
