@@ -1370,10 +1370,10 @@ footer {
     display: none;
   }
 
-  /* Allow scrolling in mobile landscape to reveal navbar */
+  /* Allow page scrolling to reveal navbar - modal scrolls with page */
   .image-modal {
-    overflow-y: auto;
-    overflow-x: hidden;
+    position: absolute;
+    min-height: 100vh;
   }
 
   /* Constraint modal to fit viewport */
