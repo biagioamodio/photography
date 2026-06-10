@@ -70,13 +70,6 @@
 }
 /* ── END VIEWPORT CONDITIONS ────────────────────────────────────────────── */
 
-/* Mobile landscape: account for Safari dynamic top bar */
-@media (max-width: 840px) and (orientation: landscape) {
-  html, body {
-    padding-top: env(safe-area-inset-top);
-  }
-}
-
 /* Prevent scrollbar on serie page; remove body side padding so content fills edge-to-edge */
 body.serie-page {
   overflow: hidden;
