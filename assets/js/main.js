@@ -2,52 +2,10 @@ $(document).ready(function() {
   // Initialize theme from localStorage or default to light
   initializeTheme();
 
-  // Fix Safari navbar overlap in landscape mode
-  function adjustNavbarForSafariLandscape() {
-    // Check if on iOS Safari
-    const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-    if (!isIOSSafari) return;
-
-    // Function to apply navbar adjustment
-    const applyNavbarAdjustment = () => {
-      const $navbar = $('.navbar');
-
-      if (window.innerHeight < window.innerWidth) {
-        // Landscape mode
-        const safeArea = window.getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') ||
-                        CSS.supports('padding-top: env(safe-area-inset-top)') ? 'env(safe-area-inset-top)' : '0px';
-
-        // Get safe-area-inset-top via getComputedStyle
-        const computedStyle = window.getComputedStyle(document.documentElement);
-        let safeAreaTop = parseInt(computedStyle.paddingTop) || 0;
-
-        // If padding-top is set from our CSS, use it as a fallback
-        // Otherwise try to detect Safari's safe area directly
-        if (safeAreaTop === 0 && isIOSSafari) {
-          // Estimate safe area based on device (rough estimate for notch/Dynamic Island)
-          safeAreaTop = 40; // Typical value for Safari top bar
-        }
-
-        if (safeAreaTop > 0) {
-          $navbar.css('margin-top', safeAreaTop + 'px');
-        }
-      } else {
-        // Portrait mode - remove adjustment
-        $navbar.css('margin-top', '');
-      }
-    };
-
-    // Apply on load
-    applyNavbarAdjustment();
-
-    // Re-apply on orientation change
-    $(window).on('orientationchange resize', function() {
-      applyNavbarAdjustment();
-    });
-  }
-
-  adjustNavbarForSafariLandscape();
+  // Helper to detect mobile landscape (allow scrolling to reveal navbar)
+  window.isMobileLandscape = function() {
+    return window.innerWidth <= 840 && window.innerHeight < window.innerWidth;
+  };
 
   // Disable right-click on images (copyright protection)
   $(document).on('contextmenu', 'img', function(e) {
@@ -434,12 +392,18 @@ function loadSerieContent(serie) {
   $('#content-display').on('click', '.photo-image', function() {
     $('#lightbox-img').attr('src', this.src).attr('alt', $(this).attr('alt') || '');
     $('#photo-lightbox').addClass('active');
-    $('body').css('overflow', 'hidden');
+    // Allow scrolling in mobile landscape to reveal navbar
+    if (!window.isMobileLandscape()) {
+      $('body').css('overflow', 'hidden');
+    }
   });
 
   function closeLightbox() {
     $('#photo-lightbox').removeClass('active');
-    $('body').css('overflow', '');
+    // Restore overflow only if we restricted it (i.e., not mobile landscape)
+    if (!window.isMobileLandscape()) {
+      $('body').css('overflow', '');
+    }
   }
 
   // Backdrop tap closes lightbox — unless a swipe just fired
@@ -873,15 +837,23 @@ function initializeImageModal() {
 function openImageModal() {
   const modal = $('#image-modal');
   modal.addClass('active');
-  // Prevent body scroll when modal is open and add class to hide slideshow
-  $('body').css('overflow', 'hidden').addClass('modal-open');
+  // Prevent body scroll when modal is open (allow scrolling in mobile landscape to reveal navbar)
+  if (!window.isMobileLandscape()) {
+    $('body').css('overflow', 'hidden').addClass('modal-open');
+  } else {
+    $('body').addClass('modal-open');
+  }
 }
 
 function closeImageModal() {
   const modal = $('#image-modal');
   modal.removeClass('active');
   // Re-enable body scroll and remove class to show slideshow
-  $('body').css('overflow', '').removeClass('modal-open');
+  if (!window.isMobileLandscape()) {
+    $('body').css('overflow', '').removeClass('modal-open');
+  } else {
+    $('body').removeClass('modal-open');
+  }
 }
 
 // ===== Theme Toggle Functions =====
