@@ -72,8 +72,8 @@
 
 /* Mobile landscape: account for Safari dynamic top bar */
 @media (max-width: 840px) and (orientation: landscape) {
-  html, body {
-    padding-top: env(safe-area-inset-top);
+  .navbar {
+    margin-top: env(safe-area-inset-top);
   }
 }
 
