@@ -461,6 +461,7 @@ body.home-page > .container-fluid > .page-content {
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
   /* Allow scrolling to reveal navbar hidden behind Safari top bar */
   body {
+    height: auto;
     overflow-y: auto;
   }
 
@@ -473,6 +474,7 @@ body.home-page > .container-fluid > .page-content {
 @media (max-width: 840px) and (orientation: landscape) {
   body.series-page,
   body.about-page {
+    height: auto;
     overflow-y: auto;
   }
 }
