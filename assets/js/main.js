@@ -2,6 +2,53 @@ $(document).ready(function() {
   // Initialize theme from localStorage or default to light
   initializeTheme();
 
+  // Fix Safari navbar overlap in landscape mode
+  function adjustNavbarForSafariLandscape() {
+    // Check if on iOS Safari
+    const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    if (!isIOSSafari) return;
+
+    // Function to apply navbar adjustment
+    const applyNavbarAdjustment = () => {
+      const $navbar = $('.navbar');
+
+      if (window.innerHeight < window.innerWidth) {
+        // Landscape mode
+        const safeArea = window.getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') ||
+                        CSS.supports('padding-top: env(safe-area-inset-top)') ? 'env(safe-area-inset-top)' : '0px';
+
+        // Get safe-area-inset-top via getComputedStyle
+        const computedStyle = window.getComputedStyle(document.documentElement);
+        let safeAreaTop = parseInt(computedStyle.paddingTop) || 0;
+
+        // If padding-top is set from our CSS, use it as a fallback
+        // Otherwise try to detect Safari's safe area directly
+        if (safeAreaTop === 0 && isIOSSafari) {
+          // Estimate safe area based on device (rough estimate for notch/Dynamic Island)
+          safeAreaTop = 40; // Typical value for Safari top bar
+        }
+
+        if (safeAreaTop > 0) {
+          $navbar.css('margin-top', safeAreaTop + 'px');
+        }
+      } else {
+        // Portrait mode - remove adjustment
+        $navbar.css('margin-top', '');
+      }
+    };
+
+    // Apply on load
+    applyNavbarAdjustment();
+
+    // Re-apply on orientation change
+    $(window).on('orientationchange resize', function() {
+      applyNavbarAdjustment();
+    });
+  }
+
+  adjustNavbarForSafariLandscape();
+
   // Disable right-click on images (copyright protection)
   $(document).on('contextmenu', 'img', function(e) {
     e.preventDefault();
