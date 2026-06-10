@@ -1370,6 +1370,12 @@ footer {
     display: none;
   }
 
+  /* Allow scrolling in mobile landscape to reveal navbar */
+  .image-modal {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   /* Constraint modal to fit viewport */
   .modal-overlay {
     display: flex;
