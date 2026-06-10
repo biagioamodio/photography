@@ -460,6 +460,10 @@ body.home-page > .container-fluid > .page-content {
 /* Mobile landscape: just adjust height, no bottom padding */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
   /* Allow scrolling to reveal navbar hidden behind Safari top bar */
+  html {
+    height: auto;
+  }
+
   body {
     height: auto;
     overflow-y: auto;
@@ -472,6 +476,11 @@ body.home-page > .container-fluid > .page-content {
 
 /* Mobile landscape (any height): allow scrolling for series and about pages */
 @media (max-width: 840px) and (orientation: landscape) {
+  html.series-page,
+  html.about-page {
+    height: auto;
+  }
+
   body.series-page,
   body.about-page {
     height: auto;
