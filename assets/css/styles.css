@@ -10,13 +10,6 @@
 /* Blue + short landscape: red breakpoint fires but assumes a short navbar (~55px).
    Blue navbar is ~170px, so override content height to prevent bottom overflow. */
 @media (max-width: 840px) and (max-height: 665px) and (orientation: landscape) {
-
-/* Mobile landscape: account for Safari dynamic top bar */
-@media (max-width: 840px) and (orientation: landscape) {
-  html, body {
-    padding-top: env(safe-area-inset-top);
-  }
-}
   /* nav-row is position:fixed → not in flex flow, no padding-bottom needed */
   .serie-container {
     padding-bottom: 0 !important;
