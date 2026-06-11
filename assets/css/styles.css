@@ -474,17 +474,38 @@ body.home-page > .container-fluid > .page-content {
   }
 }
 
-/* Mobile landscape (any height): allow scrolling for series and about pages */
-@media (max-width: 840px) and (orientation: landscape) {
+/* Mobile landscape (any height): allow scrolling for all pages */
+@media (max-width: 900px) and (orientation: landscape) {
   html {
-    height: auto;
-  }
-
-  body.series-page,
-  body.about-page {
     height: auto !important;
     overflow-y: auto !important;
-    min-height: 100vh;
+  }
+
+  body {
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .container-fluid {
+    min-height: auto !important;
+  }
+
+  .page-content {
+    min-height: auto !important;
+  }
+
+  .serie-container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .about-container {
+    min-height: auto !important;
+  }
+
+  .row {
+    height: auto !important;
   }
 }
 
