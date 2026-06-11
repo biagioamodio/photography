@@ -328,8 +328,9 @@ async function saveSeriesInfo() {
     // Update local data
     series.title = title;
     series.description = description;
-    
+
     document.getElementById('edit-series-title').textContent = title;
+    renderSeriesList(); // Refresh the series list to show updated title
     showToast('Changes saved!', 'success');
     checkGitStatus();
   } catch (err) {
