@@ -474,8 +474,8 @@ body.home-page > .container-fluid > .page-content {
   }
 }
 
-/* Mobile landscape (any height): allow scrolling for all pages */
-@media (max-width: 900px) and (orientation: landscape) {
+/* Landscape orientation - allow scrolling (broader than 900px to catch Brave) */
+@media (orientation: landscape) {
   html {
     height: auto !important;
     overflow-y: auto !important;
@@ -489,23 +489,33 @@ body.home-page > .container-fluid > .page-content {
 
   .container-fluid {
     min-height: auto !important;
+    height: auto !important;
   }
 
   .page-content {
     min-height: auto !important;
+    height: auto !important;
   }
 
   .serie-container {
     height: auto !important;
     overflow: visible !important;
+    padding-bottom: 20px !important;
   }
 
   .about-container {
     min-height: auto !important;
+    height: auto !important;
   }
 
   .row {
     height: auto !important;
+  }
+
+  /* Ensure content below navbar is accessible */
+  body.series-page,
+  body.about-page {
+    padding-bottom: 20px !important;
   }
 }
 
