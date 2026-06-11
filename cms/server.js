@@ -93,6 +93,7 @@ async function processImage(buffer, filename, optimize = true) {
 
   if (optimize) {
     await sharp(buffer)
+      .rotate() // Handle EXIF orientation
       .resize(2000, 2000, {
         fit: 'inside',
         withoutEnlargement: true
@@ -106,6 +107,7 @@ async function processImage(buffer, filename, optimize = true) {
     } else {
       // Convert to JPEG anyway for consistency
       await sharp(buffer)
+        .rotate() // Handle EXIF orientation
         .jpeg({ quality: 95 })
         .toFile(outputPath);
     }
@@ -122,16 +124,21 @@ async function processImageToDir(buffer, baseName, outputDir, relPath, optimize 
   if (keepAlpha) {
     // Save as PNG to preserve transparency (foreground cutouts) - no watermark for transparent images
     await sharp(buffer)
+      .rotate() // Handle EXIF orientation
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .png({ compressionLevel: 8 })
       .toFile(outputPath);
   } else if (optimize) {
     await sharp(buffer)
+      .rotate() // Handle EXIF orientation
       .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 85 })
       .toFile(outputPath);
   } else {
-    await sharp(buffer).jpeg({ quality: 95 }).toFile(outputPath);
+    await sharp(buffer)
+      .rotate() // Handle EXIF orientation
+      .jpeg({ quality: 95 })
+      .toFile(outputPath);
   }
 
   return `${relPath}/${outputFilename}`;
