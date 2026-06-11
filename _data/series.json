@@ -10,18 +10,7 @@
           "camera": "Canon P Rangefinder",
           "lens": "Canon 50mm f/1.2",
           "filmRoll": "Kodak UltraMax 400",
-          "developing": "",
-          "scanning": "Esempio 2",
-          "printing": "Esemplificatorio 3"
-        }
-      },
-      {
-        "image": "assets/uploads/02_02b.jpg",
-        "metadata": {
-          "camera": "Canon P",
-          "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400",
-          "developing": "",
+          "developing": "London Film Lab",
           "scanning": "",
           "printing": ""
         },
@@ -32,80 +21,120 @@
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/02_06.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/02_08.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/000026200031.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
-        "image": "assets/uploads/000026200023.jpg",
+        "image": "assets/uploads/02_02b.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/000026200029.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/000026200030.jpg",
         "metadata": {
           "camera": "Canon P",
           "lens": "Canon 50mm f/1.2",
-          "filmRoll": "Kodak UltraMax 400"
-        }
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/000026200033.jpg",
         "metadata": {
-          "camera": "",
-          "lens": "",
-          "filmRoll": ""
-        }
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/000026200032.jpg",
         "metadata": {
-          "camera": "",
-          "lens": "",
-          "filmRoll": ""
-        }
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       },
       {
         "image": "assets/uploads/02_07.jpg",
         "metadata": {
-          "camera": "",
-          "lens": "",
-          "filmRoll": ""
-        }
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       }
     ]
   },
