@@ -238,6 +238,18 @@
           "printing": ""
         },
         "homepage": false
+      },
+      {
+        "image": "assets/uploads/000027500015.jpg",
+        "metadata": {
+          "camera": "Canon P",
+          "lens": "Canon 50mm f/1.2",
+          "filmRoll": "Kodak UltraMax 400",
+          "developing": "London Film Lab",
+          "scanning": "",
+          "printing": ""
+        },
+        "homepage": false
       }
     ]
   }
