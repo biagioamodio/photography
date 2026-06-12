@@ -220,52 +220,5 @@
         "homepage": false
       }
     ]
-  },
-  {
-    "id": "monochrome-visions",
-    "title": "Monochrome Visions",
-    "description": "Black and white studies of form and texture, this series embraces the reductive power of monochrome photography to emphasize shape, contrast, and composition. Shot on large format film, these images achieve exceptional detail and tonal range.\n\nBy removing color from the equation, these photographs direct attention to the fundamental visual elements of line, form, and texture. The subjects range from landscapes to still lifes, unified by their treatment rather than their content.\n\nThrough this work, I explore photography's capacity to transform ordinary subjects through careful framing and the expressive use of black and white tonality. The large format process demands slowness and deliberation, qualities that I hope are reflected in the contemplative nature of the resulting images.",
-    "photos": [
-      {
-        "image": "assets/uploads/000039670009.jpg",
-        "metadata": {
-          "camera": "Mamiya RZ67",
-          "lens": "110mm",
-          "filmRoll": "Ilford Delta 100"
-        }
-      },
-      {
-        "image": "assets/uploads/000039670026.jpg",
-        "metadata": {
-          "camera": "Mamiya RZ67",
-          "lens": "65mm",
-          "filmRoll": "Ilford Delta 100"
-        }
-      },
-      {
-        "image": "assets/uploads/000045500001.jpg",
-        "metadata": {
-          "camera": "Mamiya RZ67",
-          "lens": "110mm",
-          "filmRoll": "Ilford Delta 100"
-        }
-      },
-      {
-        "image": "assets/uploads/000045500010.jpg",
-        "metadata": {
-          "camera": "Mamiya RZ67",
-          "lens": "65mm",
-          "filmRoll": "Ilford Delta 100"
-        }
-      },
-      {
-        "image": "assets/uploads/000045500022.jpg",
-        "metadata": {
-          "camera": "Mamiya RZ67",
-          "lens": "110mm",
-          "filmRoll": "Ilford Delta 100"
-        }
-      }
-    ]
   }
 ]
