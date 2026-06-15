@@ -34,7 +34,8 @@
       },
       "textX": 50,
       "textY": 50,
-      "seriesId": "coastal-memories"
+      "seriesId": "coastal-memories",
+      "seriesTitle": "mar furastiér"
     },
     {
       "id": "17815228653081",
@@ -49,7 +50,8 @@
       },
       "textX": 50,
       "textY": 50,
-      "seriesId": "coastal-memories"
+      "seriesId": "coastal-memories",
+      "seriesTitle": "mar furastiér"
     },
     {
       "id": "17815228653082",
@@ -64,7 +66,8 @@
       },
       "textX": 50,
       "textY": 50,
-      "seriesId": "coastal-memories"
+      "seriesId": "coastal-memories",
+      "seriesTitle": "mar furastiér"
     },
     {
       "id": "17815228653083",
@@ -79,7 +82,8 @@
       },
       "textX": 50,
       "textY": 50,
-      "seriesId": "light-studies"
+      "seriesId": "light-studies",
+      "seriesTitle": "sól a viérn"
     },
     {
       "id": "17815228653084",
@@ -94,7 +98,8 @@
       },
       "textX": 50,
       "textY": 50,
-      "seriesId": "light-studies"
+      "seriesId": "light-studies",
+      "seriesTitle": "sól a viérn"
     }
   ]
 }
