@@ -513,44 +513,12 @@ $(document).ready(function() {
 // ── Home Slideshow ────────────────────────────────────────────────────────────
 
 function loadHomeSlides() {
-  const jsonPath = (window.baseUrl || '/') + '_data/series.json';
+  const homeJsonPath = (window.baseUrl || '/') + '_data/home.json';
 
-  $.getJSON(jsonPath, function(data) {
-    // Collect all photos marked for homepage from all series
-    const homepagePhotos = [];
-    const seriesArray = Array.isArray(data) ? data : (data.series || []);
+  $.getJSON(homeJsonPath, function(homeData) {
+    // Use CMS-managed home slides from home.json
+    const slides = (homeData.slides || []);
 
-    seriesArray.forEach(function(serie) {
-      if (serie.photos && Array.isArray(serie.photos)) {
-        serie.photos.forEach(function(photo) {
-          if (photo.homepage === true) {
-            // Create a slide object with the photo
-            homepagePhotos.push({
-              background: photo.image,
-              foreground: null,
-              text: '',
-              textSize: 0,
-              textX: 50,
-              textY: 50,
-              textColor: '#ffffff',
-              textBold: false,
-              textItalic: false,
-              textAlign: 'center',
-              textLineHeight: 1.2,
-              shadowEnabled: false,
-              shadowIntensity: 0,
-              shadowDistance: 0,
-              imagePosX: 50,
-              imagePosY: 50,
-              serieId: serie.id,
-              photoId: photo.id
-            });
-          }
-        });
-      }
-    });
-
-    const slides = homepagePhotos;
     if (slides.length === 0) { loadRandomImagesForHomepage(); return; }
 
     // Pick a random slide on each load
