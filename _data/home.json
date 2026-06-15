@@ -4,10 +4,10 @@
       "id": "slide-1777221426004",
       "background": "assets/uploads/home/slide-1777221426004-bg.jpg",
       "foreground": "assets/uploads/home/slide-1777221426004-fg.png",
-      "text": "ma ch guard\na fa?!",
-      "textX": 57.45713334142984,
-      "textY": 42.899441095446065,
-      "textSize": 14.5,
+      "text": "vediamo un po' ",
+      "textX": 44.7956346334195,
+      "textY": 62.66688295591118,
+      "textSize": 7.5,
       "centerLine": 50,
       "title": "Slide 1",
       "textBold": false,
@@ -20,6 +20,81 @@
       "textLineHeight": 0.9,
       "shadowEnabled": false,
       "textColor": "#1e586c"
+    },
+    {
+      "id": "17815229090110",
+      "background": "assets/uploads/02_04.jpg",
+      "foreground": null,
+      "title": "Slide 1",
+      "text": "",
+      "textFormat": {
+        "bold": false,
+        "italic": false,
+        "align": "center"
+      },
+      "textX": 50,
+      "textY": 50,
+      "seriesId": "coastal-memories"
+    },
+    {
+      "id": "17815229090111",
+      "background": "assets/uploads/02_05.jpg",
+      "foreground": null,
+      "title": "Slide 2",
+      "text": "",
+      "textFormat": {
+        "bold": false,
+        "italic": false,
+        "align": "center"
+      },
+      "textX": 50,
+      "textY": 50,
+      "seriesId": "coastal-memories"
+    },
+    {
+      "id": "17815229090112",
+      "background": "assets/uploads/02_02b.jpg",
+      "foreground": null,
+      "title": "Slide 3",
+      "text": "",
+      "textFormat": {
+        "bold": false,
+        "italic": false,
+        "align": "center"
+      },
+      "textX": 50,
+      "textY": 50,
+      "seriesId": "coastal-memories"
+    },
+    {
+      "id": "17815229090113",
+      "background": "assets/uploads/000027500033.jpg",
+      "foreground": null,
+      "title": "Slide 1",
+      "text": "",
+      "textFormat": {
+        "bold": false,
+        "italic": false,
+        "align": "center"
+      },
+      "textX": 50,
+      "textY": 50,
+      "seriesId": "light-studies"
+    },
+    {
+      "id": "17815229090114",
+      "background": "assets/uploads/000027500031.jpg",
+      "foreground": null,
+      "title": "Slide 2",
+      "text": "",
+      "textFormat": {
+        "bold": false,
+        "italic": false,
+        "align": "center"
+      },
+      "textX": 50,
+      "textY": 50,
+      "seriesId": "light-studies"
     }
   ]
 }
