@@ -2,6 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "cms",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["cms/server.js"],
+      "port": 3000
+    },
+    {
       "name": "photography-main",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["browser-sync", "start", "--server", "--port", "3002", "--files", "*.html, assets/css/*.css, assets/js/*.js, _data/*.json", "--no-notify"],
