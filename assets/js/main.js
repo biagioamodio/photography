@@ -580,11 +580,7 @@ function loadHomeSlides() {
         $slide.find('.home-slide-text').css('font-size', fsPx + 'px');
       }
 
-      $bg[0].onload = function() {
-        layout();
-        // Apply composite layout to align foreground image with background
-        homeCompositeLayout($slide[0], $bg[0], $cwrap[0], posX, posY);
-      };
+      $bg[0].onload = layout;
       // Don't call layout() here — slide is not in the DOM yet so offsetWidth = 0.
       // The initial pass runs via requestAnimationFrame below after $wrap.append($show).
 
@@ -618,20 +614,11 @@ function loadHomeSlides() {
     $wrap.append($show);
 
     function applyAllLayouts() {
-      // Update text sizes and reapply composite layout
+      // Update text sizes on resize/orientation change
       $show.find('.home-slide').each(function(i) {
         var slide = displaySlides[i];
         var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
         $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
-
-        // Reapply composite layout on resize
-        var posX = (slide.imagePosX != null ? slide.imagePosX : 50) / 100;
-        var posY = (slide.imagePosY != null ? slide.imagePosY : 50) / 100;
-        var $cwrap = $(this).find('.home-composite-wrap')[0];
-        var $bgImg = $(this).find('.home-bg-img')[0];
-        if ($bgImg && $bgImg.naturalWidth) {
-          homeCompositeLayout(this, $bgImg, $cwrap, posX, posY);
-        }
       });
     }
 
@@ -658,7 +645,18 @@ function loadHomeSlides() {
   });
 }
 
-// Same cover-with-focal-point math as the CMS applyCompositeLayout()
+/* CROPPING FEATURE - SAVED FOR FUTURE USE
+   This function implements focal-point image cropping using imagePosX/imagePosY coordinates.
+   Currently disabled in favor of simple scale-only behavior.
+
+   To re-enable cropping on home slides:
+   1. Uncomment the homeCompositeLayout() calls in loadHomeSlides():
+      - Line ~584: In $bg[0].onload handler
+      - Line ~632: In applyAllLayouts() function
+   2. Update CSS .home-composite-wrap to use: position: absolute; top: 0; left: 0;
+   3. Update CSS .home-slide to include: position: relative; overflow: hidden;
+
+   Same cover-with-focal-point math as the CMS applyCompositeLayout() */
 function homeCompositeLayout(container, bgImg, compositeWrap, posX, posY) {
   var cw = container.offsetWidth;
   var ch = container.offsetHeight;

@@ -419,8 +419,6 @@ body.home-page > .container-fluid > .page-content {
   display: none;
   width: 100%;
   height: calc(100vh - 220px);
-  position: relative;
-  overflow: hidden;
 }
 
 .home-slide.active {
@@ -521,11 +519,19 @@ body.home-page > .container-fluid > .page-content {
   }
 }
 
-/* BG + FG composite — images locked together as one unit */
+/* BG + FG composite — images locked together as one unit (scale-only, no cropping)
+   CROPPING FEATURE AVAILABLE FOR FUTURE USE:
+   To enable focal-point cropping based on imagePosX/imagePosY coordinates:
+   1. Set: position: absolute; top: 0; left: 0;
+   2. Enable homeCompositeLayout() calls in main.js (lines 584-586, 632-635)
+   3. Reference homeCompositeLayout function at lines 638-663 for cropping math
+   Currently using simple scaling behavior for all home slides. */
 .home-composite-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .home-bg-img {
