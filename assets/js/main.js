@@ -641,6 +641,17 @@ function loadHomeSlides() {
     // Reapply on window resize
     $(window).on('resize.homeSlides', applyAllLayouts);
 
+    // Use ResizeObserver to detect when slide container size changes (including media query changes)
+    if (window.ResizeObserver) {
+      const slideElement = $show.find('.home-slide')[0];
+      if (slideElement) {
+        const observer = new ResizeObserver(() => {
+          requestAnimationFrame(applyAllLayouts);
+        });
+        observer.observe(slideElement);
+      }
+    }
+
   }).fail(function() {
     // Graceful fallback to old masonry if home.json is missing or empty
     loadRandomImagesForHomepage();
