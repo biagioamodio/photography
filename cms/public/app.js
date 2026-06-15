@@ -120,6 +120,9 @@ async function loadData() {
     aboutData = await aboutRes.json();
     homeData = await homeRes.json();
 
+    // Auto-populate home slides from photos marked with homepage: true
+    syncHomeSliderFromPhotos();
+
     renderSeriesList();
     renderAboutPage();
     renderHomeList();
@@ -128,6 +131,44 @@ async function loadData() {
     console.error(err);
   }
   hideLoading();
+}
+
+// Auto-populate home slides from photos marked with homepage: true
+function syncHomeSliderFromPhotos() {
+  // Collect all photos with homepage: true
+  const homepagePhotos = [];
+  seriesData.forEach(series => {
+    series.photos.forEach(photo => {
+      if (photo.homepage === true) {
+        homepagePhotos.push({ ...photo, seriesTitle: series.title });
+      }
+    });
+  });
+
+  // Create slides for photos that don't have a corresponding slide yet
+  homepagePhotos.forEach((photo, index) => {
+    const slideExists = homeData.slides.some(s => s.background === photo.image);
+    if (!slideExists) {
+      const newSlide = {
+        id: Date.now().toString() + index,
+        background: photo.image,
+        foreground: null,
+        title: `Slide ${homeData.slides.length + 1}`,
+        text: '',
+        textFormat: { bold: false, italic: false, align: 'center' },
+        textX: 50,
+        textY: 50
+      };
+      homeData.slides.push(newSlide);
+    }
+  });
+
+  // Renumber all slides to ensure they have incremental titles
+  homeData.slides.forEach((slide, index) => {
+    if (!slide.title || slide.title.startsWith('Slide ')) {
+      slide.title = `Slide ${index + 1}`;
+    }
+  });
 }
 
 // ==================== View Management ====================
@@ -493,7 +534,7 @@ async function savePhotoMetadata() {
       id: Date.now().toString(),
       background: photo.image,
       foreground: null,
-      title: series.title,
+      title: `Slide ${homeData.slides.length + 1}`,
       text: '',
       textFormat: { bold: false, italic: false, align: 'center' },
       textX: 50,
@@ -929,6 +970,8 @@ async function addHomeSlide() {
     const res = await fetch('/api/home/slides', { method: 'POST' });
     if (!res.ok) throw new Error('Failed to create slide');
     const newSlide = await res.json();
+    // Assign incremental slide title
+    newSlide.title = `Slide ${homeData.slides.length + 1}`;
     homeData.slides.push(newSlide);
     renderHomeList();
     editHomeSlide(newSlide.id);

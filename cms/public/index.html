@@ -110,14 +110,14 @@
   <nav class="bg-white border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4">
       <div class="flex gap-1">
+        <button onclick="showView('home')" class="tab-btn active" data-tab="home">
+          🏠 Home
+        </button>
         <button onclick="showView('about')" class="tab-btn" data-tab="about">
           👤 About
         </button>
-        <button onclick="showView('series-list')" class="tab-btn active" data-tab="series-list">
+        <button onclick="showView('series-list')" class="tab-btn" data-tab="series-list">
           📚 Series
-        </button>
-        <button onclick="showView('home')" class="tab-btn" data-tab="home">
-          🏠 Home
         </button>
       </div>
     </div>
@@ -127,7 +127,7 @@
   <main class="max-w-7xl mx-auto px-4 py-8">
     
     <!-- Series List View -->
-    <div id="series-list-view" class="view">
+    <div id="series-list-view" class="view hidden">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-semibold">Photo Series</h2>
         <button onclick="showCreateSeriesModal()" 
