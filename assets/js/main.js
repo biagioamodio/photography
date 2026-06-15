@@ -517,8 +517,22 @@ $(document).ready(function() {
 
 function loadHomeSlides() {
   const homeJsonPath = (window.baseUrl || '/') + '_data/home.json';
+  const seriesJsonPath = (window.baseUrl || '/') + '_data/series.json';
 
-  $.getJSON(homeJsonPath, function(homeData) {
+  // Load both home and series data to get actual series titles
+  $.when(
+    $.getJSON(homeJsonPath),
+    $.getJSON(seriesJsonPath)
+  ).done(function(homeResponse, seriesResponse) {
+    const homeData = homeResponse[0];
+    const seriesData = Array.isArray(seriesResponse[0]) ? seriesResponse[0] : (seriesResponse[0].series || []);
+
+    // Create a map of series IDs to titles for quick lookup
+    const seriesTitleMap = {};
+    seriesData.forEach(s => {
+      seriesTitleMap[s.id] = s.title;
+    });
+
     // Use CMS-managed home slides from home.json
     let slides = (homeData.slides || []);
 
@@ -598,7 +612,7 @@ function loadHomeSlides() {
 
         // Set series title and link, or hide series section if no series
         if (slide.seriesId) {
-          const seriesTitle = slide.seriesId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          const seriesTitle = seriesTitleMap[slide.seriesId] || slide.seriesId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
           $('.modal-series-text').show();
           $('.modal-series-title').text(seriesTitle).show();
           $('.modal-series-link').attr('href', (window.baseUrl || '/') + 'serie.html?id=' + slide.seriesId).show();
@@ -644,10 +658,8 @@ function loadHomeSlides() {
         observer.observe(slideElement);
       }
     }
-
   }).fail(function() {
-    // Graceful fallback to old masonry if home.json is missing or empty
-    loadRandomImagesForHomepage();
+    console.error('Error loading home slide data');
   });
 }
 
