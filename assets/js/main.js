@@ -580,7 +580,11 @@ function loadHomeSlides() {
         $slide.find('.home-slide-text').css('font-size', fsPx + 'px');
       }
 
-      $bg[0].onload = layout;
+      $bg[0].onload = function() {
+        layout();
+        // Apply composite layout to align foreground image with background
+        homeCompositeLayout($slide[0], $bg[0], $cwrap[0], posX, posY);
+      };
       // Don't call layout() here — slide is not in the DOM yet so offsetWidth = 0.
       // The initial pass runs via requestAnimationFrame below after $wrap.append($show).
 
@@ -614,11 +618,20 @@ function loadHomeSlides() {
     $wrap.append($show);
 
     function applyAllLayouts() {
-      // CSS handles all layout - just update text sizes
+      // Update text sizes and reapply composite layout
       $show.find('.home-slide').each(function(i) {
         var slide = displaySlides[i];
         var fsPx = this.offsetHeight * ((slide.textSize || 5) / 100);
         $(this).find('.home-slide-text').css('font-size', fsPx + 'px');
+
+        // Reapply composite layout on resize
+        var posX = (slide.imagePosX != null ? slide.imagePosX : 50) / 100;
+        var posY = (slide.imagePosY != null ? slide.imagePosY : 50) / 100;
+        var $cwrap = $(this).find('.home-composite-wrap')[0];
+        var $bgImg = $(this).find('.home-bg-img')[0];
+        if ($bgImg && $bgImg.naturalWidth) {
+          homeCompositeLayout(this, $bgImg, $cwrap, posX, posY);
+        }
       });
     }
 
