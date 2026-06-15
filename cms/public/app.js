@@ -38,6 +38,34 @@ let aboutContentEditor = null;
 let seriesSortable = null;
 let photosSortable = null;
 
+// ==================== CROPPING FEATURE - SAVED FOR FUTURE USE ====================
+/*
+   Focal-point image cropping with guide lines and X/Y sliders.
+   Currently disabled in favor of simple scale-only behavior.
+
+   To re-enable cropping on home slides in the CMS:
+
+   1. In cms/public/index.html (home tab editor):
+      - Uncomment the crop guide line divs (lines 477-480):
+        <div id="crop-guide-x" style="..."></div>
+        <div id="crop-guide-y" style="..."></div>
+
+   2. In cms/public/index.html (home tab form controls):
+      - Restore the imagePosX and imagePosY slider inputs to the form
+
+   3. In cms/public/app.js:
+      - Uncomment the calls to updateGuideLines() in:
+        * renderHomeSlidePreview() function
+        * Event listeners for imagePosX/imagePosY sliders
+
+   4. In assets/js/main.js (website):
+      - Uncomment the homeCompositeLayout() calls in loadHomeSlides():
+        * Line ~584: In $bg[0].onload handler
+        * Line ~632: In applyAllLayouts() function
+      - Update CSS .home-composite-wrap: position: absolute; top: 0; left: 0;
+      - Update CSS .home-slide: position: relative; overflow: hidden;
+*/
+
 // ==================== Initialization ====================
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -50,7 +50,7 @@ $(document).ready(function() {
     }
   });
 
-  // Initialize home slideshow
+  // Initialize home slideshow (scaling only, no cropping)
   if (currentPage === 'index.html' || currentPage === '') {
     loadHomeSlides();
   }
