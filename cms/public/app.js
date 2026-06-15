@@ -1072,11 +1072,7 @@ function editHomeSlide(id) {
   document.getElementById('home-slide-edit-title').textContent =
     slide.title || `Slide ${slideIndex + 1}`;
 
-  // Crop position
-  document.getElementById('home-cropX-slider').value = slide.imagePosX ?? 50;
-  document.getElementById('home-cropY-slider').value = slide.imagePosY ?? 50;
-  updateCropLabel('X');
-  updateCropLabel('Y');
+  // Crop position controls removed (part of cropping feature backup)
 
   // Show view so container has real dimensions, then load images + update UI
   showView('home-slide-edit');
@@ -1332,11 +1328,7 @@ function updateHomePreview() {
 // Cached layout used by updateFGSeam — avoids recomputing inside the seam function
 let _compositeLayout = { wrapL: 0, wrapT: 0, wrapW: 0, wrapH: 0 };
 
-function updateCropLabel(axis) {
-  const el = document.getElementById(`home-crop${axis}-slider`);
-  const lb = document.getElementById(`home-crop${axis}-label`);
-  if (el && lb) lb.textContent = el.value + '%';
-}
+/* updateCropLabel() removed - part of cropping feature backup (see git history) */
 
 /**
  * Positions and sizes #home-composite-wrap so BG + FG move, scale,
@@ -2132,9 +2124,7 @@ async function saveHomeSlide() {
   slide.shadowDistance  = parseFloat(document.getElementById('home-shadowDistance-slider').value);
   slide.textColor       = document.getElementById('home-textColor-picker').value;
 
-  // Crop position
-  slide.imagePosX = parseInt(document.getElementById('home-cropX-slider').value);
-  slide.imagePosY = parseInt(document.getElementById('home-cropY-slider').value);
+  // Crop position fields removed (part of cropping feature backup)
 
   showLoading('Saving...');
   try {
