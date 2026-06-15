@@ -325,65 +325,6 @@ h1, h2, h3 {
 }
 
 /* Homepage - Masonry grid with 3 explicit columns */
-.masonry-grid {
-  display: flex;
-  gap: 8px;
-  margin: 0 auto;
-  padding: 10px 0;
-}
-
-.grid-sizer {
-  display: none;
-}
-
-.masonry-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.grid-item {
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.grid-item:hover {
-  opacity: 0.85;
-}
-
-.grid-item img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Responsive masonry grid */
-@media (max-width: 991px) {
-  .masonry-grid {
-    flex-wrap: wrap;
-  }
-  
-  .masonry-column {
-    flex: 0 0 calc(50% - 4px);
-  }
-  
-  .masonry-column:nth-child(3) {
-    display: none;
-  }
-}
-
-@media (max-width: 576px) {
-  .masonry-column {
-    flex: 0 0 100%;
-  }
-  
-  .masonry-column:nth-child(2),
-  .masonry-column:nth-child(3) {
-    display: none;
-  }
-}
-
 /* ── Home Slideshow ─────────────────────────────────────────────────────── */
 /* Home page: fill viewport height and vertically center the image.
    Use body > to avoid matching the navbar's inner .container-fluid. */
@@ -1570,15 +1511,6 @@ footer {
 }
 
 /* Make grid items clickable */
-.grid-item {
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-.grid-item:hover {
-  opacity: 0.85;
-}
-
 /* Responsive modal styles — portrait only */
 @media (max-width: 840px) and (orientation: portrait) {
   .modal-content {

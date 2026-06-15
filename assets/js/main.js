@@ -517,9 +517,12 @@ function loadHomeSlides() {
 
   $.getJSON(homeJsonPath, function(homeData) {
     // Use CMS-managed home slides from home.json
-    const slides = (homeData.slides || []);
+    let slides = (homeData.slides || []);
 
-    if (slides.length === 0) { loadRandomImagesForHomepage(); return; }
+    // Filter: only show slides that belong to a series (have seriesId)
+    slides = slides.filter(slide => slide.seriesId && slide.seriesId.trim());
+
+    if (slides.length === 0) { return; }
 
     // Pick a random slide on each load
     const randomIndex = Math.floor(Math.random() * slides.length);
@@ -688,96 +691,6 @@ function resolveUrl(path) {
   if (!path) return '';
   if (path.startsWith('http')) return path;
   return (window.baseUrl || '/') + path;
-}
-
-// ── Legacy masonry (kept as fallback) ─────────────────────────────────────────
-
-// Function to load random images for homepage
-function loadRandomImagesForHomepage() {
-  const jsonPath = (window.baseUrl || '/') + '_data/series.json';
-  
-  $.getJSON(jsonPath, function(data) {
-    // Handle both formats: direct array or nested under "series" property
-    const seriesData = Array.isArray(data) ? data : (data.series || []);
-    
-    // Collect all images with their series info
-    let allImages = [];
-    seriesData.forEach(function(series) {
-      series.photos.forEach(function(photo) {
-        allImages.push({
-          image: photo.image,
-          metadata: photo.metadata,
-          seriesId: series.id,
-          seriesTitle: series.title
-        });
-      });
-    });
-    
-    // Fisher-Yates shuffle algorithm for true randomization
-    function shuffleArray(array) {
-      const shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
-    
-    // Shuffle and select 18 images (or all if less than 18)
-    const shuffledImages = shuffleArray(allImages);
-    const selectedImages = shuffledImages.slice(0, 18);
-    
-    // Get the masonry grid container
-    const $grid = $('.masonry-grid');
-    
-    // Clear existing content
-    $grid.empty();
-    
-    // Create 3 column divs
-    const $column1 = $('<div class="masonry-column"></div>');
-    const $column2 = $('<div class="masonry-column"></div>');
-    const $column3 = $('<div class="masonry-column"></div>');
-    
-    // Distribute images across the 3 columns
-    // Using round-robin distribution: 0->col1, 1->col2, 2->col3, 3->col1, etc.
-    selectedImages.forEach(function(imageData, index) {
-      // Construct proper image path
-      let imgSrc = imageData.image;
-      if (imgSrc.startsWith('assets/')) {
-        imgSrc = (window.baseUrl || '/') + imgSrc;
-      }
-      
-      // Create grid item with data attributes for modal
-      const $item = $('<div class="grid-item">')
-        .attr('data-image-src', imgSrc)
-        .attr('data-series-id', imageData.seriesId)
-        .attr('data-series-title', imageData.seriesTitle);
-      
-      const $img = $('<img>')
-        .attr('src', imgSrc)
-        .attr('alt', imageData.seriesTitle);
-      
-      $item.append($img);
-      
-      // Distribute to columns using modulo
-      const columnIndex = index % 3;
-      if (columnIndex === 0) {
-        $column1.append($item);
-      } else if (columnIndex === 1) {
-        $column2.append($item);
-      } else {
-        $column3.append($item);
-      }
-    });
-    
-    // Append columns to grid
-    $grid.append($column1, $column2, $column3);
-    
-    // Initialize the image modal after grid is populated
-    initializeImageModal();
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-    console.error('Error loading series data:', textStatus, errorThrown);
-  });
 }
 
 // ===== Image Modal Functions =====
