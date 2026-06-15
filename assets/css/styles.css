@@ -656,6 +656,26 @@ body.home-page > .container-fluid > .page-content {
   margin-right: -10px;
 }
 
+/* Prevent layout jump at Bootstrap md breakpoint (992px) */
+@media (min-width: 992px) {
+  .serie-container > .row:first-child {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  .content-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #content-display {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
 .serie-description {
   font-family: 'News Cycle', sans-serif;
   text-align: justify;
