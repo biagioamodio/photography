@@ -481,7 +481,30 @@ async function savePhotoMetadata() {
   };
 
   series.photos[currentPhotoIndex].metadata = metadata;
-  series.photos[currentPhotoIndex].homepage = document.getElementById('photo-homepage-checkbox').checked;
+  const wasHomepage = series.photos[currentPhotoIndex].homepage === true;
+  const isNowHomepage = document.getElementById('photo-homepage-checkbox').checked;
+  series.photos[currentPhotoIndex].homepage = isNowHomepage;
+
+  // Handle bidirectional sync with home slides
+  if (!wasHomepage && isNowHomepage) {
+    // Creating a new home slide from this photo
+    const photo = series.photos[currentPhotoIndex];
+    const newSlide = {
+      id: Date.now().toString(),
+      background: photo.image,
+      foreground: null,
+      title: series.title,
+      text: '',
+      textFormat: { bold: false, italic: false, align: 'center' },
+      textX: 50,
+      textY: 50
+    };
+    homeData.slides.push(newSlide);
+  } else if (wasHomepage && !isNowHomepage) {
+    // Deleting the corresponding home slide
+    const photo = series.photos[currentPhotoIndex];
+    homeData.slides = homeData.slides.filter(s => s.background !== photo.image);
+  }
 
   showLoading('Saving...');
   try {
@@ -490,6 +513,15 @@ async function savePhotoMetadata() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ photos: series.photos })
     });
+
+    // Save home slides changes if any
+    if (isNowHomepage || wasHomepage) {
+      await fetch('/api/home', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slides: homeData.slides })
+      });
+    }
 
     renderPhotosGrid(series.photos);
     showToast('Metadata saved!', 'success');
@@ -2032,12 +2064,37 @@ async function deleteHomeSlide() {
 
   showLoading('Deleting...');
   try {
+    // Find the slide to get its background image
+    const slideToDelete = homeData.slides.find(s => s.id === currentSlideId);
+    const backgroundImage = slideToDelete ? slideToDelete.background : null;
+
     const res = await fetch(`/api/home/slides/${currentSlideId}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Failed to delete');
     homeData.slides = homeData.slides.filter(s => s.id !== currentSlideId);
+
+    // Sync: uncheck homepage for the corresponding photo
+    if (backgroundImage) {
+      for (let series of seriesData) {
+        for (let photo of series.photos) {
+          if (photo.image === backgroundImage) {
+            photo.homepage = false;
+          }
+        }
+      }
+
+      // Save all series changes
+      await Promise.all(seriesData.map(series =>
+        fetch(`/api/series/${series.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ photos: series.photos })
+        })
+      ));
+    }
+
     currentSlideId = null;
     renderHomeList();
-    showToast('Slide deleted', 'success');
+    showToast('Slide deleted and synced with photos', 'success');
     showView('home');
     checkGitStatus();
   } catch (err) {

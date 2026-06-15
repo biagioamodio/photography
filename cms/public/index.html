@@ -116,6 +116,9 @@
         <button onclick="showView('series-list')" class="tab-btn active" data-tab="series-list">
           📚 Series
         </button>
+        <button onclick="showView('home')" class="tab-btn" data-tab="home">
+          🏠 Home
+        </button>
       </div>
     </div>
   </nav>
@@ -251,9 +254,95 @@
         </div>
       </div>
     </div>
+
     <!-- Home List View -->
-    <!-- HOME TAB REMOVED - BACKUP SAVED TO /cms/BACKUP_HOME_TAB.html -->
-    <!-- To restore: Copy the home-view and home-slide-edit-view divs from BACKUP_HOME_TAB.html -->
+    <div id="home-view" class="view hidden">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-semibold">Home Page Slides</h2>
+        <button onclick="addHomeSlide()"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+          + Add Slide
+        </button>
+      </div>
+      <p class="text-gray-400 text-sm mb-4">Click a slide to edit it. Slides are synced with Series photos marked "Display on Homepage".</p>
+      <div id="home-slides-grid" class="grid gap-4">
+        <!-- Slide cards inserted here -->
+      </div>
+    </div>
+
+    <!-- Home Slide Edit View -->
+    <div id="home-slide-edit-view" class="view hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-4">
+          <button onclick="showView('home')" class="text-gray-500 hover:text-gray-800 text-sm">← Back</button>
+          <h2 class="text-xl font-semibold" id="home-slide-edit-title">Slide 1</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="deleteHomeSlide()" class="text-red-500 hover:text-red-600 text-sm">🗑 Delete</button>
+          <button onclick="saveHomeSlide()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors">Save</button>
+        </div>
+      </div>
+
+      <div class="flex gap-6 items-start">
+        <!-- Controls panel -->
+        <div class="flex-shrink-0 space-y-3" style="width:390px;overflow-y:auto;overflow-x:hidden;max-height:calc(100vh - 210px);">
+          <!-- Images -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Images</p>
+            <div class="flex gap-2 items-center">
+              <button onclick="document.getElementById('home-bg-input').click()"
+                      class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg text-xs">
+                BG <span class="text-gray-400">.jpg</span>
+              </button>
+              <button onclick="document.getElementById('home-fg-input').click()"
+                      class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg text-xs">
+                FG <span class="text-gray-400">.png</span>
+              </button>
+              <button onclick="removeHomeImage('foreground')" id="home-fg-remove-btn"
+                      class="w-6 h-6 text-red-500 hover:text-red-700 text-sm hidden flex items-center justify-center">
+                ✕
+              </button>
+            </div>
+            <input type="file" id="home-bg-input" accept=".jpg,.jpeg,image/jpeg" class="hidden"
+                   onchange="uploadHomeImage('background', event)">
+            <input type="file" id="home-fg-input" accept=".png,image/png" class="hidden"
+                   onchange="uploadHomeImage('foreground', event)">
+            <label class="flex items-center gap-2 text-xs text-gray-500 mt-1.5">
+              <input type="checkbox" id="home-optimize-checkbox" checked class="rounded">
+              Optimize for web
+            </label>
+          </div>
+
+          <!-- Title -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Slide title</p>
+            <input type="text" id="home-title-input"
+                   class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:border-blue-500"
+                   placeholder="Slide 1">
+          </div>
+
+          <!-- Text overlay -->
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Text overlay</p>
+            <textarea id="home-text-input" rows="2"
+                      class="w-full bg-white border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y text-sm"
+                      placeholder="e.g., A story in light"
+                      oninput="updateHomePreview()"></textarea>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Preview</p>
+          <div id="home-preview" class="w-full bg-gray-100 rounded-lg overflow-hidden" style="aspect-ratio:3/2;">
+            <img id="home-preview-bg" src="" alt="" class="w-full h-full object-cover">
+            <div id="home-preview-text" style="position:absolute;font-family:'Young Serif',serif;color:white;font-size:48px;text-shadow:2px 2px 8px rgba(0,0,0,0.5);pointer-events:none;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </main>
 
