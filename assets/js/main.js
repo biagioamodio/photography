@@ -505,9 +505,12 @@ function loadSerieContent(serie) {
   }
 }
 
-// Load series data on page load
+// Load series data only on series/serie pages (not on homepage)
 $(document).ready(function() {
-  loadSeriesData();
+  const currentPage = window.location.pathname.split('/').pop();
+  if (currentPage === 'series.html' || currentPage.includes('serie.html')) {
+    loadSeriesData();
+  }
 });
 
 // ── Home Slideshow ────────────────────────────────────────────────────────────
