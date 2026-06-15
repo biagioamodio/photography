@@ -590,11 +590,17 @@ function loadHomeSlides() {
         // Set image
         $('#modal-image').attr('src', resolveUrl(slide.background));
 
-        // Set series title and link
-        if (slide.serieId) {
-          const seriesTitle = slide.serieId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-          $('.modal-series-title').text(seriesTitle);
-          $('.modal-series-link').attr('href', (window.baseUrl || '/') + 'serie.html?id=' + slide.serieId);
+        // Set series title and link, or hide series section if no series
+        if (slide.seriesId) {
+          const seriesTitle = slide.seriesId.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+          $('.modal-series-text').show();
+          $('.modal-series-title').text(seriesTitle).show();
+          $('.modal-series-link').attr('href', (window.baseUrl || '/') + 'serie.html?id=' + slide.seriesId).show();
+        } else {
+          // Hide series section for "No Series" slides
+          $('.modal-series-text').hide();
+          $('.modal-series-title').hide();
+          $('.modal-series-link').hide();
         }
 
         // Show modal using the proper function
