@@ -126,6 +126,10 @@ async function loadData() {
     renderSeriesList();
     renderAboutPage();
     renderHomeList();
+
+    // Ensure home tab is shown and active on load
+    showView('home');
+    document.querySelector('[data-tab="home"]').classList.add('active');
   } catch (err) {
     showToast('Failed to load data', 'error');
     console.error(err);
@@ -140,7 +144,7 @@ function syncHomeSliderFromPhotos() {
   seriesData.forEach(series => {
     series.photos.forEach(photo => {
       if (photo.homepage === true) {
-        homepagePhotos.push({ ...photo, seriesTitle: series.title });
+        homepagePhotos.push({ ...photo, seriesId: series.id, seriesTitle: series.title });
       }
     });
   });
@@ -153,21 +157,41 @@ function syncHomeSliderFromPhotos() {
         id: Date.now().toString() + index,
         background: photo.image,
         foreground: null,
-        title: `Slide ${homeData.slides.length + 1}`,
+        title: `Slide 1`,
         text: '',
         textFormat: { bold: false, italic: false, align: 'center' },
         textX: 50,
-        textY: 50
+        textY: 50,
+        seriesId: photo.seriesId
       };
       homeData.slides.push(newSlide);
     }
   });
 
-  // Renumber all slides to ensure they have incremental titles
-  homeData.slides.forEach((slide, index) => {
-    if (!slide.title || slide.title.startsWith('Slide ')) {
-      slide.title = `Slide ${index + 1}`;
+  // Renumber all slides per series with incremental titles
+  renumberSlidesBySeriesGroup();
+}
+
+// Renumber slides by series group with incremental numbers per group
+function renumberSlidesBySeriesGroup() {
+  const slidesBySeriesId = {};
+
+  // Group slides by series
+  homeData.slides.forEach(slide => {
+    const seriesId = slide.seriesId || 'no-series';
+    if (!slidesBySeriesId[seriesId]) {
+      slidesBySeriesId[seriesId] = [];
     }
+    slidesBySeriesId[seriesId].push(slide);
+  });
+
+  // Renumber slides within each group
+  Object.keys(slidesBySeriesId).forEach(seriesId => {
+    slidesBySeriesId[seriesId].forEach((slide, index) => {
+      if (!slide.title || slide.title.startsWith('Slide ')) {
+        slide.title = `Slide ${index + 1}`;
+      }
+    });
   });
 }
 
@@ -534,17 +558,20 @@ async function savePhotoMetadata() {
       id: Date.now().toString(),
       background: photo.image,
       foreground: null,
-      title: `Slide ${homeData.slides.length + 1}`,
+      title: 'Slide 1',
       text: '',
       textFormat: { bold: false, italic: false, align: 'center' },
       textX: 50,
-      textY: 50
+      textY: 50,
+      seriesId: currentSeriesId
     };
     homeData.slides.push(newSlide);
+    renumberSlidesBySeriesGroup();
   } else if (wasHomepage && !isNowHomepage) {
     // Deleting the corresponding home slide
     const photo = series.photos[currentPhotoIndex];
     homeData.slides = homeData.slides.filter(s => s.background !== photo.image);
+    renumberSlidesBySeriesGroup();
   }
 
   showLoading('Saving...');
@@ -950,18 +977,43 @@ function renderHomeList() {
     return;
   }
 
-  grid.innerHTML = slides.map((slide, index) => `
-    <div class="series-card" onclick="editHomeSlide('${slide.id}')">
-      ${slide.background
-        ? `<img src="/${slide.background}" alt="" class="series-card-thumb">`
-        : `<div class="series-card-thumb flex items-center justify-center text-2xl bg-gray-100">🖼️</div>`
-      }
-      <div class="series-card-info">
-        <div class="series-card-title">${escapeHtml(slide.title || `Slide ${index + 1}`)}</div>
-        <div class="series-card-meta">${slide.background ? 'BG ✓' : 'No BG'} · ${slide.foreground ? 'FG ✓' : 'No FG'}</div>
+  // Group slides by series
+  const slidesBySeriesId = {};
+  slides.forEach(slide => {
+    const seriesId = slide.seriesId || 'no-series';
+    if (!slidesBySeriesId[seriesId]) {
+      slidesBySeriesId[seriesId] = [];
+    }
+    slidesBySeriesId[seriesId].push(slide);
+  });
+
+  // Render grouped slides with series headers
+  let html = '';
+  Object.keys(slidesBySeriesId).forEach(seriesId => {
+    const groupSlides = slidesBySeriesId[seriesId];
+    const seriesTitle = seriesId === 'no-series'
+      ? 'No Series'
+      : (seriesData.find(s => s.id === seriesId)?.title || 'Unknown Series');
+
+    // Add series header
+    html += `<div class="col-span-full mt-4 mb-2"><h3 class="text-lg font-semibold text-gray-700">${escapeHtml(seriesTitle)}</h3></div>`;
+
+    // Add slides for this series
+    html += groupSlides.map((slide, slideIndex) => `
+      <div class="series-card" onclick="editHomeSlide('${slide.id}')">
+        ${slide.background
+          ? `<img src="/${slide.background}" alt="" class="series-card-thumb">`
+          : `<div class="series-card-thumb flex items-center justify-center text-2xl bg-gray-100">🖼️</div>`
+        }
+        <div class="series-card-info">
+          <div class="series-card-title">${escapeHtml(slide.title || `Slide ${slideIndex + 1}`)}</div>
+          <div class="series-card-meta">${slide.background ? 'BG ✓' : 'No BG'} · ${slide.foreground ? 'FG ✓' : 'No FG'}</div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  });
+
+  grid.innerHTML = html;
 }
 
 async function addHomeSlide() {
@@ -970,9 +1022,9 @@ async function addHomeSlide() {
     const res = await fetch('/api/home/slides', { method: 'POST' });
     if (!res.ok) throw new Error('Failed to create slide');
     const newSlide = await res.json();
-    // Assign incremental slide title
-    newSlide.title = `Slide ${homeData.slides.length + 1}`;
+    // Title will be assigned by renumberSlidesBySeriesGroup during renderHomeList
     homeData.slides.push(newSlide);
+    renumberSlidesBySeriesGroup();
     renderHomeList();
     editHomeSlide(newSlide.id);
     checkGitStatus();
