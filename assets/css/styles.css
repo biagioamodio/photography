@@ -656,29 +656,47 @@ body.home-page > .container-fluid > .page-content {
   margin-right: -10px;
 }
 
-/* Lock layout at all widths - disable Bootstrap responsive changes */
-@media (min-width: 0) {
+/* Prevent layout jump at Bootstrap md breakpoint (992px) */
+@media (min-width: 992px) {
+  .serie-container > .row:first-child {
+    display: flex !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+  }
+
+  .content-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+  }
+
+  #content-display {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   .col-xs-2,
-  .col-xs-8,
-  .col-sm-2,
-  .col-sm-8,
-  .col-md-2,
-  .col-md-8 {
-    width: auto !important;
+  .col-xs-8 {
+    display: block !important;
+    flex-basis: auto !important;
   }
 
   .serie-container .row .col-xs-2 {
     width: 16.66666667% !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
-    flex: 0 0 auto !important;
   }
 
   .serie-container .row .col-xs-8 {
     width: 66.66666667% !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
-    flex: 0 0 auto !important;
   }
 }
 
